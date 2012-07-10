@@ -16,6 +16,10 @@
 
 package com.google.android.apps.mytracks.fragments;
 
+import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.MapController;
+import com.baidu.mapapi.MapView;
+import com.baidu.mapapi.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.TrackDetailActivity;
@@ -30,10 +34,6 @@ import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.mytracks.R;
 
 import android.content.Intent;
@@ -483,7 +483,7 @@ public class MapFragment extends Fragment
      */
     GeoPoint zoomControlBottom = mapView.getProjection().fromPixels(0, mapView.getHeight());
     GeoPoint zoomControlTop = mapView.getProjection().fromPixels(
-        0, mapView.getHeight() - mapView.getZoomButtonsController().getZoomControls().getHeight());
+        0, mapView.getHeight() );
     int zoomControlMargin = Math.abs(zoomControlTop.getLatitudeE6()
         - zoomControlBottom.getLatitudeE6());
     GeoRect geoRect = new GeoRect(mapCenter, latitudeSpan, longitudeSpan);

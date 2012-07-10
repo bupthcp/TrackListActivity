@@ -18,11 +18,7 @@ limitations under the License.
   android:layout_height="fill_parent"
   android:layout_width="fill_parent" >
   <!-- apiKey corresponds to certificate md5: 81:DF:A2:63:53:C7:6B:1E:6C:24:62:D4:91:1C:36:3A -->
-  <com.google.android.maps.MapView
-    android:apiKey="0TXoRmxTinrZKQ9JSazj-9A34XX6_lXsRvTpXWA"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
+  <com.baidu.mapapi.MapView
     android:id="@+id/map_view"
     android:layout_height="fill_parent"
     android:layout_width="fill_parent" />

@@ -15,8 +15,8 @@
  */
 package com.google.android.apps.mytracks.maps;
 
+import com.baidu.mapapi.Projection;
 import com.google.android.apps.mytracks.MapOverlay.CachedLocation;
-import com.google.android.maps.Projection;
 
 import android.graphics.Canvas;
 import android.graphics.Path;

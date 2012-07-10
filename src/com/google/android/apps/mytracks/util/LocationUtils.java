@@ -15,10 +15,10 @@
  */
 package com.google.android.apps.mytracks.util;
 
+import com.baidu.mapapi.GeoPoint;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.stats.TripStatistics;
-import com.google.android.maps.GeoPoint;
 
 import android.location.Location;
 import android.util.Log;
