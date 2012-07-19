@@ -75,7 +75,7 @@ public class TabManager implements TabHost.OnTabChangeListener {
    *
    * @author Jimmy Shih
    */
-  private static class DummyTabContentFactory implements TabContentFactory {
+  public static class DummyTabContentFactory implements TabContentFactory {
 
     private final Context context;
 

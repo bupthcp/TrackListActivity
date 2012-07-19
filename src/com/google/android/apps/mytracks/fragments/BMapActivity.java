@@ -1,28 +1,20 @@
-/*
- * Copyright 2008 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+/**
+ * 
  */
-
 package com.google.android.apps.mytracks.fragments;
 
+/**
+ * @author huchenpeng
+ *
+ */
+import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.MapActivity;
 import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.Mj;
+import com.baidu.mapapi.MapView;
 import com.baidu.mapapi.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.MyTracksApplication;
-import com.google.android.apps.mytracks.TrackDetailActivity;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils.Factory;
 import com.google.android.apps.mytracks.content.Track;
@@ -30,7 +22,6 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.maps.bMapView;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
@@ -40,10 +31,8 @@ import com.google.android.maps.mytracks.R;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,27 +45,16 @@ import android.widget.Toast;
 
 import java.util.EnumSet;
 import java.util.List;
-
-/**
- * A fragment to display map to the user.
- *
- * @author Leif Hendrik Wilden
- * @author Rodrigo Damazio
- */
-public class MapFragment extends Fragment
-    implements View.OnTouchListener, View.OnClickListener, TrackDataListener {
-
+public class BMapActivity extends MapActivity implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
+  
   public static final String MAP_FRAGMENT_TAG = "mapFragment";
-  
-  private Handler mapFragmentHandler= new Handler();
-  
   private static final String KEY_CURRENT_LOCATION = "currentLocation";
   private static final String KEY_KEEP_MY_LOCATION_VISIBLE = "keepMyLocationVisible";
 
   private TrackDataHub trackDataHub;
 
   // True to keep my location visible.
-  private boolean keepMyLocationVisible = true;
+  private boolean keepMyLocationVisible;
 
   // True to zoom to my location. Only apply when keepMyLocationVisible is true.
   private boolean zoomToMyLocation;
@@ -95,35 +73,47 @@ public class MapFragment extends Fragment
 
   // UI elements
   private View mapViewContainer;
-  private bMapView mapView;
+  private MapView mapView;
   private MapOverlay mapOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
 
   @Override
-  public void onCreate(Bundle bundle) {
-    super.onCreate(bundle);
-    setHasOptionsMenu(true);
-  }
-
-  @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    mapViewContainer = ((TrackDetailActivity) getActivity()).getMapViewContainer();
-    mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
-    int i = 20;
-    int j = 40;
-    if (Mj.InitMapControlCC(i, j) == 1)
-    {
-      mapView.init();
-      if (Mj.d != mapView)
-      {
-        Mj.d = mapView;
-        if (mapView != null)
-            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    MyTracksApplication app = (MyTracksApplication)this.getApplication();
+    if (app.mBMapMan == null) {
+        app.mBMapMan = new BMapManager(getApplication());
+        app.mBMapMan.init(app.mStrKey, new MyTracksApplication.MyGeneralListener());
+    }
+    app.mBMapMan.start();
+    // 如果使用地图SDK，请初始化地图Activity
+    long iTime = System.nanoTime();
+    super.initMapActivity(app.mBMapMan);
+    iTime = System.nanoTime() - iTime;
+    Log.d("MapViewDemo", "the init time is  " + iTime);
+    if (savedInstanceState != null) {
+      keepMyLocationVisible = savedInstanceState.getBoolean(KEY_KEEP_MY_LOCATION_VISIBLE, false);
+      currentLocation = (Location) savedInstanceState.getParcelable(KEY_CURRENT_LOCATION);
+      if (currentLocation != null) {
+        updateCurrentLocation();
       }
     }
-    mapOverlay = new MapOverlay(getActivity());
+  }
+
+  /* (non-Javadoc)
+   * @see com.baidu.mapapi.MapActivity#isRouteDisplayed()
+   */
+  @Override
+  protected boolean isRouteDisplayed() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+  @Override
+  public void onStart() {
+    setContentView(R.layout.map);
+    mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
+    mapOverlay = new MapOverlay(this);
     
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
@@ -141,21 +131,9 @@ public class MapFragment extends Fragment
     });
     messageTextView = (TextView) mapViewContainer.findViewById(R.id.map_message);
 
-    ApiAdapterFactory.getApiAdapter().invalidMenu(getActivity());
-    return mapViewContainer;
+    ApiAdapterFactory.getApiAdapter().invalidMenu(this);
   }
 
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    if (savedInstanceState != null) {
-      keepMyLocationVisible = savedInstanceState.getBoolean(KEY_KEEP_MY_LOCATION_VISIBLE, false);
-      currentLocation = (Location) savedInstanceState.getParcelable(KEY_CURRENT_LOCATION);
-      if (currentLocation != null) {
-        updateCurrentLocation();
-      }
-    }
-  }
 
   @Override
   public void onResume() {
@@ -179,8 +157,8 @@ public class MapFragment extends Fragment
   }
 
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
+  public void onDestroy() {
+    super.onDestroy();
     ViewGroup parentViewGroup = (ViewGroup) mapViewContainer.getParent();
     if (parentViewGroup != null) {
       parentViewGroup.removeView(mapViewContainer);
@@ -188,18 +166,21 @@ public class MapFragment extends Fragment
   }
 
   @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflator) {
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater menuInflator = getMenuInflater();
     menuInflator.inflate(R.menu.map, menu);
+    return true;
   }
 
   @Override
-  public void onPrepareOptionsMenu(Menu menu) {
+  public boolean onPrepareOptionsMenu(Menu menu) {
     int titleId = R.string.menu_satellite_mode;
     if (mapView != null) {
       titleId = mapView.isSatellite() ? R.string.menu_map_mode : R.string.menu_satellite_mode;
     }
     menu.findItem(R.id.map_satellite_mode).setTitle(titleId);
     super.onPrepareOptionsMenu(menu);
+    return true;
   }
 
   @Override
@@ -229,7 +210,7 @@ public class MapFragment extends Fragment
    * @param id the marker id
    */
   private void showMarker(long id) {
-    MyTracksProviderUtils MyTracksProviderUtils = Factory.get(getActivity());
+    MyTracksProviderUtils MyTracksProviderUtils = Factory.get(this);
     Waypoint waypoint = MyTracksProviderUtils.getWaypoint(id);
     if (waypoint != null && waypoint.getLocation() != null) {
       keepMyLocationVisible = false;
@@ -308,7 +289,7 @@ public class MapFragment extends Fragment
         throw new IllegalArgumentException("Unexpected state: " + state);
     }
 
-    getActivity().runOnUiThread(new Runnable() {
+    this.runOnUiThread(new Runnable() {
       @Override
       public void run() {
         if (messageId != -1) {
@@ -316,10 +297,10 @@ public class MapFragment extends Fragment
           messageTextView.setVisibility(View.VISIBLE);
 
           if (isGpsDisabled) {
-            Toast.makeText(getActivity(), R.string.gps_not_found, Toast.LENGTH_LONG).show();
+            Toast.makeText(BMapActivity.this, R.string.gps_not_found, Toast.LENGTH_LONG).show();
 
             // Click to show the location source settings
-            messageTextView.setOnClickListener(MapFragment.this);
+            messageTextView.setOnClickListener(BMapActivity.this);
           } else {
             messageTextView.setOnClickListener(null);
           }
@@ -345,7 +326,7 @@ public class MapFragment extends Fragment
 
   @Override
   public void onSelectedTrackChanged(final Track track, final boolean isRecording) {
-    getActivity().runOnUiThread(new Runnable() {
+    this.runOnUiThread(new Runnable() {
       @Override
       public void run() {
         boolean hasTrack = track != null;
@@ -434,7 +415,7 @@ public class MapFragment extends Fragment
    * accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((MyTracksApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub = ((MyTracksApplication) this.getApplication()).getTrackDataHub();
     trackDataHub.registerTrackDataListener(this, EnumSet.of(
         ListenerDataType.SELECTED_TRACK_CHANGED,
         ListenerDataType.WAYPOINT_UPDATES,
@@ -521,21 +502,16 @@ public class MapFragment extends Fragment
     mapView.postInvalidate();
 
     if (currentLocation != null && keepMyLocationVisible && !isVisible(currentLocation)) {
-      Runnable animateRunnable = new Runnable(){
-        public void run(){
-          GeoPoint geoPoint = LocationUtils.getGeoPoint(currentLocation);
-          MapController mapController = mapView.getController();
-          mapController.animateTo(geoPoint);
-          if (zoomToMyLocation) {
-            // Only zoom in the first time we show the location.
-            zoomToMyLocation = false;
-            if (mapView.getZoomLevel() < mapView.getMaxZoomLevel()) {
-              mapController.setZoom(mapView.getMaxZoomLevel());
-            }
-          }
+      GeoPoint geoPoint = LocationUtils.getGeoPoint(currentLocation);
+      MapController mapController = mapView.getController();
+      mapController.animateTo(geoPoint);
+      if (zoomToMyLocation) {
+        // Only zoom in the first time we show the location.
+        zoomToMyLocation = false;
+        if (mapView.getZoomLevel() < mapView.getMaxZoomLevel()) {
+          mapController.setZoom(mapView.getMaxZoomLevel());
         }
-      };
-      mapFragmentHandler.post(animateRunnable);
+      }
     }
   }
 
@@ -564,4 +540,5 @@ public class MapFragment extends Fragment
       }
     }
   }
+
 }

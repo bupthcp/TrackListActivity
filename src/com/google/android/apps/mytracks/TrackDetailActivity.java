@@ -16,6 +16,7 @@
 
 package com.google.android.apps.mytracks;
 
+import com.baidu.mapapi.BMapManager;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.content.TrackDataHub;
@@ -140,6 +141,12 @@ public class TrackDetailActivity extends AbstractMyTracksActivity implements Del
     trackDataHub = ((MyTracksApplication) getApplication()).getTrackDataHub();
     trackDataHub.loadTrack(trackId);
 
+    MyTracksApplication app = (MyTracksApplication)this.getApplication();
+    if (app.mBMapMan == null) {
+        app.mBMapMan = new BMapManager(getApplication());
+        app.mBMapMan.init(app.mStrKey, new MyTracksApplication.MyGeneralListener());
+    }
+    app.mBMapMan.start();
     mapViewContainer = getLayoutInflater().inflate(R.layout.map, null);
     ApiAdapterFactory.getApiAdapter().disableHardwareAccelerated(mapViewContainer);
 
