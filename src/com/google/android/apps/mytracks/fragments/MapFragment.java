@@ -123,6 +123,8 @@ public class MapFragment extends Fragment
             mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
       }
     }
+
+    
     mapOverlay = new MapOverlay(getActivity());
     
     List<Overlay> overlays = mapView.getOverlays();
