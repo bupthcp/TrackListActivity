@@ -382,6 +382,7 @@ public class MapFragment extends Fragment
   @Override
   public void onNewTrackPoint(Location location) {
     if (LocationUtils.isValidLocation(location)) {
+      LocationUtils.setGeoInLocation(location);
       mapOverlay.addLocation(location);
     }
   }
@@ -410,6 +411,9 @@ public class MapFragment extends Fragment
   public void onNewWaypoint(Waypoint waypoint) {
     if (waypoint != null && LocationUtils.isValidLocation(waypoint.getLocation())) {
       // TODO: Optimize locking inside addWaypoint
+      Location locationTmp = waypoint.getLocation();
+      LocationUtils.setGeoInLocation(locationTmp);
+      waypoint.setLocation(locationTmp);
       mapOverlay.addWaypoint(waypoint);
     }
   }

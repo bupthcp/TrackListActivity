@@ -15,6 +15,7 @@
  */
 package com.google.android.apps.mytracks.util;
 
+import com.baidu.mapapi.CoordinateConvert;
 import com.baidu.mapapi.GeoPoint;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.Track;
@@ -242,6 +243,14 @@ public class LocationUtils {
   public static GeoPoint getGeoPoint(Location location) {
     return new GeoPoint((int) (location.getLatitude() * 1E6),
                         (int) (location.getLongitude() * 1E6));
+  }
+  
+  public static void setGeoInLocation(Location location){
+    GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
+                               (int) (location.getLongitude() * 1E6));
+    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
+    location.setLatitude((p2.getLatitudeE6())/1E6);
+    location.setLongitude((p2.getLongitudeE6())/1E6);
   }
 
   /**
