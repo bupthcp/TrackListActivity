@@ -162,6 +162,7 @@ public class MapFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
+    myLocationImageButton.setVisibility(View.VISIBLE);
     resumeTrackDataHub();
   }
 
@@ -316,6 +317,7 @@ public class MapFragment extends Fragment
         if (messageId != -1) {
           messageTextView.setText(messageId);
           messageTextView.setVisibility(View.VISIBLE);
+          myLocationImageButton.setVisibility(View.VISIBLE);
 
           if (isGpsDisabled) {
             Toast.makeText(getActivity(), R.string.gps_not_found, Toast.LENGTH_LONG).show();
@@ -523,13 +525,16 @@ public class MapFragment extends Fragment
       return;
     }
 
-    mapOverlay.setMyLocation(currentLocation);
+    final Location locationTmp = new Location(currentLocation);
+    LocationUtils.setGeoInLocation(locationTmp);
+    
+    mapOverlay.setMyLocation(locationTmp);
     mapView.postInvalidate();
 
-    if (currentLocation != null && keepMyLocationVisible && !isVisible(currentLocation)) {
+    if (locationTmp != null && keepMyLocationVisible && !isVisible(locationTmp)) {
       Runnable animateRunnable = new Runnable(){
         public void run(){
-          GeoPoint geoPoint = LocationUtils.getGeoPoint(currentLocation);
+          GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
           MapController mapController = mapView.getController();
           mapController.animateTo(geoPoint);
           if (zoomToMyLocation) {

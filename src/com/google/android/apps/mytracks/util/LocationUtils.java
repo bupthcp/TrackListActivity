@@ -252,6 +252,13 @@ public class LocationUtils {
     location.setLatitude((p2.getLatitudeE6())/1E6);
     location.setLongitude((p2.getLongitudeE6())/1E6);
   }
+  
+  public static GeoPoint convertToBaiduGeopoint(GeoPoint geoPoint){
+    GeoPoint p1 = new GeoPoint((int) (geoPoint.getLatitudeE6() ),
+                               (int) (geoPoint.getLongitudeE6()) );
+    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
+    return p2;
+  }
 
   /**
    * This is a utility class w/ only static members.
