@@ -2990,4 +2990,20 @@ limitations under the License.
     translation_description="The title of the welcome dialog.">
     Welcome to My Tracks
   </string>
+  
+  <string name="strEmptyString" />
+  <string name="strHaveAccount">I have an account</string>
+  <string name="strEndomondoSportTracker">Endomondo Sports Tracker</string>
+  <string name="strTitle">iJogging</string>
+  <string name="strRemindMeLater">Remind me later</string>
+  <string name="strNewsFeedNotLoggedInText">"Endomondo is a sports tracking app that makes exercising more fun.
+
+Tap to log in, add your friends and follow their sports activities in real-time."</string>
+  <string name="strNewsFeedErrorText">Press the update button to see what your friends have been doing lately.</string>
+  <string name="strWorkoutTab">Workout</string>
+  <string name="strHistoryTab">History</string>
+  <string name="strNewsFeed">News Feed</string>
+  <string name="strRoutes">Routes</string>
+  <string name="strFriends">Friends</string>
+  <string name="strSettingsTab">Settings</string>
 </resources>

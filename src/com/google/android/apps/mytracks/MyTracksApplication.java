@@ -23,6 +23,7 @@ import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.maps.mytracks.BuildConfig;
+import com.hu.iJogging.common.ConfigFree;
 
 import android.app.Application;
 import android.content.Intent;
@@ -95,6 +96,7 @@ public class MyTracksApplication extends Application {
     AnalyticsUtils.sendPageViews(getApplicationContext(), "/appstart");
     Intent intent = new Intent(this, RemoveTempFilesService.class);
     startService(intent);
+    ConfigFree.configure();
   }
 
   /**

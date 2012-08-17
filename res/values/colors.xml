@@ -62,4 +62,49 @@ limitations under the License.
 
   <!-- dynamic track fast path, red -->
   <color name="fast_path">#F7DF0101</color>
+  
+  <color name="ButtonGrey">#ff65655a</color>
+  <color name="white">#ffffffff</color>
+  <color name="LightGrey">#ffcdcdc5</color>
+  <color name="list_separator_background">#ffeeeeee</color>
+  <color name="list_separator_text">#ff333333</color>
+  <color name="background_image">#ffeeeeee</color>
+  <color name="Transparant">#00000000</color>
+  <color name="MainDarkFontColor">#ff3d3d3d</color>
+  <color name="EndoGreen">#ff87aa14</color>
+  <color name="lightGreen">#ffb4cc83</color>
+  <color name="darkGreen">#ff87aa14</color>
+  <color name="lightYellow">#fffae993</color>
+  <color name="darkYellow">#fffde04c</color>
+  <color name="lightRed">#fff2989e</color>
+  <color name="darkRed">#ffe64c56</color>
+  <color name="ButtonBarPressedColor">#ff65655a</color>
+  <color name="ButtonGreenSelect">#ff537719</color>
+  <color name="MiddleGrey">#ff65655a</color>
+  <color name="MiddleGreyTransparent">#bb65655a</color>
+  <color name="SemiDarkGrey">#ff45453f</color>
+  <color name="DarkGrey">#ff333330</color>
+    <color name="HtcWidgetTimeColor">#ffb4b4b4</color>
+    <color name="HtcListItemColor1">#fff2f2f2</color>
+    <color name="HtcListItemColor2">#ffe9e7e1</color>
+    <color name="HtcGpsWhiteFontColor">#fff2f2f2</color>
+    <color name="HtcWhiteFontColor">#ffffffff</color>
+    <color name="HtcWhiteFontShadowColor">#ff383531</color>
+    <color name="HtcMotivationFontColor">#ff888377</color>
+    <color name="HtcButtonBarButtonRest">#00000000</color>
+    <color name="HtcButtonBarButtonPressed">#58000000</color>
+    <color name="settings_item_background_pressed">#ffebebeb</color>
+    <color name="OffWhite">#fff0f0eb</color>
+    <color name="ButtonGreenSelect">#ff537719</color>
+    <color name="ButtonRed">#ffdd2626</color>
+    <color name="ButtonRedSelect">#ffc12121</color>
+    <color name="ButtonBlue">#ff3c5a98</color>
+    <color name="ButtonBlueSelect">#ff304977</color>
+    <color name="ButtonGrey">#ff65655a</color>
+    <color name="ab_title_background_pressed">#ff93b32c</color>
+    <color name="stdButtonBorderColor">#ff9c9c9c</color>
+    <color name="stdButtonNormalBgStart">#fff2efee</color>
+    <color name="stdButtonNormalBgCenter">#ffefedeb</color>
+    <color name="stdButtonNormalBgEnd">#ffdbdbd9</color>
+    <color name="cityscape_overlay_text">#ffd9e9be</color>
 </resources>
