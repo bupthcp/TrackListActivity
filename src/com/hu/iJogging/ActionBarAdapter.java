@@ -1,5 +1,6 @@
 package com.hu.iJogging;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.common.UIConfig;
 
@@ -10,7 +11,13 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class ActionBarAdapter implements SpinnerAdapter{
   public static final int ENDOMONDO_ACTIVITY = 1;
@@ -183,10 +190,33 @@ public class ActionBarAdapter implements SpinnerAdapter{
     return 0;
   }
 
+  //这里是创建下拉菜单的标题的布局
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    // TODO Auto-generated method stub
-    return null;
+    View localView;
+    if(convertView == null){
+      localView = this.mInflater.inflate(R.layout.actionbar_item_view, null);
+    }else{
+      localView = convertView;
+    }
+      TextView localTextView1 = (TextView)localView.findViewById(R.id.ActionBarItemText1);
+      localTextView1.setTypeface(this.mRobotoRegular);
+      localTextView1.setVisibility(this.mSpinnerConfig.mTextViewVisibility);
+      if (this.mSpinnerConfig.mTextViewVisibility == 0)
+        localTextView1.setText(this.mSpinnerConfig.mTextViewTextId);
+      ImageView localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage1);
+      localImageView.setVisibility(this.mSpinnerConfig.mImageViewVisibility);
+      if (this.mSpinnerConfig.mImageViewVisibility == 0)
+        localImageView.setImageResource(this.mSpinnerConfig.mImageViewImageId);
+      TextView localTextView2 = (TextView)localView.findViewById(R.id.ActionBarItemImage1Text);
+      localTextView2.setVisibility(View.GONE);
+      if (this.mSpinnerConfig.mImageViewImageId == R.drawable.ab_icon_history_white)
+      {
+        localTextView2.setVisibility(View.VISIBLE);
+        int i = new GregorianCalendar().get(Calendar.DATE);
+        localTextView2.setText(i);
+      }
+      return localView;
   }
 
   @Override
@@ -219,10 +249,50 @@ public class ActionBarAdapter implements SpinnerAdapter{
     
   }
 
+  //这里是创建下拉菜单的布局
   @Override
   public View getDropDownView(int position, View convertView, ViewGroup parent) {
-    // TODO Auto-generated method stub
-    return null;
+    View localView;
+    if(convertView == null){
+      localView = this.mInflater.inflate(R.layout.actionbar_dropdown_item_view, null);
+    }else{
+      localView = convertView;
+    }
+    
+    TextView localTextView1;
+    TextView localTextView2;
+    ImageView localImageView;
+    localTextView1 = (TextView)localView.findViewById(R.id.ActionBarItemImageText);
+    localTextView2 = (TextView)localView.findViewById(R.id.ActionBarItemText);
+    localTextView2.setTypeface(this.mRobotoRegular);
+    localTextView2.setTextColor(this.mContext.getResources().getColor(R.color.black));
+    localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage);
+    FrameLayout localFrameLayout = (FrameLayout)localView.findViewById(R.id.ActionBarItemImageLayout);
+    if(position == 0)
+    {
+      localFrameLayout.setVisibility(View.GONE);
+      localTextView1.setVisibility(View.GONE);
+      localTextView2.setVisibility(View.GONE);
+      localImageView.setVisibility(View.GONE);
+    }else{
+      localFrameLayout.setVisibility(View.VISIBLE);
+      localTextView1.setVisibility(View.GONE);
+      localTextView2.setVisibility(View.VISIBLE);
+      localImageView.setVisibility(View.VISIBLE);
+      localTextView2.setText(this.mSpinnerConfig.mSpinnerItemArray[position].mStringId);
+      if(position == mActivityInt){
+        localTextView2.setTextColor(this.mContext.getResources().getColor(R.color.VeryLightGrey));
+      }
+      localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage);
+      localImageView.setImageResource(this.mSpinnerConfig.mSpinnerItemArray[position].mIconId);
+      if (this.mSpinnerConfig.mSpinnerItemArray[position].mIconId == R.drawable.ab_icon_history)
+      {
+        localTextView1.setVisibility(View.VISIBLE);
+        int n = new GregorianCalendar().get(Calendar.DATE);
+        localTextView1.setText(n);
+      }
+    }
+    return localView;
   }
   
   private static class SpinnerConfig
@@ -261,5 +331,15 @@ public class ActionBarAdapter implements SpinnerAdapter{
     }
   }
 
+  public class OnNaviListener implements ActionBar.OnNavigationListener
+  {
+
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+      // TODO Auto-generated method stub
+      return false;
+    }
+    
+  }
 
 }
