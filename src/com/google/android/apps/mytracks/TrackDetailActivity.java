@@ -119,19 +119,22 @@ public class TrackDetailActivity extends AbstractMyTracksActivity implements Del
    * not associated to any licensed mapping data. Therefore it should be okay to
    * return false here and still comply with the terms of service.
    */
-  @Override
-  protected boolean isRouteDisplayed() {
-    return false;
-  }
-
-  /**
-   * We are displaying a location. This needs to return true in order to comply
-   * with the terms of service.
-   */
-  @Override
-  protected boolean isLocationDisplayed() {
-    return true;
-  }
+  //isRouteDisplayed isLocationDisplayed都是android-support-v4-r7-googlemaps里面的，但是
+  //现在必须删除android-support-v4-r7-googlemaps.jar以解决重复引用android-support-v4的问题
+  //所以就必须将这两个方法注释掉了。这两个方法目前也是没有使用到的。注释了也应该不会引起什么问题
+//  @Override
+//  protected boolean isRouteDisplayed() {
+//    return false;
+//  }
+//
+//  /**
+//   * We are displaying a location. This needs to return true in order to comply
+//   * with the terms of service.
+//   */
+//  @Override
+//  protected boolean isLocationDisplayed() {
+//    return true;
+//  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
