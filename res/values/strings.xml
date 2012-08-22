@@ -1038,6 +1038,7 @@ limitations under the License.
       Character limit: ~21 (1 line)">
     Help
   </string>
+  <string name="menu_test">test</string>
   <string name="menu_import"
     translation_description="In the menu, to import tracks from the SD card.
 

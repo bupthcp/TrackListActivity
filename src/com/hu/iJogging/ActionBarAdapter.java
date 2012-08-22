@@ -214,7 +214,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
       {
         localTextView2.setVisibility(View.VISIBLE);
         int i = new GregorianCalendar().get(Calendar.DATE);
-        localTextView2.setText(i);
+        localTextView2.setText(Integer.toString(i));
       }
       return localView;
   }
@@ -289,7 +289,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
       {
         localTextView1.setVisibility(View.VISIBLE);
         int n = new GregorianCalendar().get(Calendar.DATE);
-        localTextView1.setText(n);
+        localTextView1.setText(Integer.toString(n));
       }
     }
     return localView;

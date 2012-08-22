@@ -431,6 +431,9 @@ public class TrackListActivity extends FragmentActivity implements DeleteOneTrac
         intent = IntentUtils.newIntent(this, HelpActivity.class);
         startActivity(intent);
         return true;
+      case R.id.track_menu_test:
+         intent = IntentUtils.newIntent(this, com.hu.iJogging.MainActivity.class);
+         startActivity(intent);
       default:
         return super.onOptionsItemSelected(item);
     }

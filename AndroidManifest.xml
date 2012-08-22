@@ -220,6 +220,7 @@ limitations under the License.
     <activity android:name="com.google.android.apps.mytracks.settings.SettingsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.SharingSettingsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.StatsSettingsActivity" />
+    <activity android:name="com.hu.iJogging.MainActivity" android:theme="@style/Theme.Sherlock" />
     <!-- Services -->
     <service
       android:exported="false"
