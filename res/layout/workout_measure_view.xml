@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_gravity="top|left|center" android:orientation="vertical" android:longClickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:weightSum="50.0">
+        <LinearLayout android:id="@+id/spaceTop" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="10.0" />
+        <com.hu.iJogging.DashBoardView android:id="@+id/LLMainZone" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="20.0" class="com.endomondo.android.common.DashBoardView" />
+        <LinearLayout android:id="@+id/spaceBelowDashBoard" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="10.0" />
+        <com.hu.iJogging.SportMainButton android:id="@+id/SportMainButton" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" class="com.endomondo.android.common.SportMainButton" />
+        <View android:id="@+id/SportMainButtonSeperator" android:background="@color/MainSeperatorColor" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginLeft="15.0dip" android:layout_marginTop="5.0dip" android:layout_marginRight="15.0dip" />
+        <LinearLayout android:id="@+id/spaceBelowSport" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="10.0" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="20.0dip" android:weightSum="1.0">
+            <Button android:id="@+id/ButtonStartPause" android:background="@drawable/dashboard_button_start" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:hapticFeedbackEnabled="true" />
+            <com.hu.iJogging.MotivationMainButton android:id="@+id/MotivationMainButton" android:paddingLeft="10.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_gravity="bottom|left|center" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="20.0dip">
+        <ImageView android:layout_gravity="bottom" android:layout_width="wrap_content" android:layout_height="1.0px" android:layout_marginLeft="10.0dip" android:src="@drawable/dashboard_button_countdown_offset" />
+        <FrameLayout android:id="@+id/ButtonCountdownStop" android:background="@drawable/dashboard_button_countdown" android:layout_width="wrap_content" android:layout_height="wrap_content" android:hapticFeedbackEnabled="true">
+            <TextView android:textSize="26.0dip" android:textStyle="bold" android:textColor="@color/white" android:layout_gravity="center" android:id="@+id/ButtonStopText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_gravity="bottom|left|center" android:orientation="horizontal" android:id="@+id/LinearLayout04" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginBottom="5.0dip">
+        <ImageView android:id="@+id/ImageViewGPS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:adjustViewBounds="true" />
+        <TextView android:textSize="12.0dip" android:textColor="@color/black" android:layout_gravity="bottom" android:id="@+id/TextViewGPS" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" />
+    </LinearLayout>
+    <Button android:layout_gravity="bottom|right|center" android:id="@+id/ButtonMapCorner" android:background="@drawable/dashboard_button_map" android:layout_width="wrap_content" android:layout_height="wrap_content" android:hapticFeedbackEnabled="true" />
+</FrameLayout>

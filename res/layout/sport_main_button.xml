@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/LLSportSelector" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@+id/ImageButtonSport" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/sport_blank" android:layout_alignParentLeft="true" />
+    <com.hu.iJogging.TextMeasuredView android:textSize="@dimen/sport_text_size" android:id="@+id/tvWoSport" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:singleLine="true" android:layout_toRightOf="@id/ImageButtonSport" android:layout_alignBottom="@id/ImageButtonSport" />
+    <ImageView android:id="@+id/ImageDbMoreTriangle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignBottom="@id/ImageButtonSport" android:layout_alignParentRight="true" />
+</RelativeLayout>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 public class MainActivity extends SherlockFragmentActivity{
   private ActionBar mActionBar;
   private ActionBarAdapter mAdapter = null;
+  private WorkoutPage mWorkoutPage = null;
 
   
   private void setupActionBar(){
@@ -24,13 +25,20 @@ public class MainActivity extends SherlockFragmentActivity{
   protected void onCreate(Bundle arg0) {
     // TODO Auto-generated method stub
     super.onCreate(arg0);
+    mWorkoutPage = new WorkoutPage(this);
+  }
+  
+  private void initializeDelayed(){
+    mWorkoutPage.setView();
+    mWorkoutPage.setFocus();
+    setupActionBar();
   }
 
   @Override
   protected void onResume() {
     // TODO Auto-generated method stub
     super.onResume();
-    setupActionBar();
+    initializeDelayed();
   }
 
   @Override

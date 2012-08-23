@@ -1,0 +1,51 @@
+package com.hu.iJogging;
+
+import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.common.UIConfig;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+public class SportMainButton extends LinearLayout{
+  private static final int layout = R.layout.sport_main_button;
+  private ImageView iTriangle;
+  private Context mContext;
+  private TextMeasuredView tvSport;
+
+  public SportMainButton(Context paramContext, AttributeSet paramAttributeSet)
+  {
+    super(paramContext, paramAttributeSet);
+    this.mContext = paramContext;
+    inflateAndConfigure(paramContext);
+  }
+
+  private void inflateAndConfigure(Context paramContext)
+  {
+    ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(layout, this);
+    this.tvSport = ((TextMeasuredView)findViewById(R.id.tvWoSport));
+    this.iTriangle = ((ImageView)findViewById(R.id.ImageDbMoreTriangle));
+    this.iTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
+    setClickable(true);
+    setColors();
+  }
+
+  private void setColors()
+  {
+    setColorsPressed(isPressed());
+  }
+
+  private void setColorsPressed(boolean paramBoolean)
+  {
+    if (paramBoolean)
+    {
+      this.tvSport.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.sportTextFontColorPressed));
+      this.iTriangle.setImageResource(UIConfig.DashboardConfig.trianglePressedId);
+    }
+      invalidate();
+      this.tvSport.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.sportTextFontColorRest));
+      this.iTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
+  }
+}

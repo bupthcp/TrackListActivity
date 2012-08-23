@@ -108,4 +108,5 @@ limitations under the License.
     <color name="stdButtonNormalBgEnd">#ffdbdbd9</color>
     <color name="cityscape_overlay_text">#ffd9e9be</color>
     <color name="VeryLightGrey">#ffe6e6e2</color>
+    <color name="MainSeperatorColor">#ffcdcdc5</color>
 </resources>

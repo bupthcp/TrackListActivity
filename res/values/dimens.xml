@@ -17,4 +17,7 @@ limitations under the License.
 <resources>
   <dimen name="widget_margin">8dp</dimen>
   <dimen name="stdButtonBorder">1.0px</dimen>
+  <dimen name="motivation_type_text_size">16.0dip</dimen>
+  <dimen name="motivation_info_text_size">12.0dip</dimen>
+  <dimen name="sport_text_size">18.0dip</dimen>
 </resources>
