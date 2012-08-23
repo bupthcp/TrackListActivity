@@ -33,12 +33,23 @@ public class MainActivity extends SherlockFragmentActivity{
     mWorkoutPage.setFocus();
     setupActionBar();
   }
+  
+  private void startInitialization(){
+    //TODO
+    //add DelayedInitializer() here
+    //if useDelayedInitializer()
+    initializeDelayed();
+  }
 
   @Override
   protected void onResume() {
     // TODO Auto-generated method stub
     super.onResume();
-    initializeDelayed();
+    if(null != mActionBar){
+      mActionBar.setSelectedNavigationItem(0);
+    }
+    WorkoutPage.setFakeView(this);
+    startInitialization();
   }
 
   @Override

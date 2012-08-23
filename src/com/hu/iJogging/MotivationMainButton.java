@@ -52,11 +52,13 @@ public class MotivationMainButton extends LinearLayout{
       this.iType.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.motivationTextTypeFontColorPressed));
       this.iInfo.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.motivationTextInfoFontColorPressed));
       this.iTriangle.setImageResource(UIConfig.DashboardConfig.trianglePressedId);
-    }
+    }else{
       invalidate();
       this.iType.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.motivationTextTypeFontColorRest));
       this.iInfo.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.motivationTextInfoFontColorRest));
       this.iTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
+    }
+
   }
 
   private void setTexts()

@@ -43,9 +43,11 @@ public class SportMainButton extends LinearLayout{
     {
       this.tvSport.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.sportTextFontColorPressed));
       this.iTriangle.setImageResource(UIConfig.DashboardConfig.trianglePressedId);
-    }
+    }else{
       invalidate();
       this.tvSport.setTextColor(this.mContext.getResources().getColor(UIConfig.DashboardConfig.sportTextFontColorRest));
       this.iTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
+    }
+
   }
 }

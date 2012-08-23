@@ -23,6 +23,14 @@ public class WorkoutPage {
     this.mOwner.setContentView(this.mMeasureView);
   }
   
+  public static void setFakeView(Activity paramActivity)
+  {
+    View localView = paramActivity.getLayoutInflater().inflate(R.layout.workout_splash, null);
+    mBtnMotivation = (MotivationMainButton)localView.findViewById(R.id.MotivationMainButton);
+    btnSport = (LinearLayout)localView.findViewById(R.id.SportMainButton);
+    paramActivity.setContentView(localView);
+  }
+  
   private static View getMeasureView(Activity paramActivity)
   {
     View localView = paramActivity.getLayoutInflater().inflate(R.layout.workout_measure_view, null);
