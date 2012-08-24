@@ -20,4 +20,8 @@ limitations under the License.
   <dimen name="motivation_type_text_size">16.0dip</dimen>
   <dimen name="motivation_info_text_size">12.0dip</dimen>
   <dimen name="sport_text_size">18.0dip</dimen>
+  <dimen name="pointer_sausage_wo">72.0dip</dimen>
+  <dimen name="sausage_height">26.0dip</dimen>
+  <dimen name="borderExclPadding">8.0dip</dimen>
+  <dimen name="borderExclPadding">8.0dip</dimen>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/pointer_sausage" android:layout_width="fill_parent" android:layout_height="@dimen/pointer_sausage_wo"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:id="@+id/pointer" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="@dimen/pointer_sausage_wo" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" />
+    <LinearLayout android:id="@+id/bottomSpace" android:layout_width="fill_parent" android:layout_height="8.0dip" android:layout_marginBottom="2.0dip" android:layout_alignParentBottom="true" />
+    <LinearLayout android:id="@+id/sausage" android:layout_width="fill_parent" android:layout_height="@dimen/sausage_height" android:layout_marginLeft="@dimen/borderExclPadding" android:layout_marginRight="@dimen/borderExclPadding" android:layout_above="@id/bottomSpace" android:layout_alignParentLeft="true" />
+</RelativeLayout>

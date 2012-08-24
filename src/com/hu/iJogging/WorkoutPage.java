@@ -3,13 +3,27 @@ package com.hu.iJogging;
 import com.google.android.maps.mytracks.R;
 
 import android.app.Activity;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 public class WorkoutPage {
   View mMeasureView = null;
   MainActivity mOwner = null;
   private static MotivationMainButton mBtnMotivation;
   private static View btnSport;
+  ImageView btnMusic;
+  ImageView imageGPS;
+  ImageView ivSport;
+  private Handler mSettingsChangeHandler;
+  private DashBoardStretchSpace mSpace1;
+  TextView tvGPS;
+  TextMeasuredView tvSport;
   
   public WorkoutPage(MainActivity paramActivity)
   {
@@ -46,5 +60,56 @@ public class WorkoutPage {
   public void setFocus(){
     //TODO
     //add mMainZone1 and different zone here
+    this.ivSport = ((ImageView)this.mMeasureView.findViewById(R.id.ImageButtonSport));
+    this.ivSport.setVisibility(0);
+    int i = this.mOwner.getResources().getColor(R.color.EndoGreen);
+    this.ivSport.setColorFilter(i, PorterDuff.Mode.SRC_ATOP);
+    this.tvSport = ((TextMeasuredView)this.mMeasureView.findViewById(R.id.tvWoSport));
+    btnSport.setOnClickListener(new View.OnClickListener()
+    {
+      public void onClick(View paramView)
+      {
+        WorkoutPage.this.startSportDialog();
+      }
+    });
+    this.imageGPS = ((ImageView)this.mMeasureView.findViewById(R.id.ImageViewGPS));
+    this.tvGPS = ((TextView)this.mMeasureView.findViewById(R.id.TextViewGPS));
+    Typeface localTypeface = Typeface.createFromAsset(this.mOwner.getAssets(), "fonts/Roboto-Regular.ttf");
+    this.tvGPS.setTypeface(localTypeface);
+    mBtnMotivation.setOnClickListener(new View.OnClickListener()
+    {
+      public void onClick(View paramView)
+      {
+        WorkoutPage.this.startMotivationDialog();
+      }
+    });
+    ((Button)this.mMeasureView.findViewById(R.id.ButtonMapCorner)).setOnTouchListener(new View.OnTouchListener()
+    {
+      public boolean onTouch(View paramView, MotionEvent paramMotionEvent)
+      {
+        if (paramMotionEvent.getAction() == 0)
+          WorkoutPage.this.startMapsActivity();
+        return true;
+      }
+    });
+    this.mSpace1 = ((DashBoardStretchSpace)this.mMeasureView.findViewById(R.id.space1));
+    LinearLayout localLinearLayout1 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLIntervalsZone);
+    localLinearLayout1.removeAllViews();
+//    this.mIntervalZone = new IntervalZone(this.mOwner, null);
+//    this.mIntervalZone.setSpaceLL(this.mSpace1);
+//    localLinearLayout1.addView(this.mIntervalZone);
+  }
+  
+  private void startMotivationDialog()
+  {
+  }
+
+  private void startSportDialog()
+  {
+  }
+  
+  private void startMapsActivity()
+  {
+
   }
 }
