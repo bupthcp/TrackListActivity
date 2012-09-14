@@ -233,4 +233,7 @@ limitations under the License.
         <item name="android:textColor">@color/white</item>
         <item name="android:lines">2</item>
     </style>
+    <style name="dashboard_text_style">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

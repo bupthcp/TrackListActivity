@@ -24,4 +24,7 @@ limitations under the License.
   <dimen name="sausage_height">26.0dip</dimen>
   <dimen name="borderExclPadding">8.0dip</dimen>
   <dimen name="borderExclPadding">8.0dip</dimen>
+  <dimen name="dbv_title_z34_normal">15.0dip</dimen>
+  <dimen name="dbv_value_z34_normal">32.0dip</dimen>
+  <dimen name="dbv_unit_z34_normal">15.0dip</dimen>
 </resources>

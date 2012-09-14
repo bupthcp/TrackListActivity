@@ -25,6 +25,12 @@ public class WorkoutPage {
   TextView tvGPS;
   TextMeasuredView tvSport;
   
+  MainZoneLayout mMainZone1;
+  MainZoneLayout mMainZone2;
+  MainZoneLayout mMainZone3;
+  MainZoneLayout mMainZone4;
+  
+  
   public WorkoutPage(MainActivity paramActivity)
   {
     this.mOwner = paramActivity;
