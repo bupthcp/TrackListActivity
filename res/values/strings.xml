@@ -3007,4 +3007,7 @@ Tap to log in, add your friends and follow their sports activities in real-time.
   <string name="strRoutes">Routes</string>
   <string name="strFriends">Friends</string>
   <string name="strSettingsTab">Settings</string>
+  <string name="strDistance">Distance</string>
+  <string name="strKilometerShortUnit">km</string>
+  <string name="strDistanceFormat">km</string>
 </resources>

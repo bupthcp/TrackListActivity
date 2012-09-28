@@ -104,6 +104,14 @@ public class WorkoutPage {
 //    this.mIntervalZone = new IntervalZone(this.mOwner, null);
 //    this.mIntervalZone.setSpaceLL(this.mSpace1);
 //    localLinearLayout1.addView(this.mIntervalZone);
+    this.mMainZone1 = new MainZoneLayout(this.mOwner, null, 1, 1, null);
+    LinearLayout localLinearLayout2 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLMainZone1);
+    localLinearLayout2.removeAllViews();
+    localLinearLayout2.addView(this.mMainZone1);
+    this.mMainZone2 = new MainZoneLayout(this.mOwner, null, 1,1, null);
+    LinearLayout localLinearLayout3 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLMainZone2);
+    localLinearLayout3.removeAllViews();
+    localLinearLayout3.addView(this.mMainZone2);
   }
   
   private void startMotivationDialog()

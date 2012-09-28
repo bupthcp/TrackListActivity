@@ -109,4 +109,6 @@ limitations under the License.
     <color name="cityscape_overlay_text">#ffd9e9be</color>
     <color name="VeryLightGrey">#ffe6e6e2</color>
     <color name="MainSeperatorColor">#ffcdcdc5</color>
+    <color name="ab_list_background_pressed">#ffebebeb</color>
+    <color name="EndoGreen">#ff87aa14</color>
 </resources>
