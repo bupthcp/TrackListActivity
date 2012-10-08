@@ -15,6 +15,7 @@ public class IntervalZone extends LinearLayout{
   private LinearLayout mPtr;
   private LinearLayout mSsg;
 //  private IntervalsPSCtrl mPointerSausage;
+  private DashBoardStretchSpace mSpace1;
   
   public IntervalZone(Context paramContext, AttributeSet paramAttributeSet)
   {
@@ -24,5 +25,12 @@ public class IntervalZone extends LinearLayout{
     this.mPtr = ((LinearLayout)this.mLl.findViewById(R.id.pointer));
     this.mSsg = ((LinearLayout)this.mLl.findViewById(R.id.sausage));
 //    this.mPointerSausage = new IntervalsPSCtrl(this.mContext, null, false, true);
+  }
+  
+  public void setSpaceLL(DashBoardStretchSpace paramDashBoardStretchSpace)
+  {
+    this.mSpace1 = paramDashBoardStretchSpace;
+//    this.mPointerSausage.setSpaceLL(paramDashBoardStretchSpace);
+//    this.mSpace1.setPointerSausage(this.mPointerSausage);
   }
 }

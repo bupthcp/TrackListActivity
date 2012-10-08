@@ -24,7 +24,16 @@ limitations under the License.
   <dimen name="sausage_height">26.0dip</dimen>
   <dimen name="borderExclPadding">8.0dip</dimen>
   <dimen name="borderExclPadding">8.0dip</dimen>
+  <dimen name="dbv_title_z1_normal">15.0dip</dimen>
+  <dimen name="dbv_title_z2_normal">15.0dip</dimen>
   <dimen name="dbv_title_z34_normal">15.0dip</dimen>
+  <dimen name="dbv_value_z1_normal">60.0dip</dimen>
+  <dimen name="dbv_value_z2_normal">60.0dip</dimen>
   <dimen name="dbv_value_z34_normal">32.0dip</dimen>
+  <dimen name="dbv_unit_z1_normal">15.0dip</dimen>
+  <dimen name="dbv_unit_z2_normal">15.0dip</dimen>
   <dimen name="dbv_unit_z34_normal">15.0dip</dimen>
+  <dimen name="pointer_height">22.0dip</dimen>
+  <dimen name="border">12.0dip</dimen>
+  <dimen name="triangle">7.0dip</dimen>
 </resources>

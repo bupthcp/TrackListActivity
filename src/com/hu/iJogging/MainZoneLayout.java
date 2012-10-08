@@ -47,7 +47,21 @@ public class MainZoneLayout extends LinearLayout{
   }
   
   private void setupDefaultView(){
-    LinearLayout localLinearLayout = (LinearLayout)((LayoutInflater)this.mOwner.getSystemService("layout_inflater")).inflate(R.layout.default_workout_zone34_item_view, this);
+    int i=0;
+    switch(mZone){
+      case 1:
+        i = R.layout.default_workout_zone1_item_view;
+        break;
+      case 2:
+        i = R.layout.default_workout_zone2_item_view;
+        break;
+      case 3:
+        i = R.layout.default_workout_zone34_item_view;
+        break;
+      default:
+        i = R.layout.default_workout_zone34_item_view;
+    }
+    LinearLayout localLinearLayout = (LinearLayout)((LayoutInflater)this.mOwner.getSystemService("layout_inflater")).inflate(i, this);
     this.mTitleIcon = ((ImageView)localLinearLayout.findViewById(R.id.TVmainZoneIcon));
     this.mTitle = ((TextMeasuredView)localLinearLayout.findViewById(R.id.TVmainZoneTitle));
     this.mTitle.setTypeface(this.mRobotoLight);
@@ -64,12 +78,22 @@ public class MainZoneLayout extends LinearLayout{
     switch(mType){
       case 1:
         setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceText(this.mOwner));
+        setValue("00:00");
         break;
       case 2:
+        break;
+      case 3:
+        break;
+      case 4:
         break;
       default:
         break;
     }
+  }
+  
+  private void setValue(String paramString)
+  {
+    this.mValue.setText(paramString);
   }
   
   //paramInt:icon

@@ -25,6 +25,7 @@ public class WorkoutPage {
   TextView tvGPS;
   TextMeasuredView tvSport;
   
+  private IntervalZone mIntervalZone;
   MainZoneLayout mMainZone1;
   MainZoneLayout mMainZone2;
   MainZoneLayout mMainZone3;
@@ -98,20 +99,22 @@ public class WorkoutPage {
         return true;
       }
     });
-    this.mSpace1 = ((DashBoardStretchSpace)this.mMeasureView.findViewById(R.id.space1));
-    LinearLayout localLinearLayout1 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLIntervalsZone);
-    localLinearLayout1.removeAllViews();
-//    this.mIntervalZone = new IntervalZone(this.mOwner, null);
-//    this.mIntervalZone.setSpaceLL(this.mSpace1);
-//    localLinearLayout1.addView(this.mIntervalZone);
     this.mMainZone1 = new MainZoneLayout(this.mOwner, null, 1, 1, null);
     LinearLayout localLinearLayout2 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLMainZone1);
     localLinearLayout2.removeAllViews();
     localLinearLayout2.addView(this.mMainZone1);
-    this.mMainZone2 = new MainZoneLayout(this.mOwner, null, 1,1, null);
+    this.mMainZone2 = new MainZoneLayout(this.mOwner, null, 2,1, null);
     LinearLayout localLinearLayout3 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLMainZone2);
     localLinearLayout3.removeAllViews();
     localLinearLayout3.addView(this.mMainZone2);
+    this.mMainZone3 = new MainZoneLayout(this.mOwner, null, 3, 1, null);
+    LinearLayout localLinearLayout4 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLMainZone3);
+    localLinearLayout4.removeAllViews();
+    localLinearLayout4.addView(this.mMainZone3);
+    this.mMainZone4 = new MainZoneLayout(this.mOwner, null, 3, 1, null);
+    LinearLayout localLinearLayout5 = (LinearLayout)this.mMeasureView.findViewById(R.id.LLMainZone4);
+    localLinearLayout5.removeAllViews();
+    localLinearLayout5.addView(this.mMainZone4);
   }
   
   private void startMotivationDialog()
