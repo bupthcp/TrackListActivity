@@ -1039,6 +1039,7 @@ limitations under the License.
     Help
   </string>
   <string name="menu_test">test</string>
+  <string name="menu_test_1">test1</string>
   <string name="menu_import"
     translation_description="In the menu, to import tracks from the SD card.
 
