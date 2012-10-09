@@ -34,4 +34,9 @@ public abstract class FormatterUnits {
   {
     return null;
   }
+  
+  public String getSpeedText(Context paramContext)
+  {
+    return null;
+  }
 }

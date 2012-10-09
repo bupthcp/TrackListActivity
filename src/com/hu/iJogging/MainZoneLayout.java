@@ -77,14 +77,20 @@ public class MainZoneLayout extends LinearLayout{
   private void setTitle(){
     switch(mType){
       case 1:
-        setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceText(this.mOwner));
+        setOneLineText(R.drawable.dashboard_duration_icon, R.string.strDuration);
         setValue("00:00");
         break;
       case 2:
+        setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceText(this.mOwner));
+        setValue("00.00");
         break;
       case 3:
+        setTwoLinesText(R.drawable.dashboard_avgspeed_icon, this.mOwner.getString(R.string.strAverageSpeed), mFormatterUnits.getSpeedText(this.mOwner));
+        setValue("00.0");
         break;
       case 4:
+        setTwoLinesText(R.drawable.dashboard_speed_icon, this.mOwner.getString(R.string.strSpeed), mFormatterUnits.getSpeedText(this.mOwner));
+        setValue("00.0");
         break;
       default:
         break;
@@ -107,5 +113,10 @@ public class MainZoneLayout extends LinearLayout{
       this.mUnit.setText(paramString2);
       this.mUnit.setVisibility(View.VISIBLE);
     }
+  }
+  
+  private void setOneLineText(int paramInt1, int paramInt2)
+  {
+    setTwoLinesText(paramInt1, this.mOwner.getString(paramInt2), "");
   }
 }

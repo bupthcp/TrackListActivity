@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 public class SportMainButton extends LinearLayout{
   private static final int layout = R.layout.sport_main_button;
   private ImageView iTriangle;
+  private ImageView iSport;
   private Context mContext;
   private TextMeasuredView tvSport;
 
@@ -25,9 +26,12 @@ public class SportMainButton extends LinearLayout{
   private void inflateAndConfigure(Context paramContext)
   {
     ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(layout, this);
-    this.tvSport = ((TextMeasuredView)findViewById(R.id.tvWoSport));
-    this.iTriangle = ((ImageView)findViewById(R.id.ImageDbMoreTriangle));
+    this.tvSport = (TextMeasuredView)findViewById(R.id.tvWoSport);
+    this.iTriangle = (ImageView)findViewById(R.id.ImageDbMoreTriangle);
     this.iTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
+    this.iSport = (ImageView)findViewById(R.id.ImageButtonSport);
+    iSport.setImageResource(R.drawable.lvt_sport0);
+    tvSport.setText(R.string.strRunning);
     setClickable(true);
     setColors();
   }

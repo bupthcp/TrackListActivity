@@ -3010,4 +3010,10 @@ Tap to log in, add your friends and follow their sports activities in real-time.
   <string name="strDistance">Distance</string>
   <string name="strKilometerShortUnit">km</string>
   <string name="strDistanceFormat">km</string>
+  <string name="strDuration">Duration</string>
+  <string name="strKmH">km/h</string>
+  <string name="strSpeed">Speed</string>
+  <string name="strAverageSpeed">Avg. Speed</string>
+  <string name="strRunning">Running</string>
+  <string name="strBasicWorkout">Basic Workout</string>
 </resources>

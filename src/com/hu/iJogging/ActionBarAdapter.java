@@ -2,7 +2,6 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.common.UIConfig;
 
 import android.app.Activity;
 import android.content.Context;
@@ -56,7 +55,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     sRoutesSpinnerItem = new SpinnerItem(R.string.strRoutes, R.drawable.ab_icon_routes, null, true, 27);
     sFriendsSpinnerItem = new SpinnerItem(R.string.strFriends, R.drawable.ab_icon_friends, null, false, -1);
     sSettingsSpinnerItem = new SpinnerItem(R.string.strSettingsTab, R.drawable.ab_icon_settings, null, false, -1);
-    int i = UIConfig.TitleConfig.titleBannerImageId;
+    int i = R.drawable.ab_icon_home;
     SpinnerItem[] arrayOfSpinnerItem1 = new SpinnerItem[7];
     arrayOfSpinnerItem1[0] = sHiddenSpinnerItem;
     arrayOfSpinnerItem1[1] = sEndomondoSpinnerItem;
@@ -65,7 +64,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     arrayOfSpinnerItem1[4] = sRoutesSpinnerItem;
     arrayOfSpinnerItem1[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem1[6] = sSettingsSpinnerItem;
-    sEndomondoActivitySpinnerConfig = new SpinnerConfig(8, 0, 0, i, arrayOfSpinnerItem1);
+    sEndomondoActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strWorkoutTab, View.VISIBLE, i, arrayOfSpinnerItem1);
     int j = R.string.strHistoryTab;
     int k = R.drawable.ab_icon_history_white;
     SpinnerItem[] arrayOfSpinnerItem2 = new SpinnerItem[7];
@@ -76,7 +75,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     arrayOfSpinnerItem2[4] = sRoutesSpinnerItem;
     arrayOfSpinnerItem2[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem2[6] = sSettingsSpinnerItem;
-    sHistoryActivitySpinnerConfig = new SpinnerConfig(0, j, 0, k, arrayOfSpinnerItem2);
+    sHistoryActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, j, View.VISIBLE, k, arrayOfSpinnerItem2);
     int m = R.string.strNewsFeed;
     int n = R.drawable.ab_icon_newsfeed_white;
     SpinnerItem[] arrayOfSpinnerItem3 = new SpinnerItem[7];
@@ -87,7 +86,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     arrayOfSpinnerItem3[4] = sRoutesSpinnerItem;
     arrayOfSpinnerItem3[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem3[6] = sSettingsSpinnerItem;
-    sNewsFeedActivitySpinnerConfig = new SpinnerConfig(0, m, 0, n, arrayOfSpinnerItem3);
+    sNewsFeedActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, m, View.VISIBLE, n, arrayOfSpinnerItem3);
     int i1 = R.string.strRoutes;
     int i2 = R.drawable.ab_icon_routes_white;
     SpinnerItem[] arrayOfSpinnerItem4 = new SpinnerItem[7];
@@ -98,7 +97,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     arrayOfSpinnerItem4[4] = sRoutesSpinnerItem;
     arrayOfSpinnerItem4[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem4[6] = sSettingsSpinnerItem;
-    sRoutesActivitySpinnerConfig = new SpinnerConfig(0, i1, 0, i2, arrayOfSpinnerItem4);
+    sRoutesActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, i1, View.VISIBLE, i2, arrayOfSpinnerItem4);
     int i3 = R.string.strFriends;
     int i4 = R.drawable.ab_icon_friends_white;
     SpinnerItem[] arrayOfSpinnerItem5 = new SpinnerItem[7];
@@ -109,7 +108,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     arrayOfSpinnerItem5[4] = sRoutesSpinnerItem;
     arrayOfSpinnerItem5[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem5[6] = sSettingsSpinnerItem;
-    sFriendsActivitySpinnerConfig = new SpinnerConfig(0, i3, 0, i4, arrayOfSpinnerItem5);
+    sFriendsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, i3, View.VISIBLE, i4, arrayOfSpinnerItem5);
     int i5 = R.string.strSettingsTab;
     int i6 = R.drawable.ab_icon_settings_white;
     SpinnerItem[] arrayOfSpinnerItem6 = new SpinnerItem[7];
@@ -120,7 +119,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
     arrayOfSpinnerItem6[4] = sRoutesSpinnerItem;
     arrayOfSpinnerItem6[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem6[6] = sSettingsSpinnerItem;
-    sSettingsActivitySpinnerConfig = new SpinnerConfig(0, i5, 0, i6, arrayOfSpinnerItem6);
+    sSettingsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, i5, View.VISIBLE, i6, arrayOfSpinnerItem6);
   }
   
   public ActionBarAdapter(Context paramContext, int paramInt)
@@ -202,11 +201,11 @@ public class ActionBarAdapter implements SpinnerAdapter{
       TextView localTextView1 = (TextView)localView.findViewById(R.id.ActionBarItemText1);
       localTextView1.setTypeface(this.mRobotoRegular);
       localTextView1.setVisibility(this.mSpinnerConfig.mTextViewVisibility);
-      if (this.mSpinnerConfig.mTextViewVisibility == 0)
+      if (this.mSpinnerConfig.mTextViewVisibility == View.VISIBLE)
         localTextView1.setText(this.mSpinnerConfig.mTextViewTextId);
       ImageView localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage1);
       localImageView.setVisibility(this.mSpinnerConfig.mImageViewVisibility);
-      if (this.mSpinnerConfig.mImageViewVisibility == 0)
+      if (this.mSpinnerConfig.mImageViewVisibility == View.VISIBLE)
         localImageView.setImageResource(this.mSpinnerConfig.mImageViewImageId);
       TextView localTextView2 = (TextView)localView.findViewById(R.id.ActionBarItemImage1Text);
       localTextView2.setVisibility(View.GONE);
