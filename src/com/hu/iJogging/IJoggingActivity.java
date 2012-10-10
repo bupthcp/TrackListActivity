@@ -2,14 +2,15 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.fragments.TrainingDetailFragment;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 public class IJoggingActivity extends SherlockFragmentActivity{
@@ -34,12 +35,18 @@ public class IJoggingActivity extends SherlockFragmentActivity{
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    MyTracksApplication app = (MyTracksApplication)this.getApplication();
-    if (app.mBMapMan == null) {
-        app.mBMapMan = new BMapManager(getApplication());
-        app.mBMapMan.init(app.mStrKey, new MyTracksApplication.MyGeneralListener());
+    if(null != mActionBar){
+      mActionBar.setSelectedNavigationItem(0);
     }
-    app.mBMapMan.start();
+    setupActionBar();
+    this.setContentView(R.layout.i_jogging_main);
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
+    ft.add(R.id.fragment_container, trainingDetailFragment);
+    ft.commit();
+
+    //≥ı ºªØbaiduµÿÕº
+    MyTracksApplication app = (MyTracksApplication)this.getApplication();
     mOffline = new MKOfflineMap();
     mOffline.init(app.mBMapMan, new MKOfflineMapListener() {
       @Override
@@ -66,10 +73,5 @@ public class IJoggingActivity extends SherlockFragmentActivity{
   @Override
   protected void onResume() {
     super.onResume();
-    if(null != mActionBar){
-      mActionBar.setSelectedNavigationItem(0);
-    }
-    setupActionBar();
-    this.setContentView(R.layout.i_jogging_main);
   }
 }

@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,10 +61,8 @@ public class TrainingDetailFragment extends Fragment {
   }
 
   private void setFocus() {
-    View localView = getActivity().getLayoutInflater().inflate(R.layout.workout_splash, null);
-    mBtnMotivation = (MotivationMainButton) localView.findViewById(R.id.MotivationMainButton);
-    btnSport = (LinearLayout) localView.findViewById(R.id.SportMainButton);
-    getActivity().setContentView(localView);
+    mBtnMotivation = (MotivationMainButton) mMeasureView.findViewById(R.id.MotivationMainButton);
+    btnSport = (LinearLayout) mMeasureView.findViewById(R.id.SportMainButton);
     this.ivSport = ((ImageView) this.mMeasureView.findViewById(R.id.ImageButtonSport));
     this.ivSport.setVisibility(0);
     int i = getActivity().getResources().getColor(R.color.EndoGreen);
@@ -113,6 +112,10 @@ public class TrainingDetailFragment extends Fragment {
   
   private void startMapFragment(){
     MapFragment mapFragment = new MapFragment();
-    getFragmentManager().beginTransaction().add(android.R.id.content, mapFragment).commit();
+    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    ft.add(R.id.fragment_container, mapFragment);
+    ft.addToBackStack(null);
+    ft.commit();
   }
+  
 }

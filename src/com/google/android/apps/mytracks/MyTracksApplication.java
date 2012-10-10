@@ -90,6 +90,7 @@ public class MyTracksApplication extends Application {
     mBMapMan = new BMapManager(this);
     mBMapMan.init(this.mStrKey, new MyGeneralListener());
     mBMapMan.getLocationManager().setNotifyInternal(10, 5);
+    mBMapMan.start();
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }

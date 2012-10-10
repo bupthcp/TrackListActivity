@@ -3,7 +3,6 @@ package com.hu.iJogging;
 import com.actionbarsherlock.app.ActionBar;
 import com.google.android.maps.mytracks.R;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
@@ -31,7 +30,7 @@ public class ActionBarAdapter implements SpinnerAdapter{
   private static SpinnerItem sEndomondoSpinnerItem;
   private static SpinnerConfig sFriendsActivitySpinnerConfig;
   private static SpinnerItem sFriendsSpinnerItem;
-  private static SpinnerItem sHiddenSpinnerItem = new SpinnerItem(R.string.strEmptyString, 0, null, false, -1);
+  private static SpinnerItem sHiddenSpinnerItem = new SpinnerItem(R.string.strEmptyString, 0);
   private static SpinnerConfig sHistoryActivitySpinnerConfig;
   private static SpinnerItem sHistorySpinnerItem;
   private static SpinnerConfig sNewsFeedActivitySpinnerConfig;
@@ -49,12 +48,12 @@ public class ActionBarAdapter implements SpinnerAdapter{
   
   static
   {
-    sEndomondoSpinnerItem = new SpinnerItem(R.string.strWorkoutTab, R.drawable.ab_icon_home, null, false, -1);
-    sNewsFeedSpinnerItem = new SpinnerItem(R.string.strNewsFeed, R.drawable.ab_icon_newsfeed, null, false, -1);
-    sHistorySpinnerItem = new SpinnerItem(R.string.strHistoryTab, R.drawable.ab_icon_history, null, false, -1);
-    sRoutesSpinnerItem = new SpinnerItem(R.string.strRoutes, R.drawable.ab_icon_routes, null, true, 27);
-    sFriendsSpinnerItem = new SpinnerItem(R.string.strFriends, R.drawable.ab_icon_friends, null, false, -1);
-    sSettingsSpinnerItem = new SpinnerItem(R.string.strSettingsTab, R.drawable.ab_icon_settings, null, false, -1);
+    sEndomondoSpinnerItem = new SpinnerItem(R.string.strWorkoutTab, R.drawable.ab_icon_home);
+    sNewsFeedSpinnerItem = new SpinnerItem(R.string.strNewsFeed, R.drawable.ab_icon_newsfeed);
+    sHistorySpinnerItem = new SpinnerItem(R.string.strHistoryTab, R.drawable.ab_icon_history);
+    sRoutesSpinnerItem = new SpinnerItem(R.string.strRoutes, R.drawable.ab_icon_routes);
+    sFriendsSpinnerItem = new SpinnerItem(R.string.strFriends, R.drawable.ab_icon_friends);
+    sSettingsSpinnerItem = new SpinnerItem(R.string.strSettingsTab, R.drawable.ab_icon_settings);
     int i = R.drawable.ab_icon_home;
     SpinnerItem[] arrayOfSpinnerItem1 = new SpinnerItem[7];
     arrayOfSpinnerItem1[0] = sHiddenSpinnerItem;
@@ -314,19 +313,13 @@ public class ActionBarAdapter implements SpinnerAdapter{
   
   private static class SpinnerItem
   {
-    final Class<? extends Activity> mActivityClass;
-    final boolean mForResult;
     final int mIconId;
-    final int mRequestCode;
     final int mStringId;
 
-    SpinnerItem(int paramInt1, int paramInt2, Class<? extends Activity> paramClass, boolean paramBoolean, int paramInt3)
+    SpinnerItem(int paramInt1, int paramInt2)
     {
       this.mStringId = paramInt1;
       this.mIconId = paramInt2;
-      this.mActivityClass = paramClass;
-      this.mForResult = paramBoolean;
-      this.mRequestCode = paramInt3;
     }
   }
 
@@ -335,8 +328,11 @@ public class ActionBarAdapter implements SpinnerAdapter{
 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-      // TODO Auto-generated method stub
-      return false;
+      if(itemPosition == 0)
+        return false;
+      mSpinnerConfig = getSpinnerConfig(itemPosition);
+      mActivityInt = itemPosition;
+      return true;
     }
     
   }

@@ -19,6 +19,7 @@ import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.common.LocationUtility;
 
 import android.content.Intent;
 import android.location.Location;
@@ -140,11 +141,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     super.onResume();
     myLocationImageButton.setVisibility(View.VISIBLE);
     resumeTrackDataHub();
-    MapController mMapController = mapView.getController();  // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
-    GeoPoint point = new GeoPoint((int) (39.915 * 1E6),
-            (int) (116.404 * 1E6));  //用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
-    mMapController.setCenter(point);  //设置地图中心点
-    mMapController.setZoom(12);    //设置地图zoom级别
+    initMapCenter();
   }
 
   @Override
@@ -555,5 +552,16 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         mapView.getController().zoomToSpan(latitudeSpanE6, longitudeSpanE6);
       }
     }
+  }
+  
+  private void initMapCenter(){
+    Location locationTmp=LocationUtility.getInstance(getActivity()).getLastKnownLocation();
+    if(locationTmp == null)
+      return;
+    LocationUtils.setGeoInLocation(locationTmp);
+    MapController mMapController = mapView.getController();  // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
+    GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
+    mMapController.setCenter(geoPoint);  //设置地图中心点
+    mMapController.setZoom(12);    //设置地图zoom级别
   }
 }
