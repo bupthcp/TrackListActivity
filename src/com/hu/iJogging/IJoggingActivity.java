@@ -7,6 +7,7 @@ import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailFragment;
 
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class IJoggingActivity extends SherlockFragmentActivity{
     this.mActionBar.setDisplayShowHomeEnabled(false);
     mAdapter = new ActionBarAdapter(this);
     mActionBar.setListNavigationCallbacks(mAdapter,mAdapter.new OnNaviListener());
-    mActionBar.setSelectedNavigationItem(2);
+    mActionBar.setSelectedNavigationItem(1);
   }
 
 
@@ -67,6 +68,20 @@ public class IJoggingActivity extends SherlockFragmentActivity{
         }
       }
     });
+  }
+  
+  public void switchToTrackListFragment(){
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    TrackListFragment trackListFragment = new TrackListFragment();
+    ft.replace(R.id.fragment_container, trackListFragment);
+    ft.commit();
+  }
+  
+  public void switchToTrainingDetailFragment(){
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
+    ft.replace(R.id.fragment_container, trainingDetailFragment);
+    ft.commit();
   }
 
   

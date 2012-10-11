@@ -278,19 +278,40 @@ public class ActionBarAdapter implements SpinnerAdapter {
       this.mIconId = paramInt2;
     }
   }
+  
+  private void switchFragment(int position){
+    switch (position) {
+      case 1:
+        ((IJoggingActivity)mContext).switchToTrainingDetailFragment();
+        break;
+      case 2:
+        break;
+      case 3:
+        ((IJoggingActivity)mContext).switchToTrackListFragment();
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        break;
+      default:
+        break;
+    }
+  }
 
   
-  //这个回调函数在布局完成之后才会调用，即getView以及getDropDownView都完成后，才调用
-  //mActionBar.setSelectedNavigationItem 这个方法会出发重新布局，所以也会出发这个回调函数
+  // 这个回调函数在布局完成之后才会调用，即getView以及getDropDownView都完成后，才调用
+  // mActionBar.setSelectedNavigationItem 这个方法会出发重新布局，所以也会出发这个回调函数
   public class OnNaviListener implements ActionBar.OnNavigationListener {
 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
       if (itemPosition == 0) return false;
       mCurrentSpinner = itemPosition;
+      switchFragment(itemPosition);
       return true;
     }
-
   }
 
 }

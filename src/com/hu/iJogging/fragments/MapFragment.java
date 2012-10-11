@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,7 +87,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map, null);
+    mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment, null);
     mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
     int i = 20;
     int j = 40;
@@ -110,7 +111,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     
     mapView.requestFocus();
     mapView.setOnTouchListener(this);
-    mapView.setBuiltInZoomControls(true);
+    mapView.setBuiltInZoomControls(false);
     myLocationImageButton = (ImageButton) mapViewContainer.findViewById(R.id.map_my_location);
     myLocationImageButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -121,6 +122,17 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     messageTextView = (TextView) mapViewContainer.findViewById(R.id.map_message);
 
     ApiAdapterFactory.getApiAdapter().invalidMenu(getActivity());
+    
+    ((Button) this.mapViewContainer.findViewById(R.id.ButtonDashboardCorner))
+    .setOnTouchListener(new View.OnTouchListener() {
+      public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
+        if (paramMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+           backStack();
+        }
+        return true;
+      }
+    });
+    
     return mapViewContainer;
   }
 
@@ -563,5 +575,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
     mMapController.setCenter(geoPoint);  //设置地图中心点
     mMapController.setZoom(12);    //设置地图zoom级别
+  }
+  
+  private void backStack(){
+    getFragmentManager().popBackStack();
   }
 }
