@@ -26,9 +26,9 @@ public class IJoggingActivity extends SherlockFragmentActivity{
     this.mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     this.mActionBar.setDisplayShowTitleEnabled(false);
     this.mActionBar.setDisplayShowHomeEnabled(false);
-    mAdapter = new ActionBarAdapter(this, 1);
-    mAdapter.new OnNaviListener();
+    mAdapter = new ActionBarAdapter(this);
     mActionBar.setListNavigationCallbacks(mAdapter,mAdapter.new OnNaviListener());
+    mActionBar.setSelectedNavigationItem(2);
   }
 
 

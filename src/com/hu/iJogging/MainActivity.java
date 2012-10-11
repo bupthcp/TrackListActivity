@@ -16,7 +16,7 @@ public class MainActivity extends SherlockFragmentActivity{
     this.mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     this.mActionBar.setDisplayShowTitleEnabled(false);
     this.mActionBar.setDisplayShowHomeEnabled(false);
-    mAdapter = new ActionBarAdapter(this, 1);
+    mAdapter = new ActionBarAdapter(this);
     mAdapter.new OnNaviListener();
     mActionBar.setListNavigationCallbacks(mAdapter,mAdapter.new OnNaviListener());
   }

@@ -17,15 +17,8 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class ActionBarAdapter implements SpinnerAdapter{
-  public static final int ENDOMONDO_ACTIVITY = 1;
-  public static final int FRIENDS_ACTIVITY = 5;
-  public static final int HIDDEN_POS = 0;
-  public static final int HISTORY_ACTIVITY = 3;
-  public static final int NEWSFEED_ACTIVITY = 2;
-  public static final int ROUTES_ACTIVITY = 4;
-  public static final int SETTINGS_ACTIVITY = 6;
-  public static final int SETTINGS_AUDIO_ACTIVITY = 7;
+public class ActionBarAdapter implements SpinnerAdapter {
+  private static SpinnerConfig sInitialSpinnerConfig;
   private static SpinnerConfig sEndomondoActivitySpinnerConfig;
   private static SpinnerItem sEndomondoSpinnerItem;
   private static SpinnerConfig sFriendsActivitySpinnerConfig;
@@ -39,100 +32,66 @@ public class ActionBarAdapter implements SpinnerAdapter{
   private static SpinnerItem sRoutesSpinnerItem;
   private static SpinnerConfig sSettingsActivitySpinnerConfig;
   private static SpinnerItem sSettingsSpinnerItem;
-  private int mActivityInt;
+
+  private static final int mSpinnerLength = 7;
+  //mCurrentSpinner 用于记录spinner的下拉菜单中哪个item被选中，以便
+  //在下次下拉菜单出现时将此菜单反色
+  private int mCurrentSpinner = 1;
   private Context mContext = null;
   private LayoutInflater mInflater = null;
   private Typeface mRobotoRegular;
   private SpinnerConfig mSpinnerConfig;
-  
-  
-  static
-  {
+
+  static {
     sEndomondoSpinnerItem = new SpinnerItem(R.string.strWorkoutTab, R.drawable.ab_icon_home);
     sNewsFeedSpinnerItem = new SpinnerItem(R.string.strNewsFeed, R.drawable.ab_icon_newsfeed);
     sHistorySpinnerItem = new SpinnerItem(R.string.strHistoryTab, R.drawable.ab_icon_history);
     sRoutesSpinnerItem = new SpinnerItem(R.string.strRoutes, R.drawable.ab_icon_routes);
     sFriendsSpinnerItem = new SpinnerItem(R.string.strFriends, R.drawable.ab_icon_friends);
     sSettingsSpinnerItem = new SpinnerItem(R.string.strSettingsTab, R.drawable.ab_icon_settings);
-    int i = R.drawable.ab_icon_home;
-    SpinnerItem[] arrayOfSpinnerItem1 = new SpinnerItem[7];
-    arrayOfSpinnerItem1[0] = sHiddenSpinnerItem;
-    arrayOfSpinnerItem1[1] = sEndomondoSpinnerItem;
-    arrayOfSpinnerItem1[2] = sNewsFeedSpinnerItem;
-    arrayOfSpinnerItem1[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem1[4] = sRoutesSpinnerItem;
-    arrayOfSpinnerItem1[5] = sFriendsSpinnerItem;
-    arrayOfSpinnerItem1[6] = sSettingsSpinnerItem;
-    sEndomondoActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strWorkoutTab, View.VISIBLE, i, arrayOfSpinnerItem1);
-    int j = R.string.strHistoryTab;
-    int k = R.drawable.ab_icon_history_white;
-    SpinnerItem[] arrayOfSpinnerItem2 = new SpinnerItem[7];
-    arrayOfSpinnerItem2[0] = sHiddenSpinnerItem;
-    arrayOfSpinnerItem2[1] = sEndomondoSpinnerItem;
-    arrayOfSpinnerItem2[2] = sNewsFeedSpinnerItem;
-    arrayOfSpinnerItem2[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem2[4] = sRoutesSpinnerItem;
-    arrayOfSpinnerItem2[5] = sFriendsSpinnerItem;
-    arrayOfSpinnerItem2[6] = sSettingsSpinnerItem;
-    sHistoryActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, j, View.VISIBLE, k, arrayOfSpinnerItem2);
-    int m = R.string.strNewsFeed;
-    int n = R.drawable.ab_icon_newsfeed_white;
-    SpinnerItem[] arrayOfSpinnerItem3 = new SpinnerItem[7];
-    arrayOfSpinnerItem3[0] = sHiddenSpinnerItem;
-    arrayOfSpinnerItem3[1] = sEndomondoSpinnerItem;
-    arrayOfSpinnerItem3[2] = sNewsFeedSpinnerItem;
-    arrayOfSpinnerItem3[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem3[4] = sRoutesSpinnerItem;
-    arrayOfSpinnerItem3[5] = sFriendsSpinnerItem;
-    arrayOfSpinnerItem3[6] = sSettingsSpinnerItem;
-    sNewsFeedActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, m, View.VISIBLE, n, arrayOfSpinnerItem3);
-    int i1 = R.string.strRoutes;
-    int i2 = R.drawable.ab_icon_routes_white;
-    SpinnerItem[] arrayOfSpinnerItem4 = new SpinnerItem[7];
-    arrayOfSpinnerItem4[0] = sHiddenSpinnerItem;
-    arrayOfSpinnerItem4[1] = sEndomondoSpinnerItem;
-    arrayOfSpinnerItem4[2] = sNewsFeedSpinnerItem;
-    arrayOfSpinnerItem4[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem4[4] = sRoutesSpinnerItem;
-    arrayOfSpinnerItem4[5] = sFriendsSpinnerItem;
-    arrayOfSpinnerItem4[6] = sSettingsSpinnerItem;
-    sRoutesActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, i1, View.VISIBLE, i2, arrayOfSpinnerItem4);
-    int i3 = R.string.strFriends;
-    int i4 = R.drawable.ab_icon_friends_white;
-    SpinnerItem[] arrayOfSpinnerItem5 = new SpinnerItem[7];
-    arrayOfSpinnerItem5[0] = sHiddenSpinnerItem;
-    arrayOfSpinnerItem5[1] = sEndomondoSpinnerItem;
-    arrayOfSpinnerItem5[2] = sNewsFeedSpinnerItem;
-    arrayOfSpinnerItem5[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem5[4] = sRoutesSpinnerItem;
-    arrayOfSpinnerItem5[5] = sFriendsSpinnerItem;
-    arrayOfSpinnerItem5[6] = sSettingsSpinnerItem;
-    sFriendsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, i3, View.VISIBLE, i4, arrayOfSpinnerItem5);
-    int i5 = R.string.strSettingsTab;
-    int i6 = R.drawable.ab_icon_settings_white;
-    SpinnerItem[] arrayOfSpinnerItem6 = new SpinnerItem[7];
-    arrayOfSpinnerItem6[0] = sHiddenSpinnerItem;
-    arrayOfSpinnerItem6[1] = sEndomondoSpinnerItem;
-    arrayOfSpinnerItem6[2] = sNewsFeedSpinnerItem;
-    arrayOfSpinnerItem6[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem6[4] = sRoutesSpinnerItem;
-    arrayOfSpinnerItem6[5] = sFriendsSpinnerItem;
-    arrayOfSpinnerItem6[6] = sSettingsSpinnerItem;
-    sSettingsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, i5, View.VISIBLE, i6, arrayOfSpinnerItem6);
+
+    SpinnerItem[] arrayOfSpinnerItem = new SpinnerItem[mSpinnerLength];
+    arrayOfSpinnerItem[0] = sHiddenSpinnerItem;  //这个item是用不到的，只是为了使数组下标与position一致而做的填充
+    arrayOfSpinnerItem[1] = sEndomondoSpinnerItem;
+    arrayOfSpinnerItem[2] = sNewsFeedSpinnerItem;
+    arrayOfSpinnerItem[3] = sHistorySpinnerItem;
+    arrayOfSpinnerItem[4] = sRoutesSpinnerItem;
+    arrayOfSpinnerItem[5] = sFriendsSpinnerItem;
+    arrayOfSpinnerItem[6] = sSettingsSpinnerItem;
+    sInitialSpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strWorkoutTab, View.VISIBLE,
+        R.drawable.ab_icon_home_white, arrayOfSpinnerItem);
+
+    sEndomondoActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strWorkoutTab,
+        View.VISIBLE, R.drawable.ab_icon_home_white, arrayOfSpinnerItem);
+
+    sHistoryActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strHistoryTab,
+        View.VISIBLE, R.drawable.ab_icon_history_white, arrayOfSpinnerItem);
+
+    sNewsFeedActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strNewsFeed,
+        View.VISIBLE, R.drawable.ab_icon_newsfeed_white, arrayOfSpinnerItem);
+
+    sRoutesActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strRoutes,
+        View.VISIBLE, R.drawable.ab_icon_routes_white, arrayOfSpinnerItem);
+
+    sFriendsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strFriends,
+        View.VISIBLE, R.drawable.ab_icon_friends_white, arrayOfSpinnerItem);
+
+    sSettingsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strSettingsTab,
+        View.VISIBLE, R.drawable.ab_icon_settings_white, arrayOfSpinnerItem);
   }
-  
-  public ActionBarAdapter(Context paramContext, int paramInt)
-  {
+
+  public ActionBarAdapter(Context paramContext) {
     this.mContext = paramContext;
-    this.mInflater = ((LayoutInflater)paramContext.getSystemService("layout_inflater"));
-    this.mRobotoRegular = Typeface.createFromAsset(this.mContext.getAssets(), "fonts/Roboto-Regular.ttf");
-    this.mActivityInt = paramInt;
-    this.mSpinnerConfig = getSpinnerConfig(paramInt);
+    this.mInflater = ((LayoutInflater) paramContext.getSystemService("layout_inflater"));
+    this.mRobotoRegular = Typeface.createFromAsset(this.mContext.getAssets(),
+        "fonts/Roboto-Regular.ttf");
+    this.mSpinnerConfig = getSpinnerConfig(0);
   }
-  
-  private SpinnerConfig getSpinnerConfig(int paramInt)
-  {
-    switch(paramInt){
+
+  private SpinnerConfig getSpinnerConfig(int paramInt) {
+    switch (paramInt) {
+      case 0:
+        return sInitialSpinnerConfig;
       case 1:
         return sEndomondoActivitySpinnerConfig;
       case 2:
@@ -149,25 +108,10 @@ public class ActionBarAdapter implements SpinnerAdapter{
         return null;
     }
   }
-  
+
   @Override
   public int getCount() {
-    switch(mActivityInt){
-      case 1:
-        return sEndomondoActivitySpinnerConfig.mSpinnerItemArray.length;
-      case 2:
-        return sNewsFeedActivitySpinnerConfig.mSpinnerItemArray.length;
-      case 3:
-        return sHistoryActivitySpinnerConfig.mSpinnerItemArray.length;
-      case 4:
-        return sRoutesActivitySpinnerConfig.mSpinnerItemArray.length;
-      case 5:
-        return sFriendsActivitySpinnerConfig.mSpinnerItemArray.length;
-      case 6:
-        return sSettingsActivitySpinnerConfig.mSpinnerItemArray.length;
-      default:
-        return 0;
-    }
+    return mSpinnerLength;
   }
 
   @Override
@@ -188,33 +132,46 @@ public class ActionBarAdapter implements SpinnerAdapter{
     return 0;
   }
 
-  //这里是创建下拉菜单的标题的布局
+  // Spinner的绘制其实与绘制list是基本类似的：
+  //1. Spinner的标题处可以看做List的第0个元素，Spinner的dropdown出来的菜单可以看做
+  //List的第1个，第2个....元素。
+  //2. Spinner的绘制包括两个过程。首先会计算dropdown出来的菜单的每个item的宽度高度，
+  //这个工作由getDropDownView完成。因此在getDropDownView中对于position==0的条目是不处理
+  //的，在当前的代码中，getDropDownView会运行14次，测量高度7次，测量宽度7次。
+  //而之后需要计算Spinner的标题的宽度，这个过程可以通过打断点的方式跟踪，发现getView要
+  //运行8次，第一次getView是得到当前选中的Item的View，后面的7次则是按照顺序将7个item都
+  //走一遍
+  //3.从这个过程可以看出，Spinner的绘制其实是两块，一个是由getDropDownView绘制的内层，
+  //而getView绘制由标题宽度决定的外层，然后两层会叠放在一起。getView返回的view只有被选中的
+  //那个position的item才会生效，在标题处显示出来。
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     View localView;
-    if(convertView == null){
+    if (convertView == null) {
       localView = this.mInflater.inflate(R.layout.actionbar_item_view, null);
-    }else{
+    } else {
       localView = convertView;
     }
-      TextView localTextView1 = (TextView)localView.findViewById(R.id.ActionBarItemText1);
-      localTextView1.setTypeface(this.mRobotoRegular);
-      localTextView1.setVisibility(this.mSpinnerConfig.mTextViewVisibility);
-      if (this.mSpinnerConfig.mTextViewVisibility == View.VISIBLE)
-        localTextView1.setText(this.mSpinnerConfig.mTextViewTextId);
-      ImageView localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage1);
-      localImageView.setVisibility(this.mSpinnerConfig.mImageViewVisibility);
-      if (this.mSpinnerConfig.mImageViewVisibility == View.VISIBLE)
-        localImageView.setImageResource(this.mSpinnerConfig.mImageViewImageId);
-      TextView localTextView2 = (TextView)localView.findViewById(R.id.ActionBarItemImage1Text);
-      localTextView2.setVisibility(View.GONE);
-      if (this.mSpinnerConfig.mImageViewImageId == R.drawable.ab_icon_history_white)
-      {
-        localTextView2.setVisibility(View.VISIBLE);
-        int i = new GregorianCalendar().get(Calendar.DATE);
-        localTextView2.setText(Integer.toString(i));
-      }
-      return localView;
+    SpinnerConfig spinnerConfigTmp;
+    spinnerConfigTmp = getSpinnerConfig(position);
+
+    TextView localTextView1 = (TextView) localView.findViewById(R.id.ActionBarItemText1);
+    localTextView1.setTypeface(this.mRobotoRegular);
+    localTextView1.setVisibility(spinnerConfigTmp.mTextViewVisibility);
+    if (spinnerConfigTmp.mTextViewVisibility == View.VISIBLE)
+      localTextView1.setText(spinnerConfigTmp.mTextViewTextId);
+    ImageView localImageView = (ImageView) localView.findViewById(R.id.ActionBarItemImage1);
+    localImageView.setVisibility(spinnerConfigTmp.mImageViewVisibility);
+    if (spinnerConfigTmp.mImageViewVisibility == View.VISIBLE)
+      localImageView.setImageResource(spinnerConfigTmp.mImageViewImageId);
+    TextView localTextView2 = (TextView) localView.findViewById(R.id.ActionBarItemImage1Text);
+    localTextView2.setVisibility(View.GONE);
+    if (spinnerConfigTmp.mImageViewImageId == R.drawable.ab_icon_history_white) {
+      localTextView2.setVisibility(View.VISIBLE);
+      int i = new GregorianCalendar().get(Calendar.DATE);
+      localTextView2.setText(Integer.toString(i));
+    }
+    return localView;
   }
 
   @Override
@@ -238,53 +195,52 @@ public class ActionBarAdapter implements SpinnerAdapter{
   @Override
   public void registerDataSetObserver(DataSetObserver observer) {
     // TODO Auto-generated method stub
-    
+
   }
 
   @Override
   public void unregisterDataSetObserver(DataSetObserver observer) {
     // TODO Auto-generated method stub
-    
+
   }
 
-  //这里是创建下拉菜单的布局
+  // 这里是创建下拉菜单的布局
   @Override
   public View getDropDownView(int position, View convertView, ViewGroup parent) {
     View localView;
-    if(convertView == null){
+    if (convertView == null) {
       localView = this.mInflater.inflate(R.layout.actionbar_dropdown_item_view, null);
-    }else{
+    } else {
       localView = convertView;
     }
-    
+
     TextView localTextView1;
     TextView localTextView2;
     ImageView localImageView;
-    localTextView1 = (TextView)localView.findViewById(R.id.ActionBarItemImageText);
-    localTextView2 = (TextView)localView.findViewById(R.id.ActionBarItemText);
+    localTextView1 = (TextView) localView.findViewById(R.id.ActionBarItemImageText);
+    localTextView2 = (TextView) localView.findViewById(R.id.ActionBarItemText);
     localTextView2.setTypeface(this.mRobotoRegular);
     localTextView2.setTextColor(this.mContext.getResources().getColor(R.color.black));
-    localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage);
-    FrameLayout localFrameLayout = (FrameLayout)localView.findViewById(R.id.ActionBarItemImageLayout);
-    if(position == 0)
-    {
+    localImageView = (ImageView) localView.findViewById(R.id.ActionBarItemImage);
+    FrameLayout localFrameLayout = (FrameLayout) localView
+        .findViewById(R.id.ActionBarItemImageLayout);
+    if (position == 0) {
       localFrameLayout.setVisibility(View.GONE);
       localTextView1.setVisibility(View.GONE);
       localTextView2.setVisibility(View.GONE);
       localImageView.setVisibility(View.GONE);
-    }else{
+    } else {
       localFrameLayout.setVisibility(View.VISIBLE);
       localTextView1.setVisibility(View.GONE);
       localTextView2.setVisibility(View.VISIBLE);
       localImageView.setVisibility(View.VISIBLE);
       localTextView2.setText(this.mSpinnerConfig.mSpinnerItemArray[position].mStringId);
-      if(position == mActivityInt){
+      if (position == mCurrentSpinner) {
         localTextView2.setTextColor(this.mContext.getResources().getColor(R.color.VeryLightGrey));
       }
-      localImageView = (ImageView)localView.findViewById(R.id.ActionBarItemImage);
+      localImageView = (ImageView) localView.findViewById(R.id.ActionBarItemImage);
       localImageView.setImageResource(this.mSpinnerConfig.mSpinnerItemArray[position].mIconId);
-      if (this.mSpinnerConfig.mSpinnerItemArray[position].mIconId == R.drawable.ab_icon_history)
-      {
+      if (this.mSpinnerConfig.mSpinnerItemArray[position].mIconId == R.drawable.ab_icon_history) {
         localTextView1.setVisibility(View.VISIBLE);
         int n = new GregorianCalendar().get(Calendar.DATE);
         localTextView1.setText(Integer.toString(n));
@@ -292,17 +248,19 @@ public class ActionBarAdapter implements SpinnerAdapter{
     }
     return localView;
   }
-  
-  private static class SpinnerConfig
-  {
+
+  //SpinnerConfig保存了标题和dropdown菜单的布局资源信息
+  //paramArrayOfSpinnerItem这个数组保存的是dropdown菜单的布局资源信息
+  //剩余的4个成员变量是标题的布局资源信息
+  private static class SpinnerConfig {
     final int mImageViewImageId;
     final int mImageViewVisibility;
     final ActionBarAdapter.SpinnerItem[] mSpinnerItemArray;
     final int mTextViewTextId;
     final int mTextViewVisibility;
 
-    SpinnerConfig(int paramInt1, int paramInt2, int paramInt3, int paramInt4, ActionBarAdapter.SpinnerItem[] paramArrayOfSpinnerItem)
-    {
+    SpinnerConfig(int paramInt1, int paramInt2, int paramInt3, int paramInt4,
+        ActionBarAdapter.SpinnerItem[] paramArrayOfSpinnerItem) {
       this.mTextViewVisibility = paramInt1;
       this.mTextViewTextId = paramInt2;
       this.mImageViewVisibility = paramInt3;
@@ -310,31 +268,29 @@ public class ActionBarAdapter implements SpinnerAdapter{
       this.mSpinnerItemArray = paramArrayOfSpinnerItem;
     }
   }
-  
-  private static class SpinnerItem
-  {
+
+  private static class SpinnerItem {
     final int mIconId;
     final int mStringId;
 
-    SpinnerItem(int paramInt1, int paramInt2)
-    {
+    SpinnerItem(int paramInt1, int paramInt2) {
       this.mStringId = paramInt1;
       this.mIconId = paramInt2;
     }
   }
 
-  public class OnNaviListener implements ActionBar.OnNavigationListener
-  {
+  
+  //这个回调函数在布局完成之后才会调用，即getView以及getDropDownView都完成后，才调用
+  //mActionBar.setSelectedNavigationItem 这个方法会出发重新布局，所以也会出发这个回调函数
+  public class OnNaviListener implements ActionBar.OnNavigationListener {
 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-      if(itemPosition == 0)
-        return false;
-      mSpinnerConfig = getSpinnerConfig(itemPosition);
-      mActivityInt = itemPosition;
+      if (itemPosition == 0) return false;
+      mCurrentSpinner = itemPosition;
       return true;
     }
-    
+
   }
 
 }
