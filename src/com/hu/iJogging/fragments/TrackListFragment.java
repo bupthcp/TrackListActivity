@@ -2,12 +2,12 @@ package com.hu.iJogging.fragments;
 
 import com.google.android.apps.mytracks.content.TracksColumns;
 import com.google.android.apps.mytracks.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
-import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.apps.mytracks.util.TrackIconUtils;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.IJoggingActivity;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -17,7 +17,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,21 +24,20 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
 
   private static final String TAG = TrackListFragment.class.getSimpleName();
   
-  private TrackRecordingServiceConnection trackRecordingServiceConnection;
+
   private boolean metricUnits;
-  private long recordingTrackId;
+  
   private ListView listView;
   private View mFragmentView;
   private ResourceCursorAdapter resourceCursorAdapter;
 
   // True to start a new recording.
-  private boolean startNewRecording = false;
+  
 
   private MenuItem recordTrackMenuItem;
   private MenuItem stopRecordingMenuItem;
@@ -58,40 +56,11 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
     TracksColumns.TOTALTIME,
     TracksColumns.ICON};
   
-//Callback when the trackRecordingServiceConnection binding changes.
- private final Runnable bindChangedCallback = new Runnable() {
-   @Override
-   public void run() {
-     if (!startNewRecording) {
-       return;
-     }
 
-     ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
-     if (service == null) {
-       Log.d(TAG, "service not available to start a new recording");
-       return;
-     }
-     try {
-       recordingTrackId = service.startNewTrack();
-       startNewRecording = false;
-//       Intent intent = IntentUtils.newIntent(TrackListActivity.this, TrackDetailActivity.class)
-//           .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, recordingTrackId);
-//       startActivity(intent);
-       Toast.makeText(
-           getActivity(), R.string.track_list_record_success, Toast.LENGTH_SHORT).show();
-     } catch (Exception e) {
-       Toast.makeText(getActivity(), R.string.track_list_record_error, Toast.LENGTH_LONG)
-           .show();
-       Log.e(TAG, "Unable to start a new recording.", e);
-     }
-   }
- };
   
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    trackRecordingServiceConnection = new TrackRecordingServiceConnection(
-        getActivity(), bindChangedCallback);
   }
   
   
@@ -118,7 +87,7 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
         int totalTimeIndex = cursor.getColumnIndexOrThrow(TracksColumns.TOTALTIME);
         int iconIndex = cursor.getColumnIndex(TracksColumns.ICON);
         
-        boolean isRecording = cursor.getLong(idIndex) == recordingTrackId;
+        boolean isRecording = cursor.getLong(idIndex) == (((IJoggingActivity)getActivity()).recordingTrackId);
         String name = cursor.getString(nameIndex);
         int iconId = isRecording ? R.drawable.menu_record_track
             : TrackIconUtils.getIconDrawable(cursor.getString(iconIndex));
