@@ -87,7 +87,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment, null);
+    mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment, container,false);
     mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
     int i = 20;
     int j = 40;
@@ -171,6 +171,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     pauseTrackDataHub();
   }
 
+  //在这里实现onDestroyView是为了保证在fragment切换的
+  //时候，fragment的container是干净的，
+  //如果不加上这个清理过程，有可能会出现两个fragment重叠
+  //在一起显示的情况
   @Override
   public void onDestroyView() {
     super.onDestroyView();

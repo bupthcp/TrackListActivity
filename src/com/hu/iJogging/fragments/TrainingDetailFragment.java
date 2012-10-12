@@ -43,14 +43,32 @@ public class TrainingDetailFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     if (this.mMeasureView == null) {
-      this.mMeasureView = getMeasureView();
+      this.mMeasureView = getMeasureView(container);
     }
     setFocus();
     return mMeasureView;
   }
+  
+  //在这里实现onDestroyView是为了保证在fragment切换的
+  //时候，fragment的container是干净的，
+  //如果不加上这个清理过程，有可能会出现两个fragment重叠
+  //在一起显示的情况
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    ViewGroup parentViewGroup = (ViewGroup) mMeasureView.getParent();
+    if (parentViewGroup != null) {
+      parentViewGroup.removeView(mMeasureView);
+    }
+  }
 
-  private View getMeasureView() {
-    View localView = getActivity().getLayoutInflater().inflate(R.layout.workout_measure_view, null);
+  private View getMeasureView(ViewGroup container) {
+    //inflate的第三个参数设置为false，即不适用layout的root元素。因为laytout文件中会有root的laytout,这个时候就会与
+    //container冲突了， 会有这个错误出现The specified child already has a parent. You must call removeView() on 
+    //the child's parent first。
+    //如果要使用inflater(int id,View container)这个方法，则container需要设置为null。这个方法和
+    //inflater(int id,View container, boolean )的第三个参数为true时是等效的
+    View localView = getActivity().getLayoutInflater().inflate(R.layout.workout_measure_view, container, false);
     mBtnMotivation = (MotivationMainButton) localView.findViewById(R.id.MotivationMainButton);
     mBtnMotivation.setVisibility(View.VISIBLE);
     btnSport = (LinearLayout) localView.findViewById(R.id.SportMainButton);
@@ -113,7 +131,8 @@ public class TrainingDetailFragment extends Fragment {
   private void startMapFragment(){
     MapFragment mapFragment = new MapFragment();
     FragmentTransaction ft = getFragmentManager().beginTransaction();
-    ft.add(R.id.fragment_container, mapFragment);
+    ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,R.anim.enter_workout_map, R.anim.exit_workout_map);
+    ft.replace(R.id.fragment_container, mapFragment);
     ft.addToBackStack(null);
     ft.commit();
   }

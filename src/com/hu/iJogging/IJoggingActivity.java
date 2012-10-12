@@ -11,6 +11,7 @@ import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailFragment;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
@@ -41,6 +42,7 @@ public class IJoggingActivity extends SherlockFragmentActivity{
     }
     setupActionBar();
     this.setContentView(R.layout.i_jogging_main);
+    FragmentManager.enableDebugLogging(true);
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
     ft.add(R.id.fragment_container, trainingDetailFragment);
@@ -70,15 +72,26 @@ public class IJoggingActivity extends SherlockFragmentActivity{
     });
   }
   
+  //switch系列的方法用于在全局切换fragment，所以在切换前必须调用popBackStack
+  //将backstack中的所有fragment清理掉，否则，在切换过程中会出现重叠显示的问题
+  //这个方法也必须在commit之前调用，如果在commit之后调用，backstack会发生变化
+  //就没有办法清理干净了，会出现重叠显示的效果。
   public void switchToTrackListFragment(){
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    //这个语句的效果是将backstack内的所有tag不是null的entry全部清理，其实就是
+    //将所有的entry全部清理出去
+    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    FragmentTransaction ft = fragmentManager.beginTransaction();
     TrackListFragment trackListFragment = new TrackListFragment();
     ft.replace(R.id.fragment_container, trackListFragment);
     ft.commit();
+    
   }
   
   public void switchToTrainingDetailFragment(){
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    FragmentTransaction ft = fragmentManager.beginTransaction();
     TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
     ft.replace(R.id.fragment_container, trainingDetailFragment);
     ft.commit();
