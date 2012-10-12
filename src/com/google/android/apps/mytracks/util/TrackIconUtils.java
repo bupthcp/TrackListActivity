@@ -44,13 +44,13 @@ public class TrackIconUtils {
 
   static {
     map.put(AIRPLANE, R.drawable.track_airplane);
-    map.put(BIKE, R.drawable.track_bike);
-    map.put(BOAT, R.drawable.track_boat);
+    map.put(BIKE, R.drawable.lvt_sport1);
+    map.put(BOAT, R.drawable.lvt_sport11);
     map.put(DRIVE, R.drawable.track_drive);
-    map.put(RUN, R.drawable.track_run);
-    map.put(SKI, R.drawable.track_ski);
-    map.put(SNOW_BOARDING, R.drawable.track_snow_boarding);
-    map.put(WALK, R.drawable.track_walk);
+    map.put(RUN, R.drawable.lvt_sport0);
+    map.put(SKI, R.drawable.lvt_sport7);
+    map.put(SNOW_BOARDING, R.drawable.lvt_sport8);
+    map.put(WALK, R.drawable.lvt_sport18);
   }
 
   private static int[] airplane = new int[] {
@@ -100,12 +100,13 @@ public class TrackIconUtils {
    * 
    * @param iconValue the icon value
    */
+  //如果没有开始记录，是条空的记录的话，则设置为WALK
   public static int getIconDrawable(String iconValue) {
     if (iconValue == null || iconValue.equals("")) {
-      return R.drawable.track_walk;
+      return R.drawable.lvt_sport18;
     }
     Integer drawable = map.get(iconValue);
-    return drawable == null ? R.drawable.track_walk : drawable;
+    return drawable == null ? R.drawable.lvt_sport18 : drawable;
   }
   
   /**
