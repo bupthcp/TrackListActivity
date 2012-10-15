@@ -41,5 +41,26 @@
     <string name="strDistance">全程距离</string>
     <string name="strKilometerShortUnit">公里</string>
     <string name="strDistanceFormat">公里 </string>
+    <string name="strRunning">跑步 </string>
+    <string name="strCyclingTransport">自行车，代步</string>
+    <string name="strCyclingSport">自行车，运动 </string>
+    <string name="strMountainBiking">自行车，登山</string>
+    <string name="strSkating">溜冰 </string>
+    <string name="strRollerSkiing">直排轮</string>
+    <string name="strCrossCountrySki">越野滑雪 </string>
+    <string name="strSkiingDownhill">速降滑雪 </string>
+    <string name="strSnowboarding">单板滑雪 </string>
+    <string name="strKayaking">独木舟</string>
+    <string name="strKiteSurfing">风帆冲浪</string>
+    <string name="strRowing">划艇 </string>
+    <string name="strSailing">帆船 </string>
+    <string name="strWindsurfing">风帆</string>
+    <string name="strFitnessWalking">健走 </string>
+    <string name="strGolfing">高尔夫 </string>
+    <string name="strHiking">健行 </string>
+    <string name="strOrienteering">定向运动 </string>
+    <string name="strWalking">步行 </string>
+    <string name="strRiding">骑马 </string>
+    <string name="strSwimming">游泳 </string>
 </resources>
     

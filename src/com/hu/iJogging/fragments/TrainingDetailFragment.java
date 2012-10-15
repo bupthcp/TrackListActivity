@@ -87,7 +87,9 @@ public class TrainingDetailFragment extends Fragment {
     this.ivSport.setColorFilter(i, PorterDuff.Mode.SRC_ATOP);
     this.tvSport = ((TextMeasuredView) this.mMeasureView.findViewById(R.id.tvWoSport));
     btnSport.setOnClickListener(new View.OnClickListener() {
-      public void onClick(View paramView) {}
+      public void onClick(View paramView) {
+        startSelectSportsFragment();
+      }
     });
     this.imageGPS = ((ImageView) this.mMeasureView.findViewById(R.id.ImageViewGPS));
     this.tvGPS = ((TextView) this.mMeasureView.findViewById(R.id.TextViewGPS));
@@ -133,6 +135,15 @@ public class TrainingDetailFragment extends Fragment {
     FragmentTransaction ft = getFragmentManager().beginTransaction();
     ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,R.anim.enter_workout_map, R.anim.exit_workout_map);
     ft.replace(R.id.fragment_container, mapFragment);
+    ft.addToBackStack(null);
+    ft.commit();
+  }
+  
+  private void startSelectSportsFragment(){
+    SelectSportsFragment selectSportsFragment = new SelectSportsFragment();
+    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    ft.setCustomAnimations(R.anim.enter_bottom, R.anim.exit_bottom,R.anim.enter_bottom, R.anim.enter_bottom);
+    ft.replace(R.id.fragment_container, selectSportsFragment);
     ft.addToBackStack(null);
     ft.commit();
   }

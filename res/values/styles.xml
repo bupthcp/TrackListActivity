@@ -289,4 +289,7 @@ limitations under the License.
         <item name="android:dropDownSelector">@drawable/ab_endo__list_selectable_background</item>
         <item name="background">@drawable/ab_endo__title_selectable_background</item>
     </style>
+    <style name="list_item_text_style">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

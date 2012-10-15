@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="sports">
+    <item>@string/strRunning</item>
+    <item>@string/strCyclingTransport</item>
+    <item>@string/strCyclingSport</item>
+    <item>@string/strMountainBiking</item>
+    <item>@string/strFitnessWalking</item>
+    <item>@string/strOrienteering</item>
+    <item>@string/strWalking</item>
+  </string-array>
+</resources>

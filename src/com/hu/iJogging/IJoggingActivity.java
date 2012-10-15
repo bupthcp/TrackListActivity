@@ -36,6 +36,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
     this.mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     this.mActionBar.setDisplayShowTitleEnabled(false);
     this.mActionBar.setDisplayShowHomeEnabled(false);
+    this.mActionBar.setDisplayUseLogoEnabled(false);
     mAdapter = new ActionBarAdapter(this);
     mActionBar.setListNavigationCallbacks(mAdapter, mAdapter.new OnNaviListener());
     mActionBar.setSelectedNavigationItem(1);
@@ -47,7 +48,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
     if (null != mActionBar) {
       mActionBar.setSelectedNavigationItem(0);
     }
-    setupActionBar();
+    
     this.setContentView(R.layout.i_jogging_main);
     FragmentManager.enableDebugLogging(true);
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -109,6 +110,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
+    setupActionBar();
   }
 
   // Callback when the trackRecordingServiceConnection binding changes.

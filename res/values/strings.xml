@@ -3017,4 +3017,25 @@ Tap to log in, add your friends and follow their sports activities in real-time.
   <string name="strAverageSpeed">Avg. Speed</string>
   <string name="strRunning">Running</string>
   <string name="strBasicWorkout">Basic Workout</string>
+    <string name="strRunning">Running</string>
+    <string name="strCyclingTransport">Cycling transport</string>
+    <string name="strCyclingSport">Cycling, sport</string>
+    <string name="strMountainBiking">Mountain biking</string>
+    <string name="strSkating">Skating</string>
+    <string name="strRollerSkiing">Roller skiing</string>
+    <string name="strCrossCountrySki">Cross country ski</string>
+    <string name="strSkiingDownhill">Skiing, downhill</string>
+    <string name="strSnowboarding">Snowboarding</string>
+    <string name="strKayaking">Kayaking</string>
+    <string name="strKiteSurfing">Kite surfing</string>
+    <string name="strRowing">Rowing</string>
+    <string name="strSailing">Sailing</string>
+    <string name="strWindsurfing">Windsurfing</string>
+    <string name="strFitnessWalking">Fitness walking</string>
+    <string name="strGolfing">Golfing</string>
+    <string name="strHiking">Hiking</string>
+    <string name="strOrienteering">Orienteering</string>
+    <string name="strWalking">Walking</string>
+    <string name="strRiding">Riding</string>
+    <string name="strSwimming">Swimming</string>
 </resources>

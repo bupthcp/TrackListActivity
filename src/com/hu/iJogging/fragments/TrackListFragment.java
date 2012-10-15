@@ -5,9 +5,9 @@ import com.google.android.apps.mytracks.fragments.DeleteOneTrackDialogFragment.D
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
-import com.google.android.apps.mytracks.util.TrackIconUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.common.IconUtils;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -90,7 +90,7 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
         boolean isRecording = cursor.getLong(idIndex) == (((IJoggingActivity)getActivity()).recordingTrackId);
         String name = cursor.getString(nameIndex);
         int iconId = isRecording ? R.drawable.menu_record_track
-            : TrackIconUtils.getIconDrawable(cursor.getString(iconIndex));
+            : IconUtils.getInstance(mContext).getIconDrawable(cursor.getString(iconIndex));
         String iconContentDescription = getString(isRecording ? R.string.icon_recording
             : R.string.icon_track);
         String category = cursor.getString(categoryIndex);
