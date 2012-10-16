@@ -3038,4 +3038,5 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="strWalking">Walking</string>
     <string name="strRiding">Riding</string>
     <string name="strSwimming">Swimming</string>
+    <string name="strSelectSport">Select Sport</string>
 </resources>

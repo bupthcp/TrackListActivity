@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class SelectSportsFragment extends Fragment{
   
@@ -27,15 +28,39 @@ public class SelectSportsFragment extends Fragment{
     SelectSportsFragmentAdapter<CharSequence> adapter = SelectSportsFragmentAdapter.createFromResource(
         getActivity(), R.array.sports, R.layout.select_sports_item);
     listView.setAdapter(adapter);
-    ActionBar actionBar = ((IJoggingActivity)getActivity()).getSupportActionBar();
-    actionBar.setDisplayOptions(15);
-    actionBar.setTitle("Sport");
+    setupActionBar();
+
     return mSelectSportsFragmentView;
+  }
+  
+  private void setupActionBar(){
+    ActionBar actionBar = ((IJoggingActivity)getActivity()).getSupportActionBar();
+    //这里如果通过设置setDisplayHomeAsUpEnabled去使用actionBar自带的回退按钮
+    //是无法完成回到上一个fragment的功能的
+    //所以只能使用自定义的view去实现actionBar
+    //使用的自定义布局simple_action_bar_title是从abs_action_bar_title_item.xml剥离出来的
+    //这个是sherlock的title的布局
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    actionBar.setDisplayShowCustomEnabled(true);
+    actionBar.setCustomView(R.layout.actionbar_cunstom_simple);
+    View customView = actionBar.getCustomView();
+    TextView tv = (TextView)customView.findViewById(R.id.simple_action_bar_title);
+    tv.setText(R.string.strSelectSport);
+    
+    View iv = customView.findViewById(R.id.icon_back);
+    iv.setOnClickListener(new View.OnClickListener(){
+      @Override
+      public void onClick(View v) {
+        getFragmentManager().popBackStack();
+      }    
+    });
   }
   
   
   @Override
   public void onDestroyView() {
+    ((IJoggingActivity)getActivity()).setupActionBar();
+
     super.onDestroyView();
     ViewGroup parentViewGroup = (ViewGroup) mSelectSportsFragmentView.getParent();
     if (parentViewGroup != null) {

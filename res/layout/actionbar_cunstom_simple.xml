@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:paddingRight="16dip"
+              android:background="?attr/actionBarItemBackground"
+              android:enabled="false">
+
+    <ImageView android:id="@+id/icon_back"
+               android:src="?attr/homeAsUpIndicator"
+               android:layout_gravity="center_vertical|left"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_vertical|left"
+                  android:orientation="vertical">
+        <TextView android:id="@+id/simple_action_bar_title"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:singleLine="true"
+                  android:textColor="@color/white"
+                  android:textSize="@dimen/abs__action_bar_title_text_size"
+                  android:ellipsize="end" />
+        <TextView android:id="@+id/simple_action_bar_subtitle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="@dimen/abs__action_bar_subtitle_top_margin"
+                  android:layout_marginBottom="@dimen/abs__action_bar_subtitle_bottom_margin"
+                  android:singleLine="true"
+                  android:ellipsize="end"
+                  android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

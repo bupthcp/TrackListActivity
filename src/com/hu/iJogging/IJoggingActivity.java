@@ -31,12 +31,13 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   private boolean startNewRecording = false;
   public long recordingTrackId;
 
-  private void setupActionBar() {
+  public void setupActionBar() {
     this.mActionBar = getSupportActionBar();
     this.mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     this.mActionBar.setDisplayShowTitleEnabled(false);
     this.mActionBar.setDisplayShowHomeEnabled(false);
     this.mActionBar.setDisplayUseLogoEnabled(false);
+    this.mActionBar.setDisplayShowCustomEnabled(false);
     mAdapter = new ActionBarAdapter(this);
     mActionBar.setListNavigationCallbacks(mAdapter, mAdapter.new OnNaviListener());
     mActionBar.setSelectedNavigationItem(1);

@@ -62,5 +62,6 @@
     <string name="strWalking">步行 </string>
     <string name="strRiding">骑马 </string>
     <string name="strSwimming">游泳 </string>
+    <string name="strSelectSport">选择一种运动</string>
 </resources>
     
