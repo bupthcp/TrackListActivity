@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +29,13 @@ public class SelectSportsFragment extends Fragment{
     SelectSportsFragmentAdapter<CharSequence> adapter = SelectSportsFragmentAdapter.createFromResource(
         getActivity(), R.array.sports, R.layout.select_sports_item);
     listView.setAdapter(adapter);
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+      @Override
+      public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        TextView tv=(TextView)arg1.findViewById(R.id.sport_description);
+        ((IJoggingActivity)getActivity()).currentSport= (String) tv.getText();
+        getFragmentManager().popBackStack();
+      }});
     setupActionBar();
 
     return mSelectSportsFragmentView;

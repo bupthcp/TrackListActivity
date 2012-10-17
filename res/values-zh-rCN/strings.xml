@@ -63,5 +63,17 @@
     <string name="strRiding">骑马 </string>
     <string name="strSwimming">游泳 </string>
     <string name="strSelectSport">选择一种运动</string>
+    <string name="strDuration">全程时间</string>
+   <string name="strKmH">公里/时</string>
+   <string name="strAverageSpeed">平均速度 </string>
+   <string name="strSpeed">速度 </string>
+   <string name="strRunning">跑步 </string>
+   <string name="strBasicWorkout">简单运动</string>
+   <string name="strWorkoutTab">训练详情</string>
+   <string name="strNewsFeed">新消息</string>
+   <string name="strHistoryTab">训练列表</string>
+   <string name="strRoutes">路线</string>
+   <string name="strFriends">好友</string>
+   <string name="strSettingsTab">设定</string>
 </resources>
     

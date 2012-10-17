@@ -222,6 +222,8 @@ limitations under the License.
     <activity android:name="com.google.android.apps.mytracks.settings.StatsSettingsActivity" />
     <activity android:name="com.hu.iJogging.MainActivity" />
     <activity android:name="com.hu.iJogging.IJoggingActivity" />
+    <activity android:name="com.hu.iJogging.ViewHistoryActivity" />
+    
     <!-- Services -->
     <service
       android:exported="false"

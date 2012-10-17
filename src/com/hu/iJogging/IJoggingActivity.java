@@ -6,6 +6,7 @@ import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.MyTracksApplication;
+import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.maps.mytracks.R;
@@ -23,12 +24,13 @@ public class IJoggingActivity extends SherlockFragmentActivity {
 
   private ActionBar mActionBar;
   private ActionBarAdapter mAdapter = null;
-  private WorkoutPage mWorkoutPage = null;
 
   private MKOfflineMap mOffline = null;
 
+  private TrackDataHub trackDataHub;
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private boolean startNewRecording = false;
+  public String currentSport = null;
   public long recordingTrackId;
 
   public void setupActionBar() {
@@ -40,7 +42,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
     this.mActionBar.setDisplayShowCustomEnabled(false);
     mAdapter = new ActionBarAdapter(this);
     mActionBar.setListNavigationCallbacks(mAdapter, mAdapter.new OnNaviListener());
-    mActionBar.setSelectedNavigationItem(1);
+//    mActionBar.setSelectedNavigationItem(1);
   }
 
   @Override
@@ -113,6 +115,17 @@ public class IJoggingActivity extends SherlockFragmentActivity {
     super.onResume();
     setupActionBar();
   }
+  
+  @Override
+  protected void onStart() {
+    super.onStart();
+  }
+  
+  @Override
+  protected void onStop() {
+    super.onStop();
+  }
+  
 
   // Callback when the trackRecordingServiceConnection binding changes.
   private final Runnable bindChangedCallback = new Runnable() {

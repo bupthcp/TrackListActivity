@@ -1,15 +1,20 @@
 package com.hu.iJogging.fragments;
 
+import com.google.android.apps.mytracks.TrackDetailActivity;
 import com.google.android.apps.mytracks.content.TracksColumns;
 import com.google.android.apps.mytracks.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
+import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.IconUtils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +23,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,16 +39,10 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
   private ListView listView;
   private View mFragmentView;
   private ResourceCursorAdapter resourceCursorAdapter;
+  private IJoggingActivity mActivity;
 
   // True to start a new recording.
   
-
-  private MenuItem recordTrackMenuItem;
-  private MenuItem stopRecordingMenuItem;
-  private MenuItem searchMenuItem;
-  private MenuItem importMenuItem;
-  private MenuItem saveAllMenuItem;
-  private MenuItem deleteAllMenuItem;
   
   private static final String[] PROJECTION = new String[] {
     TracksColumns._ID,
@@ -59,6 +57,13 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
 
   
   @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    mActivity = (IJoggingActivity)activity;
+  }
+
+
+  @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
   }
@@ -72,7 +77,9 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
     listView.setOnItemClickListener(new OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent intent = IntentUtils.newIntent(mActivity, ViewHistoryActivity.class)
+            .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, id);
+        startActivity(intent);
       }
     });
     resourceCursorAdapter = new ResourceCursorAdapter(getActivity(), R.layout.list_item, null, 0) {

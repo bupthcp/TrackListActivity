@@ -1,6 +1,7 @@
 package com.hu.iJogging;
 
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.common.IconUtils;
 import com.hu.iJogging.common.UIConfig;
 
 import android.content.Context;
@@ -34,6 +35,21 @@ public class SportMainButton extends LinearLayout{
     tvSport.setText(R.string.strRunning);
     setClickable(true);
     setColors();
+  }
+  
+  public void setSport(String sport){
+    if(sport != null){
+      tvSport.setText(sport);
+    }else{
+      sport = mContext.getString(R.string.strRunning);
+      tvSport.setText(sport);
+    }
+    int iconId = IconUtils.getInstance(mContext).getIconDrawable(sport);
+    if(iconId>0){
+      iSport.setImageResource(iconId);
+    }else{
+      iSport.setImageResource(R.drawable.lvt_sport0);
+    }
   }
 
   private void setColors()

@@ -521,7 +521,7 @@ public class MapFragment extends Fragment
    * Updates the current location and centers it if necessary.
    */
   private void updateCurrentLocation() {
-    if (mapOverlay == null || mapView == null) {
+    if (mapOverlay == null || mapView == null || currentLocation == null) {
       return;
     }
 

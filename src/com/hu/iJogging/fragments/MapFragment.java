@@ -19,8 +19,11 @@ import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.LocationUtility;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -45,6 +48,8 @@ import java.util.List;
 public class MapFragment extends Fragment
 implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public static final String MAP_FRAGMENT_TAG = "mapFragment";
+  Activity mActivity;
+  Boolean isViewHistory = false;
   
   private Handler mapFragmentHandler= new Handler();
   
@@ -77,6 +82,17 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private MapOverlay mapOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
+  
+  @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if(activity instanceof IJoggingActivity){
+      isViewHistory = false;
+    }else if(activity instanceof ViewHistoryActivity){
+      isViewHistory = true;
+    }
+    mActivity = activity;
+  }
 
   @Override
   public void onCreate(Bundle bundle) {
@@ -287,6 +303,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public void onProviderStateChange(ProviderState state) {
     final int messageId;
     final boolean isGpsDisabled;
+    //如果是查看界面，则不需要显示gps的警告信息
+    if(isViewHistory)
+      return;
     switch (state) {
       case DISABLED:
         messageId = R.string.gps_need_to_enable;
@@ -437,12 +456,22 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    */
   private synchronized void resumeTrackDataHub() {
     trackDataHub = ((MyTracksApplication) getActivity().getApplication()).getTrackDataHub();
-    trackDataHub.registerTrackDataListener(this, EnumSet.of(
-        ListenerDataType.SELECTED_TRACK_CHANGED,
-        ListenerDataType.WAYPOINT_UPDATES,
-        ListenerDataType.POINT_UPDATES,
-        ListenerDataType.LOCATION_UPDATES,
-        ListenerDataType.COMPASS_UPDATES));
+    //如果是查看界面，不需要启动gps信息，所以就不用注册location相关的listener了，
+    //也就不会触发gps
+    if(isViewHistory){
+      trackDataHub.registerTrackDataListener(this, EnumSet.of(
+          ListenerDataType.SELECTED_TRACK_CHANGED,
+          ListenerDataType.WAYPOINT_UPDATES,
+          ListenerDataType.POINT_UPDATES,
+          ListenerDataType.COMPASS_UPDATES));
+    }else{
+      trackDataHub.registerTrackDataListener(this, EnumSet.of(
+          ListenerDataType.SELECTED_TRACK_CHANGED,
+          ListenerDataType.WAYPOINT_UPDATES,
+          ListenerDataType.POINT_UPDATES,
+          ListenerDataType.LOCATION_UPDATES,
+          ListenerDataType.COMPASS_UPDATES));
+    }
   }
   
   /**

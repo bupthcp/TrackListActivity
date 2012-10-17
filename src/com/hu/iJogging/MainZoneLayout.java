@@ -17,6 +17,10 @@ public class MainZoneLayout extends LinearLayout{
   private Activity mOwner;
   private Typeface mRobotoLight;
   private Typeface mRobotoRegular;
+  public static final int TYPE_DURATION = 1;
+  public static final int TYPE_DISTANCE = 2;
+  public static final int TYPE_AVERAGE_SPEED = 3;
+  public static final int TYPE_SPEED = 4;
   
   private TextMeasuredView mTitle;
   private ImageView mTitleIcon;
@@ -71,26 +75,46 @@ public class MainZoneLayout extends LinearLayout{
     this.mUnit.setTypeface(this.mRobotoLight);
     this.mTriangle = ((ImageView)localLinearLayout.findViewById(R.id.ImageDbMoreTriangle));
     this.mTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
-    setTitle();
+    setTitle(null);
   }
   
-  private void setTitle(){
+  public void setTitle(String titleStr){
     switch(mType){
-      case 1:
+      case TYPE_DURATION:
         setOneLineText(R.drawable.dashboard_duration_icon, R.string.strDuration);
-        setValue("00:00");
+        if(null == titleStr){
+          setValue("00:00");
+        }
+        else{
+          setValue(titleStr);
+        }
         break;
-      case 2:
+      case TYPE_DISTANCE:
         setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceText(this.mOwner));
-        setValue("00.00");
+        if(null == titleStr){
+          setValue("00.00");
+        }
+        else{
+          setValue(titleStr);
+        }
         break;
-      case 3:
+      case TYPE_AVERAGE_SPEED:
         setTwoLinesText(R.drawable.dashboard_avgspeed_icon, this.mOwner.getString(R.string.strAverageSpeed), mFormatterUnits.getSpeedText(this.mOwner));
-        setValue("00.0");
+        if(null == titleStr){
+          setValue("00.0");
+        }
+        else{
+          setValue(titleStr);
+        }
         break;
-      case 4:
+      case TYPE_SPEED:
         setTwoLinesText(R.drawable.dashboard_speed_icon, this.mOwner.getString(R.string.strSpeed), mFormatterUnits.getSpeedText(this.mOwner));
-        setValue("00.0");
+        if(null == titleStr){
+          setValue("00.0");
+        }
+        else{
+          setValue(titleStr);
+        }
         break;
       default:
         break;
