@@ -1,7 +1,18 @@
 package com.hu.iJogging.fragments;
 
+import com.google.android.apps.mytracks.MyTracksApplication;
+import com.google.android.apps.mytracks.content.Track;
+import com.google.android.apps.mytracks.content.TrackDataHub;
+import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
+import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.TracksColumns;
+import com.google.android.apps.mytracks.content.Waypoint;
+import com.google.android.apps.mytracks.services.ITrackRecordingService;
+import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
+import com.google.android.apps.mytracks.stats.TripStatistics;
+import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
+import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.MainZoneLayout;
@@ -14,6 +25,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,6 +33,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,10 +42,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-public class TrainingDetailFragment extends Fragment {
+import android.widget.Toast;
+
+import java.util.EnumSet;
+public class TrainingDetailFragment extends Fragment implements TrackDataListener {
   View mMeasureView = null;
-  private static MotivationMainButton mBtnMotivation;
-  private static View btnSport;
+  private MotivationMainButton mBtnMotivation;
+  private View btnSport;
+  private View buttonCountdownStop;
+  private Button btnStart;
   ImageView btnMusic;
   ImageView imageGPS;
   ImageView ivSport;
@@ -48,10 +66,30 @@ public class TrainingDetailFragment extends Fragment {
   MainZoneLayout mMainZone3;
   MainZoneLayout mMainZone4;
   
-  String totalTime;
-  String totalDistance;
-  String averageSpeed;
-  String maxSpeed;
+  private TrackDataHub trackDataHub;
+  private TrackRecordingServiceConnection trackRecordingServiceConnection;
+  private boolean startNewRecording = false;
+  
+  
+  private UiUpdateThread uiUpdateThread;
+
+  // The start time of the current track.
+  private long startTime = -1L;
+
+  private Location lastLocation = null;
+  private TripStatistics lastTripStatistics = null;
+  
+  // A runnable to update the total time field.
+  private final Runnable updateTotalTime = new Runnable() {
+    public void run() {
+      if (isRecording()) {
+        setTotalTime(System.currentTimeMillis() - startTime);
+      }
+    }
+  };
+
+  
+  private String TAG = TrainingDetailFragment.class.getSimpleName();
   
   private static final String[] PROJECTION = new String[] {
     TracksColumns._ID,
@@ -81,6 +119,7 @@ public class TrainingDetailFragment extends Fragment {
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+    trackRecordingServiceConnection = new TrackRecordingServiceConnection(mActivity, bindChangedCallback);
   }
 
   @Override
@@ -95,7 +134,21 @@ public class TrainingDetailFragment extends Fragment {
   @Override
   public void onResume(){
     super.onResume();
-
+    if(!isViewHistory){
+      resumeTrackDataHub();
+    }
+  }
+  
+  @Override
+  public void onPause() {
+    super.onPause();
+    if(!isViewHistory){
+      pauseTrackDataHub();
+      if (uiUpdateThread != null) {
+        uiUpdateThread.interrupt();
+        uiUpdateThread = null;
+      }
+    }
   }
   
   //在这里实现onDestroyView是为了保证在fragment切换的
@@ -129,6 +182,37 @@ public class TrainingDetailFragment extends Fragment {
 
   private void setFocus() {
     mBtnMotivation = (MotivationMainButton) mMeasureView.findViewById(R.id.MotivationMainButton);
+    
+    buttonCountdownStop = mMeasureView.findViewById(R.id.ButtonCountdownStop);
+    if(isViewHistory){
+      buttonCountdownStop.setVisibility(View.INVISIBLE);
+    }else{
+      buttonCountdownStop.setVisibility(View.VISIBLE);
+      buttonCountdownStop.setBackgroundResource(R.drawable.dashboard_button_stop);
+      buttonCountdownStop.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          stopRecording();
+        }
+      });
+    }
+    
+    btnStart = (Button)mMeasureView.findViewById(R.id.ButtonStartPause);
+    if(isViewHistory){
+      //如果是查看界面，应该启动google地球进行播放
+    }else{
+      //如果是新训练界面，则启动记录
+      btnStart.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          startRecording();
+          pauseTrackDataHub();
+          resumeTrackDataHub();
+        }
+      });
+    }
+    
+    
     btnSport = (LinearLayout) mMeasureView.findViewById(R.id.SportMainButton);
     this.ivSport = ((ImageView) this.mMeasureView.findViewById(R.id.ImageButtonSport));
     this.ivSport.setVisibility(0);
@@ -189,26 +273,31 @@ public class TrainingDetailFragment extends Fragment {
       getActivity().getSupportLoaderManager().initLoader(0, null, new LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+          Log.d(TAG, "trackId"+((ViewHistoryActivity)mActivity).trackId);
           return new CursorLoader(getActivity(),
               TracksColumns.CONTENT_URI,
               PROJECTION,
+              TracksColumns._ID + "="+((ViewHistoryActivity)mActivity).trackId,
               null,
-              null,
-              TracksColumns._ID + "="+((ViewHistoryActivity)mActivity).trackId);
+              null);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
           cursor.moveToFirst();
           int totalTimeIndex = cursor.getColumnIndexOrThrow(TracksColumns.TOTALTIME);
-          int averageSpeedIndex = cursor.getColumnIndex(TracksColumns.AVGSPEED);
           int maxSpeedIndex = cursor.getColumnIndex(TracksColumns.MAXSPEED);
           int totalDistanceIndex = cursor.getColumnIndex(TracksColumns.TOTALDISTANCE);
-          totalTime = StringUtils.formatElapsedTime(cursor.getLong(totalTimeIndex));
-          totalDistance = StringUtils.formatDistance(
-              getActivity(), cursor.getDouble(totalDistanceIndex), metricUnits);
-          averageSpeed = StringUtils.formatSpeed(getActivity(), averageSpeedIndex, metricUnits, true);
-          maxSpeed = StringUtils.formatSpeed(getActivity(), maxSpeedIndex, metricUnits, true);
+          long totalTimeLong = cursor.getLong(totalTimeIndex);
+          String totalTime = StringUtils.formatElapsedTime(totalTimeLong);
+          double totalDistanceDouble = cursor.getDouble(totalDistanceIndex);
+          String totalDistance = StringUtils.formatDistanceWithoutUnit(
+              getActivity(), totalDistanceDouble, metricUnits);
+          //平均速度与最高速度不同，在记录运动的同时并不是即时演算的，所以数据库中没有存储，
+          //只在需要的时候才会使用总时间和总距离进行运算得出平均速度
+          double avgSpeeddouble = totalDistanceDouble / ((double) totalTimeLong / 1000.0);
+          String averageSpeed = StringUtils.formatSpeedWithoutUnit(getActivity(), avgSpeeddouble, metricUnits, true);
+          String maxSpeed = StringUtils.formatSpeedWithoutUnit(getActivity(), cursor.getLong(maxSpeedIndex), metricUnits, true);
           mMainZone1.setTitle(totalTime);
           mMainZone2.setTitle(totalDistance);
           mMainZone3.setTitle(averageSpeed);
@@ -224,6 +313,151 @@ public class TrainingDetailFragment extends Fragment {
   }
   
   
+  /**
+   * Starts a new recording.
+   */
+  public void startRecording() {
+    startNewRecording = true;
+    trackRecordingServiceConnection.startAndBind();
+
+    /*
+     * If the binding has happened, then invoke the callback to start a new
+     * recording. If the binding hasn't happened, then invoking the callback
+     * will have no effect. But when the binding occurs, the callback will get
+     * invoked.
+     */
+    bindChangedCallback.run();
+  }
+  
+  public void stopRecording(){
+    TrackRecordingServiceConnectionUtils.stop(mActivity, trackRecordingServiceConnection, false);
+  }
+
+  // Callback when the trackRecordingServiceConnection binding changes.
+  private final Runnable bindChangedCallback = new Runnable() {
+    @Override
+    public void run() {
+      if (!startNewRecording) { return; }
+
+      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
+      if (service == null) {
+        Log.d(TAG, "service not available to start a new recording");
+        return;
+      }
+      try {
+        long recordingTrackId = service.startNewTrack();
+        ((IJoggingActivity)mActivity).recordingTrackId = recordingTrackId;
+        trackDataHub.loadTrack(recordingTrackId);
+        trackDataHub.start();
+        startNewRecording = false;
+        Toast.makeText(mActivity, R.string.track_list_record_success,
+            Toast.LENGTH_SHORT).show();
+      } catch (Exception e) {
+        Toast.makeText(mActivity, R.string.track_list_record_error, Toast.LENGTH_LONG)
+            .show();
+        Log.e(TAG, "Unable to start a new recording.", e);
+      }
+    }
+  };
+  
+  /**
+   * Resumes the trackDataHub. Needs to be synchronized because trackDataHub can
+   * be accessed by multiple threads.
+   */
+  private synchronized void resumeTrackDataHub() {
+    trackDataHub = ((MyTracksApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub.registerTrackDataListener(this, EnumSet.of(
+        ListenerDataType.SELECTED_TRACK_CHANGED,
+        ListenerDataType.TRACK_UPDATES,
+        ListenerDataType.LOCATION_UPDATES,
+        ListenerDataType.DISPLAY_PREFERENCES));
+  }
+
+  /**
+   * Pauses the trackDataHub. Needs to be synchronized because trackDataHub can
+   * be accessed by multiple threads.
+   */
+  private synchronized void pauseTrackDataHub() {
+    trackDataHub.unregisterTrackDataListener(this);
+    trackDataHub = null;
+  }
+  
+  /**
+   * A thread that updates the total time field every second.
+   */
+  private class UiUpdateThread extends Thread {
+    @Override
+    public void run() {
+      Log.d(TAG, "UI update thread started");
+      while (PreferencesUtils.getLong(getActivity(), R.string.recording_track_id_key)
+          != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
+        getActivity().runOnUiThread(updateTotalTime);
+        try {
+          Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+          Log.d(TAG, "UI update thread caught exception", e);
+          break;
+        }
+      }
+      Log.d(TAG, "UI update thread finished");
+    }
+  }
+
+  /**
+   * Returns true if recording. Needs to be synchronized because trackDataHub
+   * can be accessed by multiple threads.
+   */
+  private synchronized boolean isRecording() {
+    return trackDataHub != null && trackDataHub.isRecordingSelected();
+  }
+  
+  private void setTotalTime(long totalTime){
+    String totalTimeStr = StringUtils.formatElapsedTime(totalTime);
+    mMainZone1.setTitle(totalTimeStr);
+  }
+  
+  private void setTotalDistance(double totalDistanceDouble){
+    String totalDistanceStr = StringUtils.formatDistanceWithoutUnit(
+        getActivity(), totalDistanceDouble, metricUnits);
+    mMainZone2.setTitle(totalDistanceStr);
+  }
+  
+  private void setAvgSpeed(double avgSpeedDouble){
+    String averageSpeedStr = StringUtils.formatSpeedWithoutUnit(getActivity(), avgSpeedDouble, metricUnits, true);
+    mMainZone3.setTitle(averageSpeedStr);
+  }
+  
+  private void setSpeed(double speedDouble){
+    String speedStr = StringUtils.formatSpeedWithoutUnit(getActivity(), speedDouble, metricUnits,true);
+    mMainZone4.setTitle(speedStr);
+  }
+  
+  private void updateUI(){
+    setLocationValues(lastLocation);
+    setTripStatisticsValues(lastTripStatistics);
+  }
+  
+  private void setLocationValues(Location location){
+    double speed = location == null ? Double.NaN : location.getSpeed();
+    setSpeed(speed);
+  }
+  
+  private void setTripStatisticsValues(TripStatistics tripStatistics){
+ // Set total distance
+    double totalDistance = tripStatistics == null ? Double.NaN : tripStatistics.getTotalDistance();
+    boolean useTotalTime = PreferencesUtils.getBoolean(
+        getActivity(), R.string.stats_use_total_time_key, PreferencesUtils.STATS_USE_TOTAL_TIME_DEFAULT);
+    setTotalDistance(totalDistance);
+    
+    double averageSpeed;
+    if (tripStatistics == null) {
+      averageSpeed = Double.NaN;
+    } else {
+      averageSpeed = useTotalTime ? tripStatistics.getAverageSpeed()
+          : tripStatistics.getAverageMovingSpeed();
+    }
+    setAvgSpeed(averageSpeed);
+  }
   
   private void startMapFragment(){
     MapFragment mapFragment = new MapFragment();
@@ -241,6 +475,143 @@ public class TrainingDetailFragment extends Fragment {
     ft.replace(R.id.fragment_container, selectSportsFragment);
     ft.addToBackStack(null);
     ft.commit();
+  }
+
+  @Override
+  public void onProviderStateChange(ProviderState state) {
+    if (isResumed() && (state == ProviderState.DISABLED || state == ProviderState.NO_FIX)) {
+      getActivity().runOnUiThread(new Runnable() {
+          @Override
+        public void run() {
+          lastLocation = null;
+          setLocationValues(lastLocation);
+        }
+      });
+    }
+  }
+
+  @Override
+  public void onCurrentLocationChanged(final Location loc) {
+    if (isResumed() && isRecording()) {
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          lastLocation = loc;
+          setLocationValues(lastLocation);
+        }
+      });
+    }
+  }
+
+  @Override
+  public void onCurrentHeadingChanged(double heading) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onSelectedTrackChanged(Track track, boolean isRecording) {
+    if (isResumed()) {
+      if (uiUpdateThread == null && isRecording) {
+        uiUpdateThread = new UiUpdateThread();
+        uiUpdateThread.start();
+      } else if (uiUpdateThread != null && !isRecording) {
+        uiUpdateThread.interrupt();
+        uiUpdateThread = null;
+      }
+    }
+  }
+
+  @Override
+  public void onTrackUpdated(final Track track) {
+    if (isResumed()) {
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          if (track == null || track.getTripStatistics() == null) {
+            lastLocation = null;
+            lastTripStatistics = null;
+            updateUI();
+            return;
+          }
+          lastTripStatistics = track.getTripStatistics();
+          
+          startTime = track.getTripStatistics().getStartTime();
+          if (!isRecording()) {
+            lastLocation = null;
+          }
+          updateUI();
+        }
+      });
+    }
+    
+  }
+
+  @Override
+  public void clearTrackPoints() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onNewTrackPoint(Location loc) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onSampledOutTrackPoint(Location loc) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onSegmentSplit() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onNewTrackPointsDone() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void clearWaypoints() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onNewWaypoint(Waypoint wpt) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onNewWaypointsDone() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public boolean onUnitsChanged(boolean metric) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean onReportSpeedChanged(boolean reportSpeed) {
+    if (isResumed()) {
+      getActivity().runOnUiThread(new Runnable() {
+          @Override
+        public void run() {
+          updateUI();
+        }
+      });
+    }
+    return true;
   }
   
 }

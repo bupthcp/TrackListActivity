@@ -136,6 +136,35 @@ public class StringUtils {
   }
   
   /**
+   * Formats the distance,but not unit following
+   * 
+   * @param context the context
+   * @param distance the distance in meters
+   * @param metricUnits true to use metric units. False to use imperial units
+   */
+  public static String formatDistanceWithoutUnit(Context context, double distance, boolean metricUnits) {
+    if (Double.isNaN(distance) || Double.isInfinite(distance)) {
+      return context.getString(R.string.value_unknown);
+    }
+    if (metricUnits) {
+      if (distance > 500.0) {
+        distance *= UnitConversions.M_TO_KM;
+        return String.format("%1$.2f", distance);
+      } else {
+        return String.format("%1$.2f", distance);
+      }
+    } else {
+      if (distance * UnitConversions.M_TO_MI > 0.5) {
+        distance *= UnitConversions.M_TO_MI;
+        return String.format("%1$.2f", distance);
+      } else {
+        distance *= UnitConversions.M_TO_FT;
+        return String.format("%1$.2f", distance);
+      }
+    }
+  }
+  
+  /**
    * Formats the speed.
    * 
    * @param context the context
@@ -165,6 +194,41 @@ public class StringUtils {
         // convert from hours to minutes
         double pace = speed == 0 ? 0.0 : 60.0 / speed;
         return context.getString(R.string.value_float_minute_mile, pace);
+      }
+    }
+  }
+  
+  
+  /**
+   * Formats the speed,but no unit following
+   * 
+   * @param context the context
+   * @param speed the speed in meters per second
+   * @param metricUnits true to use metric units. False to use imperial units
+   * @param reportSpeed true to report as speed. False to report as pace
+   */
+  public static String formatSpeedWithoutUnit(
+      Context context, double speed, boolean metricUnits, boolean reportSpeed) {
+    if (Double.isNaN(speed) || Double.isInfinite(speed)) {
+      return context.getString(R.string.value_unknown);
+    }
+    speed *= UnitConversions.MS_TO_KMH;
+    if (metricUnits) {
+      if (reportSpeed) {
+        return String.format("%1$.1f", speed);
+      } else {
+        // convert from hours to minutes
+        double pace = speed == 0 ? 0.0 : 60.0 / speed;
+        return String.format("%1$.1f", pace);
+      }
+    } else {
+      speed *= UnitConversions.KM_TO_MI;
+      if (reportSpeed) {
+        return String.format("%1$.1f", speed);
+      } else {
+        // convert from hours to minutes
+        double pace = speed == 0 ? 0.0 : 60.0 / speed;
+        return String.format("%1$.1f", pace);
       }
     }
   }

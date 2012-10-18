@@ -6,9 +6,6 @@ import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.MyTracksApplication;
-import com.google.android.apps.mytracks.content.TrackDataHub;
-import com.google.android.apps.mytracks.services.ITrackRecordingService;
-import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailFragment;
@@ -17,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.widget.Toast;
 
 public class IJoggingActivity extends SherlockFragmentActivity {
   private static final String TAG = IJoggingActivity.class.getSimpleName();
@@ -27,9 +23,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
 
   private MKOfflineMap mOffline = null;
 
-  private TrackDataHub trackDataHub;
-  private TrackRecordingServiceConnection trackRecordingServiceConnection;
-  private boolean startNewRecording = false;
+
   public String currentSport = null;
   public long recordingTrackId;
 
@@ -48,12 +42,13 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+    setupActionBar();
     if (null != mActionBar) {
       mActionBar.setSelectedNavigationItem(0);
     }
     
     this.setContentView(R.layout.i_jogging_main);
-    FragmentManager.enableDebugLogging(true);
+    FragmentManager.enableDebugLogging(false);
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
     TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
     ft.add(R.id.fragment_container, trainingDetailFragment);
@@ -82,7 +77,6 @@ public class IJoggingActivity extends SherlockFragmentActivity {
       }
     });
 
-    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
   }
 
   // switch系列的方法用于在全局切换fragment，所以在切换前必须调用popBackStack
@@ -113,7 +107,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    setupActionBar();
+    
   }
   
   @Override
@@ -127,31 +121,4 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   }
   
 
-  // Callback when the trackRecordingServiceConnection binding changes.
-  private final Runnable bindChangedCallback = new Runnable() {
-    @Override
-    public void run() {
-      if (!startNewRecording) { return; }
-
-      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
-      if (service == null) {
-        Log.d(TAG, "service not available to start a new recording");
-        return;
-      }
-      try {
-        recordingTrackId = service.startNewTrack();
-        startNewRecording = false;
-        // Intent intent = IntentUtils.newIntent(TrackListActivity.this,
-        // TrackDetailActivity.class)
-        // .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, recordingTrackId);
-        // startActivity(intent);
-        Toast.makeText(IJoggingActivity.this, R.string.track_list_record_success,
-            Toast.LENGTH_SHORT).show();
-      } catch (Exception e) {
-        Toast.makeText(IJoggingActivity.this, R.string.track_list_record_error, Toast.LENGTH_LONG)
-            .show();
-        Log.e(TAG, "Unable to start a new recording.", e);
-      }
-    }
-  };
 }

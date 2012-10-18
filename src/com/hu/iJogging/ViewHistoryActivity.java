@@ -57,7 +57,7 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
     actionBar.setCustomView(R.layout.actionbar_cunstom_simple);
     View customView = actionBar.getCustomView();
     TextView tv = (TextView)customView.findViewById(R.id.simple_action_bar_title);
-    tv.setText(R.string.strWorkoutTab);
+    tv.setText(R.string.strTrainingDetail);
     
     View iv = customView.findViewById(R.id.icon_back);
     iv.setOnClickListener(new View.OnClickListener(){

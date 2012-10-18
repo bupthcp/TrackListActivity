@@ -69,11 +69,12 @@
    <string name="strSpeed">速度 </string>
    <string name="strRunning">跑步 </string>
    <string name="strBasicWorkout">简单运动</string>
-   <string name="strWorkoutTab">训练详情</string>
+   <string name="strWorkoutTab">新训练</string>
    <string name="strNewsFeed">新消息</string>
    <string name="strHistoryTab">训练列表</string>
    <string name="strRoutes">路线</string>
    <string name="strFriends">好友</string>
    <string name="strSettingsTab">设定</string>
+   <string name="strTrainingDetail">训练详情</string>
 </resources>
     
