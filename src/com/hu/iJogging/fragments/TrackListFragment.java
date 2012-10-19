@@ -2,8 +2,6 @@ package com.hu.iJogging.fragments;
 
 import com.google.android.apps.mytracks.TrackDetailActivity;
 import com.google.android.apps.mytracks.content.TracksColumns;
-import com.google.android.apps.mytracks.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
-import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
@@ -22,19 +20,23 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
+public class TrackListFragment extends Fragment{
 
   private static final String TAG = TrackListFragment.class.getSimpleName();
   
 
-  private boolean metricUnits;
+  private boolean metricUnits = true;
   
   private ListView listView;
   private View mFragmentView;
@@ -82,6 +84,13 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
         startActivity(intent);
       }
     });
+    listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener(){
+      @Override
+      public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        mActivity.getMenuInflater().inflate(R.menu.list_fragment_menu, menu);
+      }
+    });
+//    registerForContextMenu(listView);
     resourceCursorAdapter = new ResourceCursorAdapter(getActivity(), R.layout.list_item, null, 0) {
         @Override
       public void bindView(View view, Context context, Cursor cursor) {
@@ -143,7 +152,34 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
     });
     return mFragmentView;
   }
+
   
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    if (handleContextItem(item.getItemId(), ((AdapterContextMenuInfo) item.getMenuInfo()).id)) {
+      return true;
+    }
+    return super.onContextItemSelected(item);
+  }
+  
+  /**
+   * Handles a context item selection.
+   * 
+   * @param itemId the menu item id
+   * @param trackId the track id
+   * @return true if handled.
+   */
+  private boolean handleContextItem(int itemId, long trackId) {
+    switch (itemId) {
+      case R.id.list_context_menu_delete:
+        DeleteOneTrackDialogFragment.newInstance(trackId).show(
+            getActivity().getSupportFragmentManager(), DeleteOneTrackDialogFragment.DELETE_ONE_TRACK_DIALOG_TAG);
+        return true;
+      default:
+        return false;
+    }
+  }
+
   //在这里实现onDestroyView是为了保证在fragment切换的
   //时候，fragment的container是干净的，
   //如果不加上这个清理过程，有可能会出现两个fragment重叠
@@ -157,10 +193,5 @@ public class TrackListFragment extends Fragment implements DeleteOneTrackCaller{
     }
   }
   
-  @Override
-  public TrackRecordingServiceConnection getTrackRecordingServiceConnection() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 }

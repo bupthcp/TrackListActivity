@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+  <item
+    android:icon="@drawable/menu_delete"
+    android:id="@+id/list_context_menu_delete"
+    android:title="@string/menu_delete"/>
+</menu>

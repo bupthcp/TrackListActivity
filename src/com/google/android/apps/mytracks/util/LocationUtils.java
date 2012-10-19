@@ -245,6 +245,12 @@ public class LocationUtils {
                         (int) (location.getLongitude() * 1E6));
   }
   
+  /**
+   * 使用baidu地图提供的方法将一个原始的GeoPoint转化为可以在baidu地图上显示的GeoPoint
+   * 即增加了便宜量
+   * 这个方法是直接对一个location中的GeoPoint进行设置，将一个location进行改造
+   * 这个方法只能在需要在baidu地图上进行显示之前调用，存入数据库中的都必须是原始的地理信息
+   */
   public static void setGeoInLocation(Location location){
     GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
                                (int) (location.getLongitude() * 1E6));
@@ -253,6 +259,11 @@ public class LocationUtils {
     location.setLongitude((p2.getLongitudeE6())/1E6);
   }
   
+  
+  /**
+   * 使用baidu地图提供的方法将一个原始的GeoPoint转化为可以在baidu地图上显示的GeoPoint
+   * 即增加了便宜量
+   */
   public static GeoPoint convertToBaiduGeopoint(GeoPoint geoPoint){
     GeoPoint p1 = new GeoPoint((int) (geoPoint.getLatitudeE6() ),
                                (int) (geoPoint.getLongitudeE6()) );

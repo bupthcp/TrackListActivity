@@ -7,12 +7,9 @@ import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.TracksColumns;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.services.ITrackRecordingService;
-import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
-import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.MainZoneLayout;
@@ -42,7 +39,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.EnumSet;
 public class TrainingDetailFragment extends Fragment implements TrackDataListener {
@@ -67,9 +63,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   MainZoneLayout mMainZone4;
   
   private TrackDataHub trackDataHub;
-  private TrackRecordingServiceConnection trackRecordingServiceConnection;
-  private boolean startNewRecording = false;
-  
   
   private UiUpdateThread uiUpdateThread;
 
@@ -119,7 +112,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    trackRecordingServiceConnection = new TrackRecordingServiceConnection(mActivity, bindChangedCallback);
+    trackDataHub = ((MyTracksApplication) getActivity().getApplication()).getTrackDataHub();
   }
 
   @Override
@@ -188,11 +181,17 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
       buttonCountdownStop.setVisibility(View.INVISIBLE);
     }else{
       buttonCountdownStop.setVisibility(View.VISIBLE);
-      buttonCountdownStop.setBackgroundResource(R.drawable.dashboard_button_stop);
+      buttonCountdownStop.setBackgroundResource(R.drawable.stop_gray);
+      buttonCountdownStop.setClickable(false);
       buttonCountdownStop.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          stopRecording();
+          ((IJoggingActivity)mActivity).stopRecording();
+          pauseTrackDataHub();
+          btnStart.setClickable(true);
+          btnStart.setBackgroundResource(R.drawable.dashboard_button_start);
+          buttonCountdownStop.setBackgroundResource(R.drawable.stop_gray);
+          buttonCountdownStop.setClickable(false);
         }
       });
     }
@@ -205,7 +204,11 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
       btnStart.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          startRecording();
+          ((IJoggingActivity)mActivity).startRecording();
+          buttonCountdownStop.setBackgroundResource(R.drawable.dashboard_button_stop);
+          buttonCountdownStop.setClickable(true);
+          btnStart.setClickable(false);
+          btnStart.setBackgroundResource(R.drawable.start_big_gray);
           pauseTrackDataHub();
           resumeTrackDataHub();
         }
@@ -289,19 +292,15 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
           int maxSpeedIndex = cursor.getColumnIndex(TracksColumns.MAXSPEED);
           int totalDistanceIndex = cursor.getColumnIndex(TracksColumns.TOTALDISTANCE);
           long totalTimeLong = cursor.getLong(totalTimeIndex);
-          String totalTime = StringUtils.formatElapsedTime(totalTimeLong);
           double totalDistanceDouble = cursor.getDouble(totalDistanceIndex);
-          String totalDistance = StringUtils.formatDistanceWithoutUnit(
-              getActivity(), totalDistanceDouble, metricUnits);
           //平均速度与最高速度不同，在记录运动的同时并不是即时演算的，所以数据库中没有存储，
           //只在需要的时候才会使用总时间和总距离进行运算得出平均速度
           double avgSpeeddouble = totalDistanceDouble / ((double) totalTimeLong / 1000.0);
-          String averageSpeed = StringUtils.formatSpeedWithoutUnit(getActivity(), avgSpeeddouble, metricUnits, true);
-          String maxSpeed = StringUtils.formatSpeedWithoutUnit(getActivity(), cursor.getLong(maxSpeedIndex), metricUnits, true);
-          mMainZone1.setTitle(totalTime);
-          mMainZone2.setTitle(totalDistance);
-          mMainZone3.setTitle(averageSpeed);
-          mMainZone4.setTitle(maxSpeed);
+          Long maxSpeedLong = cursor.getLong(maxSpeedIndex);
+          setTotalTime(totalTimeLong);
+          setTotalDistance(totalDistanceDouble);
+          setAvgSpeed(avgSpeeddouble);
+          setSpeed(maxSpeedLong);
         }
 
         @Override
@@ -313,59 +312,15 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
   
   
-  /**
-   * Starts a new recording.
-   */
-  public void startRecording() {
-    startNewRecording = true;
-    trackRecordingServiceConnection.startAndBind();
 
-    /*
-     * If the binding has happened, then invoke the callback to start a new
-     * recording. If the binding hasn't happened, then invoking the callback
-     * will have no effect. But when the binding occurs, the callback will get
-     * invoked.
-     */
-    bindChangedCallback.run();
-  }
-  
-  public void stopRecording(){
-    TrackRecordingServiceConnectionUtils.stop(mActivity, trackRecordingServiceConnection, false);
-  }
 
-  // Callback when the trackRecordingServiceConnection binding changes.
-  private final Runnable bindChangedCallback = new Runnable() {
-    @Override
-    public void run() {
-      if (!startNewRecording) { return; }
 
-      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
-      if (service == null) {
-        Log.d(TAG, "service not available to start a new recording");
-        return;
-      }
-      try {
-        long recordingTrackId = service.startNewTrack();
-        ((IJoggingActivity)mActivity).recordingTrackId = recordingTrackId;
-        trackDataHub.loadTrack(recordingTrackId);
-        trackDataHub.start();
-        startNewRecording = false;
-        Toast.makeText(mActivity, R.string.track_list_record_success,
-            Toast.LENGTH_SHORT).show();
-      } catch (Exception e) {
-        Toast.makeText(mActivity, R.string.track_list_record_error, Toast.LENGTH_LONG)
-            .show();
-        Log.e(TAG, "Unable to start a new recording.", e);
-      }
-    }
-  };
   
   /**
    * Resumes the trackDataHub. Needs to be synchronized because trackDataHub can
    * be accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((MyTracksApplication) getActivity().getApplication()).getTrackDataHub();
     trackDataHub.registerTrackDataListener(this, EnumSet.of(
         ListenerDataType.SELECTED_TRACK_CHANGED,
         ListenerDataType.TRACK_UPDATES,
@@ -379,7 +334,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
    */
   private synchronized void pauseTrackDataHub() {
     trackDataHub.unregisterTrackDataListener(this);
-    trackDataHub = null;
   }
   
   /**
@@ -413,23 +367,28 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   
   private void setTotalTime(long totalTime){
     String totalTimeStr = StringUtils.formatElapsedTime(totalTime);
-    mMainZone1.setTitle(totalTimeStr);
+    mMainZone1.setTitle(totalTimeStr,false);
   }
   
   private void setTotalDistance(double totalDistanceDouble){
     String totalDistanceStr = StringUtils.formatDistanceWithoutUnit(
         getActivity(), totalDistanceDouble, metricUnits);
-    mMainZone2.setTitle(totalDistanceStr);
+    if (totalDistanceDouble > 500.0) {
+      mMainZone2.setTitle(totalDistanceStr,false);
+    } else {
+      mMainZone2.setTitle(totalDistanceStr,true);
+    }
+
   }
   
   private void setAvgSpeed(double avgSpeedDouble){
     String averageSpeedStr = StringUtils.formatSpeedWithoutUnit(getActivity(), avgSpeedDouble, metricUnits, true);
-    mMainZone3.setTitle(averageSpeedStr);
+    mMainZone3.setTitle(averageSpeedStr,false);
   }
   
   private void setSpeed(double speedDouble){
     String speedStr = StringUtils.formatSpeedWithoutUnit(getActivity(), speedDouble, metricUnits,true);
-    mMainZone4.setTitle(speedStr);
+    mMainZone4.setTitle(speedStr,false);
   }
   
   private void updateUI(){
@@ -438,20 +397,20 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
   
   private void setLocationValues(Location location){
-    double speed = location == null ? Double.NaN : location.getSpeed();
+    double speed = location == null ? 0 : location.getSpeed();
     setSpeed(speed);
   }
   
   private void setTripStatisticsValues(TripStatistics tripStatistics){
  // Set total distance
-    double totalDistance = tripStatistics == null ? Double.NaN : tripStatistics.getTotalDistance();
+    double totalDistance = tripStatistics == null ? 0 : tripStatistics.getTotalDistance();
     boolean useTotalTime = PreferencesUtils.getBoolean(
         getActivity(), R.string.stats_use_total_time_key, PreferencesUtils.STATS_USE_TOTAL_TIME_DEFAULT);
     setTotalDistance(totalDistance);
     
     double averageSpeed;
     if (tripStatistics == null) {
-      averageSpeed = Double.NaN;
+      averageSpeed = 0;
     } else {
       averageSpeed = useTotalTime ? tripStatistics.getAverageSpeed()
           : tripStatistics.getAverageMovingSpeed();

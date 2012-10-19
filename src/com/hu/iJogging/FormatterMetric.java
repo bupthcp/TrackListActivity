@@ -18,6 +18,11 @@ public class FormatterMetric extends FormatterUnits{
     return paramContext.getApplicationContext().getString(R.string.strDistanceFormat);
   }
   
+  public String getDistanceMeterText(Context paramContext)
+  {
+    return paramContext.getApplicationContext().getString(R.string.strDistanceMeterFormat);
+  }
+  
   public String getSpeedText(Context paramContext)
   {
     return paramContext.getApplicationContext().getString(R.string.strKmH);

@@ -40,7 +40,8 @@
    
     <string name="strDistance">全程距离</string>
     <string name="strKilometerShortUnit">公里</string>
-    <string name="strDistanceFormat">公里 </string>
+    <string name="strDistanceFormat">公里</string>
+    <string name="strDistanceMeterFormat">米</string>
     <string name="strRunning">跑步 </string>
     <string name="strCyclingTransport">自行车，代步</string>
     <string name="strCyclingSport">自行车，运动 </string>

@@ -39,4 +39,8 @@ public abstract class FormatterUnits {
   {
     return null;
   }
+  
+  public String getDistanceMeterText(Context paramContext){
+    return null;
+  }
 }

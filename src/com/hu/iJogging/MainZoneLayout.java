@@ -75,10 +75,10 @@ public class MainZoneLayout extends LinearLayout{
     this.mUnit.setTypeface(this.mRobotoLight);
     this.mTriangle = ((ImageView)localLinearLayout.findViewById(R.id.ImageDbMoreTriangle));
     this.mTriangle.setImageResource(UIConfig.DashboardConfig.triangleRestId);
-    setTitle(null);
+    setTitle(null,true);
   }
   
-  public void setTitle(String titleStr){
+  public void setTitle(String titleStr, Boolean meterUnit){
     switch(mType){
       case TYPE_DURATION:
         setOneLineText(R.drawable.dashboard_duration_icon, R.string.strDuration);
@@ -90,7 +90,12 @@ public class MainZoneLayout extends LinearLayout{
         }
         break;
       case TYPE_DISTANCE:
-        setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceText(this.mOwner));
+        if(meterUnit){
+          setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceMeterText(this.mOwner));
+        }else{
+          setTwoLinesText(R.drawable.dashboard_distance_icon, this.mOwner.getString(R.string.strDistance), mFormatterUnits.getDistanceText(this.mOwner));
+        }
+        
         if(null == titleStr){
           setValue("00.00");
         }

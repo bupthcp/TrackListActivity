@@ -575,7 +575,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   /**
    * Shows the track.
-   *
+   * 将一条路线的跨越的经纬度范围框出来，然后将整个路线呈现在这个框里
    * @param track the track
    */
   private void showTrack(Track track) {
@@ -593,21 +593,29 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       keepMyLocationVisible = false;
       GeoPoint center = new GeoPoint(bottom + latitudeSpanE6 / 2, left + longitudeSpanE6 / 2);
       if (LocationUtils.isValidGeoPoint(center)) {
-        mapView.getController().setCenter(center);
+        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
         mapView.getController().zoomToSpan(latitudeSpanE6, longitudeSpanE6);
       }
     }
   }
   
+  /*
+   * 从系统取得上次记录的最后位置，初始化当前的地图中心，否则每次baidu都会
+   * 将地图中信设置为北京
+   */
   private void initMapCenter(){
-    Location locationTmp=LocationUtility.getInstance(getActivity()).getLastKnownLocation();
-    if(locationTmp == null)
-      return;
-    LocationUtils.setGeoInLocation(locationTmp);
-    MapController mMapController = mapView.getController();  // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
-    GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
-    mMapController.setCenter(geoPoint);  //设置地图中心点
-    mMapController.setZoom(12);    //设置地图zoom级别
+    if(currentLocation == null){
+      Location locationTmp=LocationUtility.getInstance(getActivity()).getLastKnownLocation();
+      if(locationTmp == null)
+        return;
+      currentLocation = locationTmp;
+      LocationUtils.setGeoInLocation(locationTmp);
+      MapController mMapController = mapView.getController();  // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
+      GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
+      mMapController.setCenter(geoPoint);  //设置地图中心点
+      mMapController.setZoom(12);    //设置地图zoom级别
+      mapOverlay.setMyLocation(locationTmp);
+    }
   }
   
   private void backStack(){

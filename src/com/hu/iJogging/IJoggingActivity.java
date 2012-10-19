@@ -6,7 +6,12 @@ import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.MyTracksApplication;
+import com.google.android.apps.mytracks.content.TrackDataHub;
+import com.google.android.apps.mytracks.services.ITrackRecordingService;
+import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
+import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailFragment;
 
@@ -14,8 +19,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 
-public class IJoggingActivity extends SherlockFragmentActivity {
+public class IJoggingActivity extends SherlockFragmentActivity implements DeleteOneTrackCaller{
   private static final String TAG = IJoggingActivity.class.getSimpleName();
 
   private ActionBar mActionBar;
@@ -25,7 +31,11 @@ public class IJoggingActivity extends SherlockFragmentActivity {
 
 
   public String currentSport = null;
-  public long recordingTrackId;
+  public long recordingTrackId = -1L;
+  
+  private TrackRecordingServiceConnection trackRecordingServiceConnection;
+  private boolean startNewRecording = false;
+  private TrackDataHub trackDataHub;
 
   public void setupActionBar() {
     this.mActionBar = getSupportActionBar();
@@ -42,6 +52,9 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+    MyTracksApplication app = (MyTracksApplication) this.getApplication();
+    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
+    trackDataHub = app.getTrackDataHub();
     setupActionBar();
     if (null != mActionBar) {
       mActionBar.setSelectedNavigationItem(0);
@@ -55,7 +68,7 @@ public class IJoggingActivity extends SherlockFragmentActivity {
     ft.commit();
 
     // ≥ı ºªØbaiduµÿÕº
-    MyTracksApplication app = (MyTracksApplication) this.getApplication();
+    
     mOffline = new MKOfflineMap();
     mOffline.init(app.mBMapMan, new MKOfflineMapListener() {
       @Override
@@ -107,7 +120,6 @@ public class IJoggingActivity extends SherlockFragmentActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    
   }
   
   @Override
@@ -120,5 +132,54 @@ public class IJoggingActivity extends SherlockFragmentActivity {
     super.onStop();
   }
   
+  // Callback when the trackRecordingServiceConnection binding changes.
+  private final Runnable bindChangedCallback = new Runnable() {
+    @Override
+    public void run() {
+      if (!startNewRecording) { return; }
 
+      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
+      if (service == null) {
+        Log.d(TAG, "service not available to start a new recording");
+        return;
+      }
+      try {
+        recordingTrackId = service.startNewTrack();
+        trackDataHub.loadTrack(recordingTrackId);
+        trackDataHub.start();
+        startNewRecording = false;
+        Toast.makeText(IJoggingActivity.this, R.string.track_list_record_success,
+            Toast.LENGTH_SHORT).show();
+      } catch (Exception e) {
+        Toast.makeText(IJoggingActivity.this, R.string.track_list_record_error, Toast.LENGTH_LONG)
+            .show();
+        Log.e(TAG, "Unable to start a new recording.", e);
+      }
+    }
+  };
+  
+  /**
+   * Starts a new recording.
+   */
+  public void startRecording() {
+    startNewRecording = true;
+    trackRecordingServiceConnection.startAndBind();
+    /*
+     * If the binding has happened, then invoke the callback to start a new
+     * recording. If the binding hasn't happened, then invoking the callback
+     * will have no effect. But when the binding occurs, the callback will get
+     * invoked.
+     */
+    bindChangedCallback.run();
+  }
+  
+  public void stopRecording(){
+    TrackRecordingServiceConnectionUtils.stop(this, trackRecordingServiceConnection, false);
+    recordingTrackId = -1L;
+  }
+
+  @Override
+  public TrackRecordingServiceConnection getTrackRecordingServiceConnection() {
+    return trackRecordingServiceConnection;
+  }
 }
