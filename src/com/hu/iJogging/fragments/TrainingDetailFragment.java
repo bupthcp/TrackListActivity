@@ -127,6 +127,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   @Override
   public void onResume(){
     super.onResume();
+    setStartandStopButtons();
     if(!isViewHistory){
       resumeTrackDataHub();
     }
@@ -171,6 +172,22 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     localView.findViewById(R.id.SportMainButtonSeperator).setVisibility(0);
     localView.findViewById(R.id.LLMainZone).setVisibility(0);
     return localView;
+  }
+  
+  private void setStartandStopButtons(){
+    if(!isViewHistory){
+      if(((IJoggingActivity)mActivity).isRecording()){
+        buttonCountdownStop.setClickable(true);
+        buttonCountdownStop.setBackgroundResource(R.drawable.dashboard_button_stop);
+        btnStart.setClickable(false);
+        btnStart.setBackgroundResource(R.drawable.start_big_gray);
+      }else{
+        buttonCountdownStop.setClickable(false);
+        buttonCountdownStop.setBackgroundResource(R.drawable.stop_gray);
+        btnStart.setClickable(true);
+        btnStart.setBackgroundResource(R.drawable.dashboard_button_start);
+      }
+    }
   }
 
   private void setFocus() {

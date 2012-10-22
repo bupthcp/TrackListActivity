@@ -173,6 +173,10 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     bindChangedCallback.run();
   }
   
+  public Boolean isRecording(){
+    return TrackRecordingServiceConnectionUtils.isRecording(this, trackRecordingServiceConnection);
+  }
+  
   public void stopRecording(){
     TrackRecordingServiceConnectionUtils.stop(this, trackRecordingServiceConnection, false);
     recordingTrackId = -1L;
