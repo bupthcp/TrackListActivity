@@ -13,7 +13,7 @@ import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtil
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import com.hu.iJogging.fragments.TrackListFragment;
-import com.hu.iJogging.fragments.TrainingDetailFragment;
+import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -63,8 +63,8 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     this.setContentView(R.layout.i_jogging_main);
     FragmentManager.enableDebugLogging(false);
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
-    ft.add(R.id.fragment_container, trainingDetailFragment);
+    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
     ft.commit();
 
     // ≥ı ºªØbaiduµÿÕº
@@ -112,8 +112,8 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     FragmentTransaction ft = fragmentManager.beginTransaction();
-    TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
-    ft.replace(R.id.fragment_container, trainingDetailFragment);
+    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+    ft.replace(R.id.fragment_container, trainingDetailContainerFragment);
     ft.commit();
   }
 

@@ -143,7 +143,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     .setOnTouchListener(new View.OnTouchListener() {
       public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
         if (paramMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-           backStack();
+//           backStack();
+          ((IJoggingActivity)mActivity).switchToTrainingDetailFragment();
         }
         return true;
       }
