@@ -6,6 +6,9 @@ import com.google.android.maps.mytracks.R;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -282,11 +285,13 @@ public class ActionBarAdapter implements SpinnerAdapter {
   private void switchFragment(int position){
     switch (position) {
       case 1:
-        ((IJoggingActivity)mContext).switchToTrainingDetailFragment();
+        removeFragment();
+        ((IJoggingActivity)mContext).switchToTrainingDetailContainer();
         break;
       case 2:
         break;
       case 3:
+        removeFragment();
         ((IJoggingActivity)mContext).switchToTrackListFragment();
         break;
       case 4:
@@ -299,6 +304,33 @@ public class ActionBarAdapter implements SpinnerAdapter {
         break;
     }
   }
+  
+  private void removeFragment(){
+    FragmentManager fragmentManager = ((IJoggingActivity)mContext).getSupportFragmentManager();
+    FragmentTransaction ft = fragmentManager.beginTransaction();
+    Fragment fragment;
+    switch(mCurrentSpinner){
+      case 1:
+//        fragment = fragmentManager.findFragmentById(R.id.training_detail_container);
+//        ft.remove(fragment);
+        break;
+      case 2:
+        break;
+      case 3:
+        fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+        ft.remove(fragment);
+        break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        break;
+      default:
+        break;
+    }
+    ft.commit();
+  }
 
   
   // 这个回调函数在布局完成之后才会调用，即getView以及getDropDownView都完成后，才调用
@@ -308,8 +340,8 @@ public class ActionBarAdapter implements SpinnerAdapter {
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
       if (itemPosition == 0) return false;
-      mCurrentSpinner = itemPosition;
       switchFragment(itemPosition);
+      mCurrentSpinner = itemPosition;
       return true;
     }
   }

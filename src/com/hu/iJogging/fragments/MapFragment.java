@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,7 +48,7 @@ import java.util.List;
 
 public class MapFragment extends Fragment
 implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
-  public static final String MAP_FRAGMENT_TAG = "mapFragment";
+  public static final String MAP_FRAGMENT_TAG = "MapFragment";
   Activity mActivity;
   Boolean isViewHistory = false;
   
@@ -92,6 +93,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       isViewHistory = true;
     }
     mActivity = activity;
+    activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+    activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
   }
 
   @Override
@@ -144,7 +147,17 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
         if (paramMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 //           backStack();
-          ((IJoggingActivity)mActivity).switchToTrainingDetailFragment();
+          if(isViewHistory){
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.remove(MapFragment.this);
+            ft.commit();
+            ((ViewHistoryActivity)mActivity).switchToTrainingDetailContainer();
+          }else{
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.remove(MapFragment.this);
+            ft.commit();
+            ((IJoggingActivity)mActivity).switchToTrainingDetailContainer();            
+          }
         }
         return true;
       }

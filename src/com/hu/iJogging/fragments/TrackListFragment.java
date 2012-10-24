@@ -33,7 +33,7 @@ import android.widget.ListView;
 
 public class TrackListFragment extends Fragment{
 
-  private static final String TAG = TrackListFragment.class.getSimpleName();
+  public static final String TRACK_LIST_FTAGMENT_TAG = "TrackListFragment";
   
 
   private boolean metricUnits = true;
@@ -62,6 +62,8 @@ public class TrackListFragment extends Fragment{
   public void onAttach(Activity activity) {
     super.onAttach(activity);
     mActivity = (IJoggingActivity)activity;
+    mActivity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
+    mActivity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
   }
 
 

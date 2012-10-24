@@ -14,11 +14,13 @@ import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.MainZoneLayout;
 import com.hu.iJogging.MotivationMainButton;
+import com.hu.iJogging.SelectSportsActivity;
 import com.hu.iJogging.SportMainButton;
 import com.hu.iJogging.TextMeasuredView;
 import com.hu.iJogging.ViewHistoryActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -42,6 +44,7 @@ import android.widget.TextView;
 
 import java.util.EnumSet;
 public class TrainingDetailFragment extends Fragment implements TrackDataListener {
+  public static final String TRAINING_DETAIL_FTAGMENT_TAG = "TrainingDetailFragment";
   View mMeasureView = null;
   private MotivationMainButton mBtnMotivation;
   private View btnSport;
@@ -127,6 +130,14 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   @Override
   public void onResume(){
     super.onResume();
+    //从SelectSportActivity跳转回IJoggingActivity之后，会先到onActivityResult
+    //然后再到Fragment的onResume，所以，需要在这里再对SportMainButton进行一次设置
+    if(!isViewHistory){
+      ((SportMainButton)btnSport).setSport(((IJoggingActivity)mActivity).currentSport);
+    }else{
+      //将btnSport设置为从历史记录中读取出来的数据
+      //并且不可点击切换
+    }
     setStartandStopButtons();
     if(!isViewHistory){
       resumeTrackDataHub();
@@ -242,7 +253,8 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     if(!isViewHistory){
       btnSport.setOnClickListener(new View.OnClickListener() {
         public void onClick(View paramView) {
-          startSelectSportsFragment();
+//          startSelectSportsFragment();
+          startSelectSportsActivity();
         }
       });
       ((SportMainButton)btnSport).setSport(((IJoggingActivity)mActivity).currentSport);
@@ -436,12 +448,14 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
   
   private void startMapFragment(){
+//    View container= getActivity().findViewById(R.id.fragment_container);
+//    container.setVisibility(View.VISIBLE);
     MapFragment mapFragment = new MapFragment();
     FragmentTransaction ft = getFragmentManager().beginTransaction();
     ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,R.anim.enter_workout_map, R.anim.exit_workout_map);
-    ft.replace(R.id.fragment_container, mapFragment);
-    ft.addToBackStack(null);
+    ft.add(R.id.fragment_container, mapFragment);
     ft.commit();
+//    getActivity().findViewById(R.id.training_detail_container).setVisibility(View.GONE);
   }
   
   private void startSelectSportsFragment(){
@@ -451,6 +465,11 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     ft.replace(R.id.fragment_container, selectSportsFragment);
     ft.addToBackStack(null);
     ft.commit();
+  }
+  
+  private void startSelectSportsActivity(){
+    Intent startSelectiSportsIntent = new Intent(getActivity(),SelectSportsActivity.class);
+    getActivity().startActivityForResult(startSelectiSportsIntent, IJoggingActivity.SELECT_SPORT_REQUEST_CODE);
   }
 
   @Override

@@ -3,7 +3,10 @@ package com.hu.iJogging.fragments;
 import com.actionbarsherlock.app.ActionBar;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.SelectSportsActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 public class SelectSportsFragment extends Fragment{
   
   private View mSelectSportsFragmentView;
+  public static final String SELECT_SPORTS_FTAGMENT_TAG = "SelectSportsFragment";
   
   @Override
   public void onCreate(Bundle bundle) {
@@ -33,8 +37,12 @@ public class SelectSportsFragment extends Fragment{
       @Override
       public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         TextView tv=(TextView)arg1.findViewById(R.id.sport_description);
-        ((IJoggingActivity)getActivity()).currentSport= (String) tv.getText();
-        getFragmentManager().popBackStack();
+//        ((IJoggingActivity)getActivity()).currentSport= (String) tv.getText();
+//        getFragmentManager().popBackStack();
+        Intent resultInent = new Intent(getActivity(),IJoggingActivity.class);
+        resultInent.putExtra("currentSport", (String) tv.getText());
+        getActivity().setResult(Activity.RESULT_OK,resultInent);
+        getActivity().finish();
       }});
     setupActionBar();
 
@@ -42,7 +50,7 @@ public class SelectSportsFragment extends Fragment{
   }
   
   private void setupActionBar(){
-    ActionBar actionBar = ((IJoggingActivity)getActivity()).getSupportActionBar();
+    ActionBar actionBar = ((SelectSportsActivity)getActivity()).getSupportActionBar();
     //这里如果通过设置setDisplayHomeAsUpEnabled去使用actionBar自带的回退按钮
     //是无法完成回到上一个fragment的功能的
     //所以只能使用自定义的view去实现actionBar
@@ -50,6 +58,9 @@ public class SelectSportsFragment extends Fragment{
     //这个是sherlock的title的布局
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     actionBar.setDisplayShowCustomEnabled(true);
+    actionBar.setDisplayShowTitleEnabled(false);
+    actionBar.setDisplayShowHomeEnabled(false);
+    actionBar.setDisplayUseLogoEnabled(false);
     actionBar.setCustomView(R.layout.actionbar_cunstom_simple);
     View customView = actionBar.getCustomView();
     TextView tv = (TextView)customView.findViewById(R.id.simple_action_bar_title);
@@ -59,7 +70,8 @@ public class SelectSportsFragment extends Fragment{
     iv.setOnClickListener(new View.OnClickListener(){
       @Override
       public void onClick(View v) {
-        getFragmentManager().popBackStack();
+//        getFragmentManager().popBackStack();
+        getActivity().finish();
       }    
     });
   }
@@ -67,8 +79,6 @@ public class SelectSportsFragment extends Fragment{
   
   @Override
   public void onDestroyView() {
-    ((IJoggingActivity)getActivity()).setupActionBar();
-
     super.onDestroyView();
     ViewGroup parentViewGroup = (ViewGroup) mSelectSportsFragmentView.getParent();
     if (parentViewGroup != null) {

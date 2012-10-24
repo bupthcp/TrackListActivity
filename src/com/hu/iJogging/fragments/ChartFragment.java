@@ -33,7 +33,7 @@ import java.util.EnumSet;
 
 public class ChartFragment extends Fragment implements TrackDataListener {
 
-  public static final String CHART_FRAGMENT_TAG = "chartFragment";
+  public static final String CHART_FRAGMENT_TAG = "ChartFragment";
 
   // Android reports 128 when the speed is invalid
   private static final int INVALID_SPEED = 128;
@@ -60,6 +60,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   // UI elements
   private ChartView chartView;
   private ZoomControls zoomControls;
+  private View mFragmentView;
 
   /**
    * A runnable that will enable/disable zoom controls and orange pointer as
@@ -90,8 +91,8 @@ public class ChartFragment extends Fragment implements TrackDataListener {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.chart, container, false);
-    zoomControls = (ZoomControls) view.findViewById(R.id.chart_zoom_controls);
+    mFragmentView = inflater.inflate(R.layout.chart, container, false);
+    zoomControls = (ZoomControls) mFragmentView.findViewById(R.id.chart_zoom_controls);
     zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -104,14 +105,14 @@ public class ChartFragment extends Fragment implements TrackDataListener {
         zoomOut();
       }
     });
-    return view;
+    return mFragmentView;
   }
 
   @SuppressWarnings("deprecation")
   @Override
   public void onStart() {
     super.onStart();
-    ViewGroup layout = (ViewGroup) getActivity().findViewById(R.id.chart_view_layout);
+    ViewGroup layout = (ViewGroup) mFragmentView.findViewById(R.id.chart_view_layout);
     LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
     layout.addView(chartView, layoutParams);
   }
@@ -133,8 +134,18 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   @Override
   public void onStop() {
     super.onStop();
-    ViewGroup layout = (ViewGroup) getActivity().findViewById(R.id.chart_view_layout);
+    ViewGroup layout = (ViewGroup) mFragmentView.findViewById(R.id.chart_view_layout);
     layout.removeView(chartView);
+  }
+  
+  
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    ViewGroup parentViewGroup = (ViewGroup) mFragmentView.getParent();
+    if (parentViewGroup != null) {
+      parentViewGroup.removeView(mFragmentView);
+    }
   }
 
   @Override

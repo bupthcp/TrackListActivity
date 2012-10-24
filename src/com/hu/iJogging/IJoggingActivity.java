@@ -15,10 +15,14 @@ import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCall
 import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 public class IJoggingActivity extends SherlockFragmentActivity implements DeleteOneTrackCaller{
@@ -36,6 +40,11 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private boolean startNewRecording = false;
   private TrackDataHub trackDataHub;
+  public static final String EXTRA_STR_CURRENT_SPORT = "currentSport";
+  public static final int SELECT_SPORT_REQUEST_CODE = 0;
+  
+  ViewPager mViewPager;
+  ContainerPagerAdapter mContainerPagerAdapter;
 
   public void setupActionBar() {
     this.mActionBar = getSupportActionBar();
@@ -61,11 +70,17 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     }
     
     this.setContentView(R.layout.i_jogging_main);
-    FragmentManager.enableDebugLogging(false);
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
-    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
-    ft.commit();
+    FragmentManager.enableDebugLogging(true);
+//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+//    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
+//    ft.commit();
+    
+    mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
+    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
+    mViewPager.setVisibility(View.VISIBLE);
+    findViewById(R.id.fragment_container).setVisibility(View.GONE);
+    mViewPager.setAdapter(mContainerPagerAdapter);
 
     // 初始化baidu地图
     
@@ -92,24 +107,34 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
 
   }
 
-  // switch系列的方法用于在全局切换fragment，所以在切换前必须调用popBackStack
-  // 将backstack中的所有fragment清理掉，否则，在切换过程中会出现重叠显示的问题
-  // 这个方法也必须在commit之前调用，如果在commit之后调用，backstack会发生变化
-  // 就没有办法清理干净了，会出现重叠显示的效果。
+
   public void switchToTrackListFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
-    // 这个语句的效果是将backstack内的所有tag不是null的entry全部清理，其实就是
-    // 将所有的entry全部清理出去
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     FragmentTransaction ft = fragmentManager.beginTransaction();
     TrackListFragment trackListFragment = new TrackListFragment();
     ft.replace(R.id.fragment_container, trackListFragment);
     ft.commit();
-
+  }
+  
+  public void switchToTrainingDetailContainer() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
+    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
+    mViewPager.setVisibility(View.VISIBLE);
+    findViewById(R.id.fragment_container).setVisibility(View.GONE);
   }
 
-  public void switchToTrainingDetailFragment() {
+  
+  // switch系列的方法用于在全局切换fragment，所以在切换前必须调用popBackStack
+  // 将backstack中的所有fragment清理掉，否则，在切换过程中会出现重叠显示的问题
+  // 这个方法也必须在commit之前调用，如果在commit之后调用，backstack会发生变化
+  // 就没有办法清理干净了，会出现重叠显示的效果。
+  public void switchToTrainingDetailContainerFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
+    // 这个语句的效果是将backstack内的所有tag不是null的entry全部清理，其实就是
+    // 将所有的entry全部清理出去
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     FragmentTransaction ft = fragmentManager.beginTransaction();
     TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
@@ -130,6 +155,19 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   @Override
   protected void onStop() {
     super.onStop();
+  }
+  
+  @Override
+  public void onBackPressed(){
+    super.onBackPressed();
+    
+  }
+  
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if((requestCode == SELECT_SPORT_REQUEST_CODE)&&(resultCode == Activity.RESULT_OK)){
+      currentSport = data.getStringExtra("currentSport");
+    }
   }
   
   // Callback when the trackRecordingServiceConnection binding changes.

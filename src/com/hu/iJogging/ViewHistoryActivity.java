@@ -11,11 +11,13 @@ import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.fragments.TrainingDetailFragment;
+import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,6 +33,9 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
   public long trackId;
   public long markerId;
   
+  ViewPager mViewPager;
+  ContainerPagerAdapter mContainerPagerAdapter;
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,10 +45,15 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, null);
     trackDataHub = ((MyTracksApplication) getApplication()).getTrackDataHub();
     trackDataHub.loadTrack(trackId);
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    TrainingDetailFragment trainingDetailFragment = new TrainingDetailFragment();
-    ft.add(R.id.fragment_container, trainingDetailFragment);
-    ft.commit();
+//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+//    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
+//    ft.commit();
+    mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
+    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
+    mViewPager.setVisibility(View.VISIBLE);
+    findViewById(R.id.fragment_container).setVisibility(View.GONE);
+    mViewPager.setAdapter(mContainerPagerAdapter);
     setupActionBar();
   }
   
@@ -126,6 +136,24 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
       exit();
       return;
     }
+  }
+  
+  public void switchToTrainingDetailContainer() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    mContainerPagerAdapter = new ContainerPagerAdapter(this,getSupportFragmentManager());
+    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
+    mViewPager.setVisibility(View.VISIBLE);
+    findViewById(R.id.fragment_container).setVisibility(View.GONE);
+  }
+  
+  public void switchToTrainingDetailContainerFragment() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    FragmentTransaction ft = fragmentManager.beginTransaction();
+    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+    ft.replace(R.id.fragment_container, trainingDetailContainerFragment);
+    ft.commit();
   }
   
   /**

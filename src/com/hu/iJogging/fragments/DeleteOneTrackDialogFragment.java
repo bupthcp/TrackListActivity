@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 public class DeleteOneTrackDialogFragment extends DialogFragment{
-  public static final String DELETE_ONE_TRACK_DIALOG_TAG = "deleteOneTrackDialog";
+  public static final String DELETE_ONE_TRACK_DIALOG_TAG = "DeleteOneTrackDialogFragment";
   private static final String KEY_TRACK_ID = "trackId";
 
   /**
