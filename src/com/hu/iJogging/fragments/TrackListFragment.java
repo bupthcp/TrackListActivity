@@ -64,6 +64,8 @@ public class TrackListFragment extends Fragment{
     mActivity = (IJoggingActivity)activity;
     mActivity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
     mActivity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+    activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+    activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
   }
 
 

@@ -305,14 +305,16 @@ public class ActionBarAdapter implements SpinnerAdapter {
     }
   }
   
+  //当通过ActionBar进行fragment的切换时，就没有办法在fragment内部进行前一个fragment的删除工作了
+  //只能在点击ActionBar完成之后，根据当前所使用的fragment container的res id进行fragment的删除
   private void removeFragment(){
     FragmentManager fragmentManager = ((IJoggingActivity)mContext).getSupportFragmentManager();
     FragmentTransaction ft = fragmentManager.beginTransaction();
     Fragment fragment;
     switch(mCurrentSpinner){
       case 1:
-//        fragment = fragmentManager.findFragmentById(R.id.training_detail_container);
-//        ft.remove(fragment);
+        //当页面处于新训练时，界面是由viewpager进行管理的。经过试验，发现viewpager会自己管理fragment的
+        //管理，并不需要我们进行手动的remove操作
         break;
       case 2:
         break;

@@ -120,7 +120,6 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   public void switchToTrainingDetailContainer() {
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
     mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
     mViewPager.setVisibility(View.VISIBLE);
     findViewById(R.id.fragment_container).setVisibility(View.GONE);
@@ -145,6 +144,16 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   @Override
   protected void onResume() {
     super.onResume();
+    if(recordingTrackId!=-1L){
+      trackDataHub.loadTrack(recordingTrackId);
+      trackDataHub.start();
+    }
+  }
+  
+  @Override
+  protected void onPause() {
+    super.onPause();
+    trackDataHub.stop();
   }
   
   @Override

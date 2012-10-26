@@ -7,9 +7,7 @@ import com.google.android.apps.mytracks.TrackListActivity;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
-import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
@@ -29,7 +27,7 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
   private static final String CURRENT_TAG_KEY = "tab";
  
   private TrackDataHub trackDataHub;
-  private TrackRecordingServiceConnection trackRecordingServiceConnection;
+//  private TrackRecordingServiceConnection trackRecordingServiceConnection;
   public long trackId;
   public long markerId;
   
@@ -42,9 +40,9 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
     handleIntent(getIntent());
     ApiAdapterFactory.getApiAdapter().hideTitle(this);
     setContentView(R.layout.i_jogging_main);
-    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, null);
+//    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, null);
     trackDataHub = ((MyTracksApplication) getApplication()).getTrackDataHub();
-    trackDataHub.loadTrack(trackId);
+
 //    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
 //    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
@@ -89,14 +87,21 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
   @Override
   protected void onStart() {
     super.onStart();
-    trackDataHub.start();
+    
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    TrackRecordingServiceConnectionUtils.resume(this, trackRecordingServiceConnection);
+    trackDataHub.loadTrack(trackId);
+    trackDataHub.start();
+//    TrackRecordingServiceConnectionUtils.resume(this, trackRecordingServiceConnection);
 //    setTitle(trackId == PreferencesUtils.getLong(this, R.string.recording_track_id_key));
+  }
+  
+  protected void onPause(){
+    super.onPause();
+    trackDataHub.stop();
   }
 
   @Override
@@ -108,13 +113,12 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
   @Override
   protected void onStop() {
     super.onStop();
-    trackDataHub.stop();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    trackRecordingServiceConnection.unbind();
+//    trackRecordingServiceConnection.unbind();
   }
 
   
@@ -141,7 +145,6 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
   public void switchToTrainingDetailContainer() {
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    mContainerPagerAdapter = new ContainerPagerAdapter(this,getSupportFragmentManager());
     mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
     mViewPager.setVisibility(View.VISIBLE);
     findViewById(R.id.fragment_container).setVisibility(View.GONE);

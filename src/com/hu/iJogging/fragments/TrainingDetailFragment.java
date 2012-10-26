@@ -67,7 +67,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   
   private TrackDataHub trackDataHub;
   
-  private UiUpdateThread uiUpdateThread;
+  private UiUpdateThread uiUpdateThread = null;
 
   // The start time of the current track.
   private long startTime = -1L;
@@ -134,6 +134,15 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     //然后再到Fragment的onResume，所以，需要在这里再对SportMainButton进行一次设置
     if(!isViewHistory){
       ((SportMainButton)btnSport).setSport(((IJoggingActivity)mActivity).currentSport);
+      if (uiUpdateThread != null) {
+        uiUpdateThread.resume();
+      }
+//      if (uiUpdateThread == null ) {
+//        uiUpdateThread = new UiUpdateThread();
+//        uiUpdateThread.start();
+//      } else if (uiUpdateThread != null ) {
+//        uiUpdateThread.resume();
+//      }
     }else{
       //将btnSport设置为从历史记录中读取出来的数据
       //并且不可点击切换
@@ -151,7 +160,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
       pauseTrackDataHub();
       if (uiUpdateThread != null) {
         uiUpdateThread.interrupt();
-        uiUpdateThread = null;
+        uiUpdateThread=null;
       }
     }
   }
@@ -447,15 +456,13 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     setAvgSpeed(averageSpeed);
   }
   
-  private void startMapFragment(){
-//    View container= getActivity().findViewById(R.id.fragment_container);
-//    container.setVisibility(View.VISIBLE);
-    MapFragment mapFragment = new MapFragment();
+  private void startMapFragment() {
+    Fragment mapFragment = new MapFragment();
     FragmentTransaction ft = getFragmentManager().beginTransaction();
-    ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,R.anim.enter_workout_map, R.anim.exit_workout_map);
-    ft.add(R.id.fragment_container, mapFragment);
+    ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,
+        R.anim.enter_workout_map, R.anim.exit_workout_map);
+    ft.add(R.id.fragment_container, mapFragment, MapFragment.MAP_FRAGMENT_TAG);
     ft.commit();
-//    getActivity().findViewById(R.id.training_detail_container).setVisibility(View.GONE);
   }
   
   private void startSelectSportsFragment(){
@@ -512,7 +519,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
         uiUpdateThread.start();
       } else if (uiUpdateThread != null && !isRecording) {
         uiUpdateThread.interrupt();
-        uiUpdateThread = null;
+        uiUpdateThread=null;
       }
     }
   }

@@ -6,9 +6,9 @@ import com.hu.iJogging.fragments.TrainingDetailFragment;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class ContainerPagerAdapter extends FragmentPagerAdapter {
+public class ContainerPagerAdapter extends FragmentStatePagerAdapter {
 
   /**
    * 
