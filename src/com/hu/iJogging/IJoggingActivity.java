@@ -2,13 +2,22 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
+import com.google.android.apps.mytracks.ImportActivity;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.TrackDataHub;
+import com.google.android.apps.mytracks.fragments.DeleteAllTrackDialogFragment;
+import com.google.android.apps.mytracks.io.file.SaveActivity;
+import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
+import com.google.android.apps.mytracks.util.AnalyticsUtils;
+import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
@@ -18,6 +27,7 @@ import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -126,6 +136,67 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   }
 
   
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = this.getSupportMenuInflater();
+    inflater.inflate(R.menu.ijogging_activity_menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+  
+  
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    Intent intent;
+    switch(item.getItemId()){
+      case R.id.save_to_sd_action:
+        startSaveActivity(TrackFileFormat.GPX);
+        return true;
+      case R.id.import_from_sd_action:
+        AnalyticsUtils.sendPageViews(this, "/action/import");
+        intent = IntentUtils.newIntent(this, ImportActivity.class)
+            .putExtra(ImportActivity.EXTRA_IMPORT_ALL, true);
+        startActivity(intent);
+        return true;
+      case R.id.delete_all_records:
+        new DeleteAllTrackDialogFragment().show(
+            getSupportFragmentManager(), DeleteAllTrackDialogFragment.DELETE_ALL_TRACK_DIALOG_TAG);
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+  
+  /**
+   * Starts the {@link SaveActivity} to save all tracks.
+   *
+   * @param trackFileFormat the track file format
+   */
+  private void startSaveActivity(TrackFileFormat trackFileFormat) {
+    AnalyticsUtils.sendPageViews(this, "/action/save_all");
+    Intent intent = IntentUtils.newIntent(this, SaveActivity.class)
+        .putExtra(SaveActivity.EXTRA_TRACK_FILE_FORMAT, (Parcelable) trackFileFormat);
+    startActivity(intent);
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    if(mAdapter.getCurrentSpinner() == 1){
+      menu.getItem(0).setVisible(false);
+      menu.getItem(1).setVisible(false);
+      menu.getItem(2).setVisible(false);
+    }else if(mAdapter.getCurrentSpinner() == 3){
+      menu.getItem(0).setVisible(true);
+      menu.getItem(1).setVisible(true);
+      menu.getItem(2).setVisible(true);
+    }else{
+      menu.getItem(0).setVisible(false);
+      menu.getItem(1).setVisible(false);
+      menu.getItem(2).setVisible(false);
+    }
+    return super.onPrepareOptionsMenu(menu);
+  }
+
   // switch系列的方法用于在全局切换fragment，所以在切换前必须调用popBackStack
   // 将backstack中的所有fragment清理掉，否则，在切换过程中会出现重叠显示的问题
   // 这个方法也必须在commit之前调用，如果在commit之后调用，backstack会发生变化

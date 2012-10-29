@@ -77,5 +77,7 @@
    <string name="strFriends">好友</string>
    <string name="strSettingsTab">设定</string>
    <string name="strTrainingDetail">训练详情</string>
+   <string name="strExit">退出</string>
+   <string name="strSaveToSD">全部保存至SD卡</string>
 </resources>
     

@@ -191,8 +191,6 @@ limitations under the License.
     <activity android:name="com.google.android.apps.mytracks.TrackListActivity" >
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
-
-        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
 
       <meta-data
@@ -221,7 +219,13 @@ limitations under the License.
     <activity android:name="com.google.android.apps.mytracks.settings.SharingSettingsActivity" />
     <activity android:name="com.google.android.apps.mytracks.settings.StatsSettingsActivity" />
     <activity android:name="com.hu.iJogging.MainActivity" />
-    <activity android:name="com.hu.iJogging.IJoggingActivity" />
+    <activity android:name="com.hu.iJogging.IJoggingActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
     <activity android:name="com.hu.iJogging.ViewHistoryActivity" />
     <activity android:name="com.hu.iJogging.SelectSportsActivity" />
     

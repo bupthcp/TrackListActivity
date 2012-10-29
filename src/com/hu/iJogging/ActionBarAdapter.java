@@ -347,5 +347,9 @@ public class ActionBarAdapter implements SpinnerAdapter {
       return true;
     }
   }
+  
+  public int getCurrentSpinner(){
+    return mCurrentSpinner;
+  }
 
 }
