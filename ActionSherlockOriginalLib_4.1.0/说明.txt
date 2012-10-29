@@ -1,0 +1,3 @@
+目前必须使用4.1版本的sherlock actionbar。
+sherlock的作者在4.2的时候做了升级，删除了某些theme中的
+属性，会造成编译错误。
