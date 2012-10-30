@@ -303,6 +303,10 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     TrackRecordingServiceConnectionUtils.stop(this, trackRecordingServiceConnection, false);
     recordingTrackId = -1L;
   }
+  
+  public MKOfflineMap getOfflineMap(){
+    return mOffline;
+  }
 
   @Override
   public TrackRecordingServiceConnection getTrackRecordingServiceConnection() {

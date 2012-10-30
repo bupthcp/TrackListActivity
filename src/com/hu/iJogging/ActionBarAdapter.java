@@ -31,8 +31,8 @@ public class ActionBarAdapter implements SpinnerAdapter {
   private static SpinnerItem sHistorySpinnerItem;
   private static SpinnerConfig sNewsFeedActivitySpinnerConfig;
   private static SpinnerItem sNewsFeedSpinnerItem;
-  private static SpinnerConfig sRoutesActivitySpinnerConfig;
-  private static SpinnerItem sRoutesSpinnerItem;
+  private static SpinnerConfig sOfflineMapActivitySpinnerConfig;
+  private static SpinnerItem sOfflineMapSpinnerItem;
   private static SpinnerConfig sSettingsActivitySpinnerConfig;
   private static SpinnerItem sSettingsSpinnerItem;
 
@@ -49,7 +49,7 @@ public class ActionBarAdapter implements SpinnerAdapter {
     sEndomondoSpinnerItem = new SpinnerItem(R.string.strWorkoutTab, R.drawable.ab_icon_home);
     sNewsFeedSpinnerItem = new SpinnerItem(R.string.strNewsFeed, R.drawable.ab_icon_newsfeed);
     sHistorySpinnerItem = new SpinnerItem(R.string.strHistoryTab, R.drawable.ab_icon_history);
-    sRoutesSpinnerItem = new SpinnerItem(R.string.strRoutes, R.drawable.ab_icon_routes);
+    sOfflineMapSpinnerItem = new SpinnerItem(R.string.strOfflineMap, R.drawable.ab_icon_routes);
     sFriendsSpinnerItem = new SpinnerItem(R.string.strFriends, R.drawable.ab_icon_friends);
     sSettingsSpinnerItem = new SpinnerItem(R.string.strSettingsTab, R.drawable.ab_icon_settings);
 
@@ -58,7 +58,7 @@ public class ActionBarAdapter implements SpinnerAdapter {
     arrayOfSpinnerItem[1] = sEndomondoSpinnerItem;
     arrayOfSpinnerItem[2] = sNewsFeedSpinnerItem;
     arrayOfSpinnerItem[3] = sHistorySpinnerItem;
-    arrayOfSpinnerItem[4] = sRoutesSpinnerItem;
+    arrayOfSpinnerItem[4] = sOfflineMapSpinnerItem;
     arrayOfSpinnerItem[5] = sFriendsSpinnerItem;
     arrayOfSpinnerItem[6] = sSettingsSpinnerItem;
     sInitialSpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strWorkoutTab, View.VISIBLE,
@@ -73,7 +73,7 @@ public class ActionBarAdapter implements SpinnerAdapter {
     sNewsFeedActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strNewsFeed,
         View.VISIBLE, R.drawable.ab_icon_newsfeed_white, arrayOfSpinnerItem);
 
-    sRoutesActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strRoutes,
+    sOfflineMapActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strOfflineMap,
         View.VISIBLE, R.drawable.ab_icon_routes_white, arrayOfSpinnerItem);
 
     sFriendsActivitySpinnerConfig = new SpinnerConfig(View.VISIBLE, R.string.strFriends,
@@ -102,7 +102,7 @@ public class ActionBarAdapter implements SpinnerAdapter {
       case 3:
         return sHistoryActivitySpinnerConfig;
       case 4:
-        return sRoutesActivitySpinnerConfig;
+        return sOfflineMapActivitySpinnerConfig;
       case 5:
         return sFriendsActivitySpinnerConfig;
       case 6:
