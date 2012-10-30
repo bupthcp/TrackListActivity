@@ -162,6 +162,10 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
         new DeleteAllTrackDialogFragment().show(
             getSupportFragmentManager(), DeleteAllTrackDialogFragment.DELETE_ALL_TRACK_DIALOG_TAG);
         return true;
+      case R.id.exit_action:
+        stopRecording();
+        finish();
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
