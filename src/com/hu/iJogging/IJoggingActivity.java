@@ -21,6 +21,7 @@ import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
+import com.hu.iJogging.fragments.OfflineMapFragment;
 import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
@@ -124,6 +125,15 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     FragmentTransaction ft = fragmentManager.beginTransaction();
     TrackListFragment trackListFragment = new TrackListFragment();
     ft.replace(R.id.fragment_container, trackListFragment);
+    ft.commit();
+  }
+  
+  public void switchToOfflineMapFragment() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    FragmentTransaction ft = fragmentManager.beginTransaction();
+    OfflineMapFragment OfflineMapFragment = new OfflineMapFragment();
+    ft.replace(R.id.fragment_container, OfflineMapFragment);
     ft.commit();
   }
   

@@ -36,4 +36,5 @@ limitations under the License.
   <dimen name="pointer_height">22.0dip</dimen>
   <dimen name="border">12.0dip</dimen>
   <dimen name="triangle">7.0dip</dimen>
+  <dimen name="BasicTextSize">15.0dip</dimen>
 </resources>

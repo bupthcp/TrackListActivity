@@ -80,5 +80,7 @@
    <string name="strExit">退出</string>
    <string name="strSaveToSD">全部保存至SD卡</string>
    <string name="strOfflineMap">离线地图</string>
+   <string name="strSearchHotCity">搜索热门城市</string>
+   <string name="strInstalledMap">已经安装的离线地图</string>
 </resources>
     
