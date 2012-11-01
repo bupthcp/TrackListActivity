@@ -80,7 +80,11 @@
    <string name="strExit">退出</string>
    <string name="strSaveToSD">全部保存至SD卡</string>
    <string name="strOfflineMap">离线地图</string>
-   <string name="strSearchHotCity">搜索热门城市</string>
+   <string name="strSearchHotCity">搜索离线地图</string>
    <string name="strInstalledMap">已经安装的离线地图</string>
+   <string name="strHotMap">热门离线地图包</string>
+   <string name="strSearchHotCityDescription">输入城市名称\n点击搜索一下吧</string>
+   <string name="strInstalledMapDescription">个离线地图包已安装</string>
+   <string name="strHotMapDescription">个离线地图包可以下载</string>
 </resources>
     

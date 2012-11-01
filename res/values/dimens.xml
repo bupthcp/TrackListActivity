@@ -37,4 +37,5 @@ limitations under the License.
   <dimen name="border">12.0dip</dimen>
   <dimen name="triangle">7.0dip</dimen>
   <dimen name="BasicTextSize">15.0dip</dimen>
+  <dimen name="offline_map_introduction">20dip</dimen>
 </resources>
