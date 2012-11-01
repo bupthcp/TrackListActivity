@@ -19,7 +19,6 @@ import static com.google.android.apps.mytracks.Constants.RESUME_TRACK_EXTRA_NAME
 import static com.google.android.apps.mytracks.Constants.TAG;
 
 import com.google.android.apps.mytracks.Constants;
-import com.google.android.apps.mytracks.TrackDetailActivity;
 import com.google.android.apps.mytracks.content.DescriptionGenerator;
 import com.google.android.apps.mytracks.content.DescriptionGeneratorImpl;
 import com.google.android.apps.mytracks.content.MyTracksLocation;
@@ -45,6 +44,7 @@ import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackNameUtils;
 import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;
+import com.hu.iJogging.IJoggingActivity;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -482,8 +482,8 @@ public class TrackRecordingService extends Service {
    */
   private void showNotification() {
     if (isRecording) {
-      Intent intent = IntentUtils.newIntent(this, TrackDetailActivity.class)
-          .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, recordingTrackId);
+      Intent intent = IntentUtils.newIntent(this, IJoggingActivity.class)
+          .putExtra(IJoggingActivity.EXTRA_TRACK_ID, recordingTrackId);
       TaskStackBuilder taskStackBuilder = TaskStackBuilder.from(this);
       taskStackBuilder.addNextIntent(intent);
 

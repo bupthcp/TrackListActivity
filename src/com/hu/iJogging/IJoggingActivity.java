@@ -18,6 +18,7 @@ import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.IntentUtils;
+import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
@@ -47,6 +48,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
 
   public String currentSport = null;
   public long recordingTrackId = -1L;
+  public static final String EXTRA_TRACK_ID = "track_id";
   
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private boolean startNewRecording = false;
@@ -72,6 +74,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+    recordingTrackId = PreferencesUtils.getLong(this, R.string.recording_track_id_key);
     MyTracksApplication app = (MyTracksApplication) this.getApplication();
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
     trackDataHub = app.getTrackDataHub();
@@ -116,6 +119,12 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
       }
     });
 
+  }
+  
+  @Override
+  public void onNewIntent(Intent intent) {
+    setIntent(intent);
+    recordingTrackId = intent.getLongExtra(EXTRA_TRACK_ID, -1L);
   }
 
 

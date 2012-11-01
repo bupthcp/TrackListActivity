@@ -404,11 +404,17 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
   
   private void setTotalTime(long totalTime){
+    if(totalTime < 0){
+      totalTime = 0;
+    }
     String totalTimeStr = StringUtils.formatElapsedTime(totalTime);
     mMainZone1.setTitle(totalTimeStr,false);
   }
   
   private void setTotalDistance(double totalDistanceDouble){
+    if(totalDistanceDouble < 0){
+      totalDistanceDouble = 0;
+    }
     String totalDistanceStr = StringUtils.formatDistanceWithoutUnit(
         getActivity(), totalDistanceDouble, metricUnits);
     if (totalDistanceDouble > 500.0) {
@@ -420,11 +426,17 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
   
   private void setAvgSpeed(double avgSpeedDouble){
+    if(avgSpeedDouble < 0){
+      avgSpeedDouble = 0;
+    }
     String averageSpeedStr = StringUtils.formatSpeedWithoutUnit(getActivity(), avgSpeedDouble, metricUnits, true);
     mMainZone3.setTitle(averageSpeedStr,false);
   }
   
   private void setSpeed(double speedDouble){
+    if(speedDouble < 0){
+      speedDouble = 0;
+    }
     String speedStr = StringUtils.formatSpeedWithoutUnit(getActivity(), speedDouble, metricUnits,true);
     mMainZone4.setTitle(speedStr,false);
   }
