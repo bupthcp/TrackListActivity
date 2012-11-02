@@ -36,6 +36,7 @@
             android:maxLines="1"
             android:text="@string/strSearchHotCity"
             android:textSize="@dimen/dbv_title_z1_normal" />
+        
 
         <EditText
             android:id="@+id/search_offline_map_value"
@@ -43,22 +44,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/search_offline_map_title"
-            android:layout_marginTop="5.0dip"
+            android:background="@color/transparent"
             android:maxLines="1"
+            android:layout_marginTop="5.0dip"
             android:hint="@string/strSearchHotCityDescription"
             android:textSize="@dimen/offline_map_introduction" />
+        
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/triangle"
             android:layout_alignBottom="@id/search_offline_map_value"
             android:src="@drawable/triangle_grey"
             android:layout_alignParentRight="true" />
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_offline_map_button"
+            android:layout_toLeftOf="@id/triangle"
+            android:layout_alignBottom="@id/search_offline_map_value"
+            android:src="@drawable/search_bar_icon_normal" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1.0px"
-            android:layout_below="@id/search_offline_map_value"
+            android:layout_below="@id/search_offline_map_button"
             android:layout_marginTop="5.0dip"
             android:background="@color/MainSeperatorColor" />
     </RelativeLayout>
@@ -81,7 +93,7 @@
             android:id="@+id/hot_offline_map_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/dashboard_duration_icon" />
+            android:src="@drawable/dashboard_calories_icon" />
 
         <com.hu.iJogging.TextMeasuredView
             android:id="@+id/hot_offline_map_title"
@@ -103,7 +115,7 @@
             android:layout_below="@id/hot_offline_map_title"
             android:layout_marginTop="5.0dip"
             android:maxLines="1"
-            android:text="20"
+            android:text="0"
             android:textSize="@dimen/dbv_value_z1_normal"/>
         
         <com.hu.iJogging.TextMeasuredView
@@ -151,7 +163,7 @@
             android:id="@+id/installed_offline_map_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/dashboard_duration_icon" />
+            android:src="@drawable/dashboard_goal_icon" />
 
         <com.hu.iJogging.TextMeasuredView
             android:id="@+id/installed_offline_map_title"
@@ -173,7 +185,7 @@
             android:layout_below="@id/installed_offline_map_title"
             android:layout_marginTop="5.0dip"
             android:maxLines="1"
-            android:text="20"
+            android:text="0"
             android:textSize="@dimen/dbv_value_z1_normal"/>
         
         <com.hu.iJogging.TextMeasuredView
