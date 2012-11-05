@@ -18,6 +18,9 @@ package com.google.android.apps.mytracks;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKEvent;
 import com.baidu.mapapi.MKGeneralListener;
+import com.baidu.mapapi.MKOLUpdateElement;
+import com.baidu.mapapi.MKOfflineMap;
+import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
@@ -43,6 +46,7 @@ public class MyTracksApplication extends Application {
   
   //百度MapAPI的管理类
   public BMapManager mBMapMan = null;
+  public MKOfflineMap mOffline = null;
   
   // 授权Key
   // TODO: 请输入您的Key,
@@ -91,6 +95,26 @@ public class MyTracksApplication extends Application {
     mBMapMan.init(this.mStrKey, new MyGeneralListener());
     mBMapMan.getLocationManager().setNotifyInternal(10, 5);
     mBMapMan.start();
+    mOffline = new MKOfflineMap();
+    mOffline.init(mBMapMan, new MKOfflineMapListener() {
+      @Override
+      public void onGetOfflineMapState(int type, int state) {
+        switch (type) {
+          case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
+            MKOLUpdateElement update = mOffline.getUpdateInfo(state);
+            // mText.setText(String.format("%s : %d%%", update.cityName,
+            // update.ratio));
+          }
+            break;
+          case MKOfflineMap.TYPE_NEW_OFFLINE:
+            Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
+            break;
+          case MKOfflineMap.TYPE_VER_UPDATE:
+            Log.d("OfflineDemo", String.format("new offlinemap ver"));
+            break;
+        }
+      }
+    });
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }

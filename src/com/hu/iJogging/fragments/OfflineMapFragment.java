@@ -3,9 +3,11 @@ package com.hu.iJogging.fragments;
 import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
+import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
-import com.hu.iJogging.SearchedOfflineMapActivity;
+import com.hu.iJogging.InstalledOfflineMapActivity;
+import com.hu.iJogging.HotOfflineMapActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,7 +41,7 @@ public class OfflineMapFragment extends Fragment{
     mActivity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
     activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
     activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
-    mOffline = ((IJoggingActivity)mActivity).getOfflineMap();
+    mOffline = ((MyTracksApplication)mActivity.getApplication()).mOffline;
   }
   
   @Override
@@ -70,18 +72,24 @@ public class OfflineMapFragment extends Fragment{
     searchedMapList = mOffline.getOfflineCityList();
     TextView tvHotOfflineMapValue = (TextView)mFragmentView.findViewById(R.id.hot_offline_map_value);
     tvHotOfflineMapValue.setText(Integer.toString(searchedMapList.size()));
-    tvHotOfflineMapValue.setOnClickListener(new OnClickListener(){
+    View Zone2 = mFragmentView.findViewById(R.id.zone2);
+    Zone2.setClickable(true);
+    Zone2.setOnClickListener(new OnClickListener(){
       @Override
       public void onClick(View v) {
-        Intent startSearchedIntent = new Intent(getActivity(), SearchedOfflineMapActivity.class);
+        Intent startSearchedIntent = new Intent(getActivity(), HotOfflineMapActivity.class);
+        mActivity.startActivity(startSearchedIntent);
       }
     });
     TextView tvInstalledOfflineMapValue = (TextView)mFragmentView.findViewById(R.id.installed_offline_map_value);
     tvInstalledOfflineMapValue.setText(Integer.toString(installedMapList.size()));
-    tvInstalledOfflineMapValue.setOnClickListener(new OnClickListener(){
+    View Zone3 = mFragmentView.findViewById(R.id.zone3);
+    Zone3.setClickable(true);
+    Zone3.setOnClickListener(new OnClickListener(){
       @Override
       public void onClick(View v) {
-        
+        Intent startSearchedIntent = new Intent(getActivity(), InstalledOfflineMapActivity.class);
+        mActivity.startActivity(startSearchedIntent);
       }
     });
     return mFragmentView;

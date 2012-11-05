@@ -36,8 +36,15 @@ public class OfflineMapAdapter extends BaseAdapter{
 
   @Override
   public int getCount() {
-    // TODO Auto-generated method stub
-    return 0;
+    int count;
+    if((mType == TYPE_INSTALLED)&&(mInstalledMapList != null)){
+      count = mInstalledMapList.size();
+    }else if((mType == TYPE_SEARCHED)&&(mSearchedMapList!=null)){
+      count = mSearchedMapList.size();
+    }else{
+      count = 0;
+    }
+    return count;
   }
 
   @Override

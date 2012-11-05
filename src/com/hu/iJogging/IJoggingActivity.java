@@ -5,9 +5,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.ImportActivity;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.TrackDataHub;
@@ -42,9 +39,6 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
 
   private ActionBar mActionBar;
   private ActionBarAdapter mAdapter = null;
-
-  private MKOfflineMap mOffline = null;
-
 
   public String currentSport = null;
   public long recordingTrackId = -1L;
@@ -95,29 +89,6 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     mViewPager.setVisibility(View.VISIBLE);
     findViewById(R.id.fragment_container).setVisibility(View.GONE);
     mViewPager.setAdapter(mContainerPagerAdapter);
-
-    // ≥ı ºªØbaiduµÿÕº
-    
-    mOffline = new MKOfflineMap();
-    mOffline.init(app.mBMapMan, new MKOfflineMapListener() {
-      @Override
-      public void onGetOfflineMapState(int type, int state) {
-        switch (type) {
-          case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-            MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-            // mText.setText(String.format("%s : %d%%", update.cityName,
-            // update.ratio));
-          }
-            break;
-          case MKOfflineMap.TYPE_NEW_OFFLINE:
-            Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
-            break;
-          case MKOfflineMap.TYPE_VER_UPDATE:
-            Log.d("OfflineDemo", String.format("new offlinemap ver"));
-            break;
-        }
-      }
-    });
 
   }
   
@@ -323,9 +294,6 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     recordingTrackId = -1L;
   }
   
-  public MKOfflineMap getOfflineMap(){
-    return mOffline;
-  }
 
   @Override
   public TrackRecordingServiceConnection getTrackRecordingServiceConnection() {

@@ -228,6 +228,8 @@ limitations under the License.
 
     <activity android:name="com.hu.iJogging.ViewHistoryActivity" />
     <activity android:name="com.hu.iJogging.SelectSportsActivity" />
+    <activity android:name="com.hu.iJogging.HotOfflineMapActivity" />
+    <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
     
     <!-- Services -->
     <service

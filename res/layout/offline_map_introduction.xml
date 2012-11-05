@@ -14,6 +14,7 @@
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/zone1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         android:paddingLeft="15.0dip" 
@@ -87,6 +88,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         android:paddingLeft="15.0dip" 
+        android:id="@+id/zone2"
         android:paddingRight="15.0dip">
 
         <ImageView
@@ -157,6 +159,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         android:paddingLeft="15.0dip" 
+        android:id="@+id/zone3"
         android:paddingRight="15.0dip">
 
         <ImageView

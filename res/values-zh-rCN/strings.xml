@@ -86,5 +86,7 @@
    <string name="strSearchHotCityDescription">输入城市名，点放大镜搜一下</string>
    <string name="strInstalledMapDescription">个离线包已安装，去看看</string>
    <string name="strHotMapDescription">个离线包，点我去下载</string>
+   <string name="strHotOfflineMapActivity">热门城市离线地图</string>
+   <string name="strInstalledOfflineMapActivity">已安装的离线地图</string>
 </resources>
     

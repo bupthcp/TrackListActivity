@@ -2,19 +2,36 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.baidu.mapapi.MKOLUpdateElement;
+import com.baidu.mapapi.MKOfflineMap;
+import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class InstalledOfflineMapActivity extends SherlockActivity{
+ 
+  private MKOfflineMap mOffline = null;
+  private ListView listview = null;
+  private OfflineMapAdapter adapter = null;
+  private ArrayList<MKOLUpdateElement> installedMapList;  
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.offline_map_activity);
-    setContentView(R.layout.offline_map_activity);
     setupActionBar();
+    mOffline=((MyTracksApplication)getApplication()).mOffline;
+    listview =  (ListView)findViewById(R.id.map_list);
+    installedMapList = mOffline.getAllUpdateInfo();
+    adapter = new OfflineMapAdapter(this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);
+    listview.setAdapter(adapter);
   }
   
   private void setupActionBar(){
@@ -27,7 +44,7 @@ public class InstalledOfflineMapActivity extends SherlockActivity{
     actionBar.setCustomView(R.layout.actionbar_cunstom_simple);
     View customView = actionBar.getCustomView();
     TextView tv = (TextView)customView.findViewById(R.id.simple_action_bar_title);
-    tv.setText(R.string.strSelectSport);
+    tv.setText(R.string.strInstalledOfflineMapActivity);
     
     View iv = customView.findViewById(R.id.icon_back);
     iv.setOnClickListener(new View.OnClickListener(){
