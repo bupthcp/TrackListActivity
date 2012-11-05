@@ -2,7 +2,6 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.TrackListActivity;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.TrackDataHub;
@@ -41,7 +40,7 @@ public class ViewHistoryActivity extends SherlockFragmentActivity{
     ApiAdapterFactory.getApiAdapter().hideTitle(this);
     setContentView(R.layout.i_jogging_main);
 //    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, null);
-    trackDataHub = ((MyTracksApplication) getApplication()).getTrackDataHub();
+    trackDataHub = ((IJoggingApplication) getApplication()).getTrackDataHub();
 
 //    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();

@@ -6,7 +6,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.android.apps.mytracks.ImportActivity;
-import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.fragments.DeleteAllTrackDialogFragment;
 import com.google.android.apps.mytracks.io.file.SaveActivity;
@@ -69,7 +68,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     recordingTrackId = PreferencesUtils.getLong(this, R.string.recording_track_id_key);
-    MyTracksApplication app = (MyTracksApplication) this.getApplication();
+    IJoggingApplication app = (IJoggingApplication) this.getApplication();
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
     trackDataHub = app.getTrackDataHub();
     setupActionBar();

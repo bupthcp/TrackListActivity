@@ -4,8 +4,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOfflineMap;
-import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
@@ -27,7 +27,7 @@ public class HotOfflineMapActivity extends SherlockActivity{
     super.onCreate(savedInstanceState);
     setContentView(R.layout.offline_map_activity);
     setupActionBar();
-    mOffline=((MyTracksApplication)getApplication()).mOffline;
+    mOffline = DownloadOfflineMapService.mOffline;
     listview =  (ListView)findViewById(R.id.map_list);
     searchedMapList = mOffline.getOfflineCityList();
     adapter = new OfflineMapAdapter(this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);

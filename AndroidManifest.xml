@@ -133,7 +133,7 @@ limitations under the License.
     android:icon="@drawable/ic_launcher"
     android:hardwareAccelerated="true"
     android:label="@string/my_tracks_app_name"
-    android:name="com.google.android.apps.mytracks.MyTracksApplication"
+    android:name="com.hu.iJogging.IJoggingApplication"
     android:theme="@style/Theme.EndoActionBarModeList" >
 
     <!-- For data backup -->
@@ -230,12 +230,14 @@ limitations under the License.
     <activity android:name="com.hu.iJogging.SelectSportsActivity" />
     <activity android:name="com.hu.iJogging.HotOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
+    <activity android:name="com.hu.iJogging.OfflineSearchResultActivity"/>
     
     <!-- Services -->
     <service
       android:exported="false"
       android:name="com.google.android.apps.mytracks.services.ControlRecordingService" />
     <service android:name="com.google.android.apps.mytracks.services.RemoveTempFilesService" />
+    <service android:name="com.hu.iJogging.Services.DownloadOfflineMapService"/>
     <service
       android:enabled="true"
       android:exported="true"

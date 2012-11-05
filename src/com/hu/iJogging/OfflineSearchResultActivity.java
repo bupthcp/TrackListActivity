@@ -2,7 +2,7 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLUpdateElement;
+import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineMapService;
@@ -15,24 +15,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class InstalledOfflineMapActivity extends SherlockActivity{
- 
+public class OfflineSearchResultActivity extends SherlockActivity{
   private MKOfflineMap mOffline = null;
   private ListView listview = null;
   private OfflineMapAdapter adapter = null;
-  private ArrayList<MKOLUpdateElement> installedMapList;  
+  private ArrayList<MKOLSearchRecord> searchedMapList;
+  public static final String OFFLIE_RESULT_STRING = "city_name";
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.offline_map_activity);
     setupActionBar();
-    mOffline=DownloadOfflineMapService.mOffline;
-    listview =  (ListView)findViewById(R.id.map_list);
-    installedMapList = mOffline.getAllUpdateInfo();
-    adapter = new OfflineMapAdapter(this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);
-    listview.setAdapter(adapter);
+    String searchStr = this.getIntent().getExtras().getString(OFFLIE_RESULT_STRING);
+    if(searchStr != null){
+      mOffline = DownloadOfflineMapService.mOffline;
+      listview =  (ListView)findViewById(R.id.map_list);
+      searchedMapList = mOffline.searchCity(searchStr);
+      adapter = new OfflineMapAdapter(this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
+      listview.setAdapter(adapter);
+    }
   }
+  
   
   private void setupActionBar(){
     ActionBar actionBar = getSupportActionBar();
@@ -44,7 +48,7 @@ public class InstalledOfflineMapActivity extends SherlockActivity{
     actionBar.setCustomView(R.layout.actionbar_cunstom_simple);
     View customView = actionBar.getCustomView();
     TextView tv = (TextView)customView.findViewById(R.id.simple_action_bar_title);
-    tv.setText(R.string.strInstalledOfflineMapActivity);
+    tv.setText(R.string.strOfflineSearchResultActivity);
     
     View iv = customView.findViewById(R.id.icon_back);
     iv.setOnClickListener(new View.OnClickListener(){

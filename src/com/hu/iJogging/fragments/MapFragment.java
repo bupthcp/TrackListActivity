@@ -5,7 +5,6 @@ import com.baidu.mapapi.MapController;
 import com.baidu.mapapi.Mj;
 import com.baidu.mapapi.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
-import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils.Factory;
 import com.google.android.apps.mytracks.content.Track;
@@ -20,6 +19,7 @@ import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.LocationUtility;
 
@@ -469,7 +469,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((MyTracksApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub = ((IJoggingApplication) getActivity().getApplication()).getTrackDataHub();
     //如果是查看界面，不需要启动gps信息，所以就不用注册location相关的listener了，
     //也就不会触发gps
     if(isViewHistory){

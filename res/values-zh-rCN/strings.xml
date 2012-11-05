@@ -88,5 +88,6 @@
    <string name="strHotMapDescription">个离线包，点我去下载</string>
    <string name="strHotOfflineMapActivity">热门城市离线地图</string>
    <string name="strInstalledOfflineMapActivity">已安装的离线地图</string>
+   <string name="strOfflineSearchResultActivity">离线地图搜索结果</string>
 </resources>
     
