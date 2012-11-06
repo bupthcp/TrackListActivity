@@ -89,5 +89,7 @@
    <string name="strHotOfflineMapActivity">热门城市离线地图</string>
    <string name="strInstalledOfflineMapActivity">已安装的离线地图</string>
    <string name="strOfflineSearchResultActivity">离线地图搜索结果</string>
+   <string name="strDownloadOffline">下载</string>
+   <string name="strDownloadOfflineFinished">下载完成</string>
 </resources>
     

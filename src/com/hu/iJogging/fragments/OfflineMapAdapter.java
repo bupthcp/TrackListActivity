@@ -72,11 +72,13 @@ public class OfflineMapAdapter extends BaseAdapter{
           .findViewById(R.id.list_item_total_size);
       viewholder.list_item_update_time = (TextView) convertView
           .findViewById(R.id.list_item_update_time);
+      viewholder.button_download = convertView.findViewById(R.id.button_download);
       convertView.setTag(viewholder);
     } else {
       viewholder = (ViewHolder) convertView.getTag();
     }
     if(mType == TYPE_INSTALLED){
+      MKOLUpdateElement updateElement = (MKOLUpdateElement)mInstalledMapList.get(position);
       viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
       viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
     }else if(mType == TYPE_SEARCHED){
@@ -96,6 +98,7 @@ public class OfflineMapAdapter extends BaseAdapter{
       TextView list_item_category;
       TextView list_item_total_size;
       TextView list_item_update_time;
+      View button_download;
       
       ViewHolder()
       {

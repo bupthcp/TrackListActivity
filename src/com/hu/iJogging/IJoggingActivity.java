@@ -17,6 +17,7 @@ import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import com.hu.iJogging.fragments.OfflineMapFragment;
 import com.hu.iJogging.fragments.TrackListFragment;
@@ -44,6 +45,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   public static final String EXTRA_TRACK_ID = "track_id";
   
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
+  private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
   private boolean startNewRecording = false;
   private TrackDataHub trackDataHub;
   public static final String EXTRA_STR_CURRENT_SPORT = "currentSport";
@@ -70,6 +72,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     recordingTrackId = PreferencesUtils.getLong(this, R.string.recording_track_id_key);
     IJoggingApplication app = (IJoggingApplication) this.getApplication();
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
+    downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,null);
     trackDataHub = app.getTrackDataHub();
     setupActionBar();
     if (null != mActionBar) {
@@ -153,6 +156,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
         return true;
       case R.id.exit_action:
         stopRecording();
+        downloadOfflineMapServiceConnection.stop();
         finish();
         return true;
       default:

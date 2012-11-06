@@ -139,7 +139,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     return downloadOfflineMapServiceBinder;
   }
 
-  private class DownloadOfflineMapServiceBinder extends Binder {
+  public class DownloadOfflineMapServiceBinder extends Binder {
     public boolean startDownload(int cityId) {
       if (isDownloading) { return false; }
       boolean result = mOffline.start(cityId);
