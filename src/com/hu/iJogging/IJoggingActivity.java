@@ -69,6 +69,13 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+    //如果离线地图service没有启动，说明是第一次运行ijogging应用，需要启动
+    //splash activity初始化离线地图service
+    if(!DownloadOfflineMapServiceConnection.isOfflineServiceRunning(this)){
+      Intent intent = new Intent(this,SplashActivity.class);
+      startActivity(intent);
+      finish();
+    }
     recordingTrackId = PreferencesUtils.getLong(this, R.string.recording_track_id_key);
     IJoggingApplication app = (IJoggingApplication) this.getApplication();
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
@@ -81,10 +88,6 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     
     this.setContentView(R.layout.i_jogging_main);
     FragmentManager.enableDebugLogging(true);
-//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
-//    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
-//    ft.commit();
     
     mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
     mViewPager = (ViewPager)findViewById(R.id.training_detail_container);

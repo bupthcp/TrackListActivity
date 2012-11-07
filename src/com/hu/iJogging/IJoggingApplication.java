@@ -27,8 +27,6 @@ public class IJoggingApplication extends Application{
   @Override
   public void onCreate() {
     super.onCreate();
-    Intent offlineMapServiceIntent = new Intent(this,DownloadOfflineMapService.class);
-    startService(offlineMapServiceIntent);
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }

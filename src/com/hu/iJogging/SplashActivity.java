@@ -45,6 +45,7 @@ public class SplashActivity extends Activity{
     super.onCreate(bundle);
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this,bindChangedCallback);
+    downloadOfflineMapServiceConnection.startService();
     downloadOfflineMapServiceConnection.bindService();
     handler.postDelayed(delayedJob, 500);
     setContentView(R.layout.splash_activity);

@@ -220,12 +220,12 @@ limitations under the License.
     <activity android:name="com.google.android.apps.mytracks.settings.StatsSettingsActivity" />
     <activity android:name="com.hu.iJogging.MainActivity" />
     <activity android:name="com.hu.iJogging.IJoggingActivity" >
-    </activity>
-    <activity android:name="com.hu.iJogging.SplashActivity" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+    </activity>
+    <activity android:name="com.hu.iJogging.SplashActivity" >
     </activity>
 
     <activity android:name="com.hu.iJogging.ViewHistoryActivity" />
