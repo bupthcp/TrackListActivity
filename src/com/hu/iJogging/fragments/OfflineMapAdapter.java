@@ -3,6 +3,7 @@ package com.hu.iJogging.fragments;
 import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.HotOfflineMapActivity;
 
 import android.content.Context;
 import android.view.View;
@@ -82,8 +83,12 @@ public class OfflineMapAdapter extends BaseAdapter{
       viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
       viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
     }else if(mType == TYPE_SEARCHED){
-      viewholder.list_item_name.setText(((MKOLSearchRecord)mSearchedMapList.get(position)).cityName);
-      viewholder.list_item_total_size.setText(Integer.toString(((MKOLSearchRecord)mSearchedMapList.get(position)).size));
+      MKOLSearchRecord searchRecord = (MKOLSearchRecord)mSearchedMapList.get(position);
+      viewholder.list_item_name.setText(searchRecord.cityName);
+      viewholder.list_item_total_size.setText(Integer.toString(searchRecord.size));
+      viewholder.button_download.setClickable(true);
+      viewholder.button_download.setTag(searchRecord);
+      viewholder.button_download.setOnClickListener((HotOfflineMapActivity)mCtx);
     }else{
       viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
       viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
