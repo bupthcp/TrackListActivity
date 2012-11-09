@@ -4,6 +4,7 @@ import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.HotOfflineMapActivity;
+import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 
 import android.content.Context;
 import android.view.View;
@@ -21,6 +22,7 @@ public class OfflineMapAdapter extends BaseAdapter{
   public final static  int TYPE_INSTALLED = 1;
   public final static  int TYPE_SEARCHED= 2;
   private int mType;
+  private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
   
   
   public OfflineMapAdapter(Context ctx,ArrayList<MKOLUpdateElement> installedMapList,ArrayList<MKOLSearchRecord> searchedMapList,int type){
@@ -30,6 +32,7 @@ public class OfflineMapAdapter extends BaseAdapter{
       mInstalledMapList = installedMapList;
     }else if(type == TYPE_SEARCHED){
       mSearchedMapList = searchedMapList;
+      downloadOfflineMapServiceBinder = ((HotOfflineMapActivity)mCtx).getDownloadOfflineService();
     }else{
       mInstalledMapList = installedMapList;
     }
@@ -74,6 +77,8 @@ public class OfflineMapAdapter extends BaseAdapter{
       viewholder.list_item_update_time = (TextView) convertView
           .findViewById(R.id.list_item_update_time);
       viewholder.button_download = convertView.findViewById(R.id.button_download);
+      viewholder.download = (TextView)convertView.findViewById(R.id.download);
+      viewholder.download_percentage = (TextView)convertView.findViewById(R.id.download_percentage);
       convertView.setTag(viewholder);
     } else {
       viewholder = (ViewHolder) convertView.getTag();
@@ -89,6 +94,25 @@ public class OfflineMapAdapter extends BaseAdapter{
       viewholder.button_download.setClickable(true);
       viewholder.button_download.setTag(searchRecord);
       viewholder.button_download.setOnClickListener((HotOfflineMapActivity)mCtx);
+      if(downloadOfflineMapServiceBinder != null){
+        MKOLUpdateElement updateInfo = downloadOfflineMapServiceBinder.getOfflineUpdateInfo(searchRecord.cityID);
+        if(updateInfo != null){
+          if(updateInfo.status == MKOLUpdateElement.FINISHED){
+            viewholder.download_percentage.setVisibility(View.GONE);
+            viewholder.download.setText(R.string.strDownloadOfflineFinished);
+            viewholder.button_download.setClickable(false);
+            viewholder.button_download.setBackgroundResource(R.drawable.btn_style_one);
+          }else{
+            String percentage = mCtx.getString(R.string.strDownloadOfflinePercetage, updateInfo.ratio);
+            viewholder.download_percentage.setText(percentage);
+            viewholder.download.setText(R.string.strDownloadOfflineING);
+          }
+        }else{
+          //updateInfo为null说明下载并没有开始
+          String percentage = mCtx.getString(R.string.strDownloadOfflinePercetage, 0);
+          viewholder.download_percentage.setText(percentage);
+        }
+      }
     }else{
       viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
       viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
@@ -104,6 +128,8 @@ public class OfflineMapAdapter extends BaseAdapter{
       TextView list_item_total_size;
       TextView list_item_update_time;
       View button_download;
+      TextView download;
+      TextView download_percentage;
       
       ViewHolder()
       {

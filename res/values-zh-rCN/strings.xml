@@ -91,5 +91,8 @@
    <string name="strOfflineSearchResultActivity">离线地图搜索结果</string>
    <string name="strDownloadOffline">下载</string>
    <string name="strDownloadOfflineFinished">下载完成</string>
+   <string name="strDownloadOfflineING">正在下载</string>
+   <!--百分号的转义字符原来是两个百分号  -->
+   <string name="strDownloadOfflinePercetage">%1$d%%</string>
 </resources>
     

@@ -14,10 +14,14 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Set;
 
 public class DownloadOfflineMapService extends Service implements MKOfflineMapListener {
   
@@ -37,9 +41,14 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
 
   private boolean isDownloading = false;
   private InitOfflineMapTask initOfflineMapTask = null;
+  
+  private HandlerThread listenerHandlerThread;
+  private Handler listenerHandler;
+  private DownloadOfflineListeners downloadOfflineListeners;
 
   @Override
   public void onCreate() {
+    downloadOfflineListeners = new DownloadOfflineListeners();
     downloadOfflineMapService = this;
     downloadOfflineMapServiceBinder = new DownloadOfflineMapServiceBinder();
     mBMapMan = new BMapManager(DownloadOfflineMapService.this);
@@ -48,25 +57,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     mBMapMan.start();
     mOffline = new MKOfflineMap();
     Log.d(TAG,"InitOfflineMapTask created");
-    mOffline.init(mBMapMan, new MKOfflineMapListener() {
-      @Override
-      public void onGetOfflineMapState(int type, int state) {
-        switch (type) {
-          case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-            MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-            // mText.setText(String.format("%s : %d%%", update.cityName,
-            // update.ratio));
-          }
-            break;
-          case MKOfflineMap.TYPE_NEW_OFFLINE:
-            Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
-            break;
-          case MKOfflineMap.TYPE_VER_UPDATE:
-            Log.d("OfflineDemo", String.format("new offlinemap ver"));
-            break;
-        }
-      }
-    });
+    mOffline.init(mBMapMan, this);
     Log.d(TAG,"DownloadOfflineMapService created");
     showNotification();
   }
@@ -96,10 +87,44 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-
+    listenerHandlerThread = new HandlerThread("downLoadOfflineListenerThread");
+    listenerHandlerThread.start();
+    listenerHandler = new Handler(listenerHandlerThread.getLooper());
     return START_STICKY;
   }
   
+  
+  
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    listenerHandlerThread.getLooper().quit();
+    listenerHandlerThread = null;
+  }
+  
+  
+  private void runInListenerThread(Runnable runnable) {
+    if (listenerHandler == null) {
+      // Use a Throwable to ensure the stack trace is logged.
+      Log.e(TAG, "Tried to use listener thread before start()", new Throwable());
+      return;
+    }
+    listenerHandler.post(runnable);
+  }
+  
+  private void notifyOfflineUpdate(final MKOLUpdateElement update){
+    final Set<DownloadOfflineListener> listeners= downloadOfflineListeners.getRegisteredListeners();
+    runInListenerThread(new Runnable() {
+      @Override
+      public void run() {
+        for (DownloadOfflineListener listener : listeners) {
+          listener.notifyOfflineMapStateUpdate(update);
+        }
+      }
+    });
+  }
+
+
   private class InitOfflineMapTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
@@ -154,6 +179,14 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return result;
     }
     
+    public boolean isDownloading(){
+      return isDownloading;
+    }
+    
+    public MKOLUpdateElement getOfflineUpdateInfo(int cityID){
+      return mOffline.getUpdateInfo(cityID);
+    }
+    
     
     public boolean isBaiduMapInited(){
       return isBaiduMapInited;
@@ -164,15 +197,16 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   public void onGetOfflineMapState(int type, int state) {
     switch (type) {
       case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-        Log.d("OfflineDemo", String.format("cityid:%d update", state));
+        Log.d(TAG, String.format("cityid:%d update", state));
         MKOLUpdateElement update = mOffline.getUpdateInfo(state);
+        notifyOfflineUpdate(update);
       }
         break;
       case MKOfflineMap.TYPE_NEW_OFFLINE:
-        Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
+        Log.d(TAG, String.format("add offlinemap num:%d", state));
         break;
       case MKOfflineMap.TYPE_VER_UPDATE:
-        Log.d("OfflineDemo", String.format("new offlinemap ver"));
+        Log.d(TAG, String.format("new offlinemap ver"));
         break;
       default:
         break;
