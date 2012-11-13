@@ -10,12 +10,13 @@ import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class InstalledOfflineMapActivity extends SherlockActivity{
+public class InstalledOfflineMapActivity extends SherlockActivity implements OnClickListener{
  
   private MKOfflineMap mOffline = null;
   private ListView listview = null;
@@ -53,5 +54,14 @@ public class InstalledOfflineMapActivity extends SherlockActivity{
         finish();
       }    
     });
+  }
+
+  @Override
+  public void onClick(View view) {
+    Object tmp = view.getTag();
+    if((tmp != null)&&(tmp instanceof MKOLUpdateElement)){
+      MKOLUpdateElement updateElement = (MKOLUpdateElement)tmp;
+      mOffline.remove(updateElement.cityID);
+    }
   }
 }

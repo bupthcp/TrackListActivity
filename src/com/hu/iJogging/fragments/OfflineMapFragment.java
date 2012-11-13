@@ -9,20 +9,34 @@ import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.InstalledOfflineMapActivity;
 import com.hu.iJogging.OfflineSearchResultActivity;
 import com.hu.iJogging.Services.DownloadOfflineMapService;
+import com.hu.iJogging.common.OfflineCityItem;
+import com.hu.iJogging.common.OfflineMapCitiesParser;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Set;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class OfflineMapFragment extends Fragment{
   
@@ -74,7 +88,11 @@ public class OfflineMapFragment extends Fragment{
       }
     });
     TextView tvInstalledOfflineMapValue = (TextView)mFragmentView.findViewById(R.id.installed_offline_map_value);
-    tvInstalledOfflineMapValue.setText(Integer.toString(installedMapList.size()));
+    if(installedMapList != null){
+      tvInstalledOfflineMapValue.setText(Integer.toString(installedMapList.size()));
+    }else{
+      tvInstalledOfflineMapValue.setText("0");
+    }
     View Zone3 = mFragmentView.findViewById(R.id.zone3);
     Zone3.setClickable(true);
     Zone3.setOnClickListener(new OnClickListener(){
@@ -84,7 +102,61 @@ public class OfflineMapFragment extends Fragment{
         mActivity.startActivity(startSearchedIntent);
       }
     });
+    
+    Button button = (Button)mFragmentView.findViewById(R.id.button1);
+    button.setOnClickListener(new OnClickListener(){
+
+      @Override
+      public void onClick(View v) {
+        initOfflineMapTask.execute();
+      }
+      
+    });
+    
     return mFragmentView;
+  }
+  
+  
+  private String baiduMapUrl = "http://shouji.baidu.com/resource/xml/map/city.xml";
+  private String baiduMapUrlVector = "http://shouji.baidu.com/resource/xml/map/city_vector.xml";
+  private InitOfflineMapTask initOfflineMapTask = new InitOfflineMapTask();
+
+  private class InitOfflineMapTask extends AsyncTask<Void, Void, Void> {
+    @Override
+    protected Void doInBackground(Void... params) {
+      HttpClient httpClient = new DefaultHttpClient();
+      HttpUriRequest request = new HttpGet(baiduMapUrl);
+      try {
+        HttpResponse response = (HttpResponse) httpClient.execute(request);
+        HttpEntity entity = response.getEntity();
+        InputStream input = entity.getContent();
+//        File file = new File("/sdcard/baiduMap.xml");
+//        if (file.exists()) {
+//          file.delete();
+//        }
+//        file.createNewFile();
+//        OutputStream output = new FileOutputStream(file);
+//        byte[] buffer = new byte[1024];
+//        while ((input.read(buffer)) != -1) {
+//          output.write(buffer);
+//        }
+//        output.flush();
+//        output.close();
+
+        OfflineMapCitiesParser parser = new OfflineMapCitiesParser();
+        Set<OfflineCityItem> offlineCities =  parser.parse(input);
+        for(OfflineCityItem offlineCity : offlineCities){
+          Log.d(TAG, offlineCity.ArHighUrl);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+    }
   }
   
 }

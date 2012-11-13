@@ -6,6 +6,7 @@ import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class HotOfflineMapActivity extends SherlockActivity implements OnClickListener{
+public class HotOfflineMapActivity extends SherlockActivity implements OnClickListener, DownloadOfflineListener{
   
   private static final String TAG = HotOfflineMapActivity.class.getSimpleName();
   
@@ -42,6 +43,7 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
         Log.d(TAG, "downloadOfflineMapService service not available");
         return;
       }
+      downloadOfflineMapServiceBinder.registerDownloadOfflineListener(HotOfflineMapActivity.this);
     }
   };
   
@@ -59,6 +61,26 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
   
   
   
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if(downloadOfflineMapServiceBinder != null){
+      downloadOfflineMapServiceBinder.unRegisterDownloadOfflineListener(this);      
+    }
+  }
+
+
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if(downloadOfflineMapServiceBinder != null){
+      downloadOfflineMapServiceBinder.registerDownloadOfflineListener(this);
+    }
+  }
+
+
+
   @Override
   protected void onDestroy() {
     super.onDestroy();
@@ -105,14 +127,22 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
             //对已经下载完成的离线地图包不做处理
           }else{
             //正在下载的离线地图，进行暂停操作
-//            downloadOfflineMapServiceBinder.pauseDownload(searchRecord.cityID);
+            downloadOfflineMapServiceBinder.pauseDownload(searchRecord.cityID);
           }
         }else{
           //updateInfo为null说明下载并没有开始,则开始下载这个城市的离线地图包
-//          downloadOfflineMapServiceBinder.startDownload(searchRecord.cityID);
+          downloadOfflineMapServiceBinder.startDownload(searchRecord.cityID);
         }
       }
     }
+  }
+
+
+
+  @Override
+  public void notifyOfflineMapStateUpdate(MKOLUpdateElement update) {
+    // TODO Auto-generated method stub
+    adapter.notifyDataSetChanged();
   }
 
 }

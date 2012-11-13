@@ -4,6 +4,7 @@ import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.HotOfflineMapActivity;
+import com.hu.iJogging.InstalledOfflineMapActivity;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 
 import android.content.Context;
@@ -87,6 +88,10 @@ public class OfflineMapAdapter extends BaseAdapter{
       MKOLUpdateElement updateElement = (MKOLUpdateElement)mInstalledMapList.get(position);
       viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
       viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
+      viewholder.button_download.setOnClickListener((InstalledOfflineMapActivity)mCtx);
+      viewholder.button_download.setClickable(true);
+      viewholder.download.setText(R.string.strDownloadOfflineDelete);
+      viewholder.button_download.setTag(updateElement);
     }else if(mType == TYPE_SEARCHED){
       MKOLSearchRecord searchRecord = (MKOLSearchRecord)mSearchedMapList.get(position);
       viewholder.list_item_name.setText(searchRecord.cityName);

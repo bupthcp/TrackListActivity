@@ -8,6 +8,7 @@ import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.common.NotificationCode;
+import com.hu.iJogging.common.OfflineCityItem;
 
 import android.app.Notification;
 import android.app.Service;
@@ -21,7 +22,19 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 public class DownloadOfflineMapService extends Service implements MKOfflineMapListener {
   
@@ -32,15 +45,19 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   //百度MapAPI的管理类
   public static BMapManager mBMapMan = null;
   public static MKOfflineMap mOffline = null;
+  public static Set<OfflineCityItem> offlineCities = new HashSet<OfflineCityItem>();
   // 授权Key
   // TODO: 请输入您的Key,
   // 申请地址：http://dev.baidu.com/wiki/static/imap/key/
   public String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
   public boolean m_bKeyRight = true; // 授权Key正确，验证通过
   private boolean isBaiduMapInited = false;
+  
+  private String baiduMapUrl = "http://shouji.baidu.com/resource/xml/map/city.xml";
+  private String baiduMapUrlVector = "http://shouji.baidu.com/resource/xml/map/city_vector.xml";
 
   private boolean isDownloading = false;
-  private InitOfflineMapTask initOfflineMapTask = null;
+  private InitOfflineMapTask initOfflineMapTask = new InitOfflineMapTask();
   
   private HandlerThread listenerHandlerThread;
   private Handler listenerHandler;
@@ -59,7 +76,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     Log.d(TAG,"InitOfflineMapTask created");
     mOffline.init(mBMapMan, this);
     Log.d(TAG,"DownloadOfflineMapService created");
-    showNotification();
+    //showNotification();
   }
   
   
@@ -128,13 +145,32 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   private class InitOfflineMapTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
-
+      HttpClient httpClient = new DefaultHttpClient();
+      HttpUriRequest request = new HttpGet(baiduMapUrl);
+      try{
+        HttpResponse response = (HttpResponse)httpClient.execute(request);
+        HttpEntity entity = response.getEntity();
+        InputStream input = entity.getContent();
+        File file = new File("/sdcard/baiduMap.xml");
+        if(file.exists()){
+          file.delete();
+        }
+        file.createNewFile();
+        OutputStream output = new FileOutputStream(file); 
+        byte[] buffer = new byte[1024];  
+        while((input.read(buffer)) != -1){  
+            output.write(buffer);  
+        }  
+        output.flush();  
+        output.close();
+      }catch(Exception e){
+        e.printStackTrace();
+      }
       return null;
     }
 
     @Override
     protected void onPostExecute(Void result) {
-      isBaiduMapInited = true;
     }
   }
 
@@ -166,16 +202,15 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
 
   public class DownloadOfflineMapServiceBinder extends Binder {
     public boolean startDownload(int cityId) {
-      if (isDownloading) { return false; }
       boolean result = mOffline.start(cityId);
-      isDownloading = true;
+      isDownloading = result;
+      //showNotification();
       return result;
     }
 
     public boolean pauseDownload(int cityId) {
-      if (!isDownloading) { return false; }
       boolean result = mOffline.pause(cityId);
-      isDownloading = false;
+      isDownloading = result;
       return result;
     }
     
@@ -190,6 +225,18 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     
     public boolean isBaiduMapInited(){
       return isBaiduMapInited;
+    }
+    
+    public boolean registerDownloadOfflineListener(DownloadOfflineListener listener){
+      return downloadOfflineListeners.registerDownloadOfflineListener(listener);
+    }
+    
+    public boolean unRegisterDownloadOfflineListener(DownloadOfflineListener listener){
+      return downloadOfflineListeners.unRegisterDownloadOfflineListener(listener);
+    }
+    
+    public void startDownloadXml(){
+      initOfflineMapTask.execute();
     }
   }
 
