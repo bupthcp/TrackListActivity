@@ -6,9 +6,11 @@ import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.HotOfflineMapActivity;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.InstalledOfflineMapActivity;
 import com.hu.iJogging.OfflineSearchResultActivity;
 import com.hu.iJogging.Services.DownloadOfflineMapService;
+import com.hu.iJogging.common.IJoggingDatabaseUtils;
 import com.hu.iJogging.common.OfflineCityItem;
 import com.hu.iJogging.common.OfflineMapCitiesParser;
 
@@ -17,7 +19,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,6 +58,7 @@ public class OfflineMapFragment extends Fragment{
     activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
     activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
     mOffline = DownloadOfflineMapService.mOffline;
+    iJoggingDatabaseUtils = ((IJoggingApplication)(mActivity.getApplication())).getIJoggingDatabaseUtils();
   }
   
   @Override
@@ -120,6 +122,7 @@ public class OfflineMapFragment extends Fragment{
   private String baiduMapUrl = "http://shouji.baidu.com/resource/xml/map/city.xml";
   private String baiduMapUrlVector = "http://shouji.baidu.com/resource/xml/map/city_vector.xml";
   private InitOfflineMapTask initOfflineMapTask = new InitOfflineMapTask();
+  private IJoggingDatabaseUtils iJoggingDatabaseUtils = null;
 
   private class InitOfflineMapTask extends AsyncTask<Void, Void, Void> {
     @Override
@@ -145,9 +148,7 @@ public class OfflineMapFragment extends Fragment{
 
         OfflineMapCitiesParser parser = new OfflineMapCitiesParser();
         Set<OfflineCityItem> offlineCities =  parser.parse(input);
-        for(OfflineCityItem offlineCity : offlineCities){
-          Log.d(TAG, offlineCity.ArHighUrl);
-        }
+        iJoggingDatabaseUtils.updateAllCities(offlineCities);
       } catch (Exception e) {
         e.printStackTrace();
       }

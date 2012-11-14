@@ -7,12 +7,14 @@ import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.maps.mytracks.BuildConfig;
 import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.common.ConfigFree;
+import com.hu.iJogging.common.IJoggingDatabaseUtils;
 
 import android.app.Application;
 import android.content.Intent;
 
 public class IJoggingApplication extends Application{
   private TrackDataHub trackDataHub;
+  private IJoggingDatabaseUtils iJoggingDatabaseUtils;
   
   @Override
   //建议在您app的退出之前调用mapadpi的destroy()函数，避免重复初始化带来的时间消耗
@@ -46,5 +48,12 @@ public class IJoggingApplication extends Application{
       trackDataHub = TrackDataHub.newInstance(getApplicationContext());
     }
     return trackDataHub;
+  }
+  
+  public synchronized IJoggingDatabaseUtils getIJoggingDatabaseUtils(){
+    if(iJoggingDatabaseUtils == null){
+      iJoggingDatabaseUtils = new IJoggingDatabaseUtils(getApplicationContext());
+    }
+    return iJoggingDatabaseUtils;
   }
 }
