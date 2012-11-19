@@ -10,9 +10,12 @@ import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.common.NotificationCode;
 import com.hu.iJogging.common.OfflineCityItem;
 
+import android.app.DownloadManager;
+import android.app.DownloadManager.Request;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
@@ -62,21 +65,22 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   private HandlerThread listenerHandlerThread;
   private Handler listenerHandler;
   private DownloadOfflineListeners downloadOfflineListeners;
+  
+  public static final String BMAP_SDK_PATH ="/BaiduMapSdk";
+  private DownloadManager downloadMgr=null;
 
   @Override
   public void onCreate() {
-    downloadOfflineListeners = new DownloadOfflineListeners();
-    downloadOfflineMapService = this;
-    downloadOfflineMapServiceBinder = new DownloadOfflineMapServiceBinder();
-    mBMapMan = new BMapManager(DownloadOfflineMapService.this);
-    mBMapMan.init(mStrKey, new MyGeneralListener());
-    mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-    mBMapMan.start();
-    mOffline = new MKOfflineMap();
-    Log.d(TAG,"InitOfflineMapTask created");
-    mOffline.init(mBMapMan, this);
-    Log.d(TAG,"DownloadOfflineMapService created");
     //showNotification();
+  }
+  
+  /*baidu地图的sdk在init的时候会从http://dl.imap.baidu.com/update/VerDatset.dat
+  *下载四个dat文件,这四个问题件包含了所有sdk需要的离线地图信息。但是通过sdk去管理
+  *离线地图会有程序崩溃的显现，所有现在使用自己获取地图压缩包的方式进行管理。
+  *在应用程序开始运行时，就将baidumapsdk这个目录初始化好，避免sdk再次从网络申请
+  */
+  private void initBaiduMapSdkDir(){
+    
   }
   
   
@@ -107,6 +111,21 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     listenerHandlerThread = new HandlerThread("downLoadOfflineListenerThread");
     listenerHandlerThread.start();
     listenerHandler = new Handler(listenerHandlerThread.getLooper());
+    downloadOfflineListeners = new DownloadOfflineListeners();
+    downloadOfflineMapService = this;
+    downloadOfflineMapServiceBinder = new DownloadOfflineMapServiceBinder();
+    mBMapMan = new BMapManager(DownloadOfflineMapService.this);
+    mBMapMan.init(mStrKey, new MyGeneralListener());
+    mBMapMan.getLocationManager().setNotifyInternal(10, 5);
+    mBMapMan.start();
+    mOffline = new MKOfflineMap();
+    Log.d(TAG,"InitOfflineMapTask created");
+    mOffline.init(mBMapMan, this);
+    mOffline.scan();
+    Log.d(TAG,"DownloadOfflineMapService created");
+    if(null == downloadMgr){
+      downloadMgr = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+    }
     return START_STICKY;
   }
   
@@ -214,6 +233,19 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return result;
     }
     
+    public void startDownloadZip(String url){
+      Uri uri=Uri.parse(url);
+      Request downloadRequst = new DownloadManager.Request(uri)
+      .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
+      .setAllowedOverRoaming(false)
+      .setTitle("Demo")
+      .setDescription("Something useful. No, really.")
+      .setDestinationInExternalPublicDir(BMAP_SDK_PATH,
+                                         "test.zip");
+      downloadMgr.enqueue(downloadRequst);
+      isDownloading = true;
+    }
+    
     public boolean isDownloading(){
       return isDownloading;
     }
@@ -249,6 +281,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
         notifyOfflineUpdate(update);
       }
         break;
+        //调用scan完成之后会发出这个消息
       case MKOfflineMap.TYPE_NEW_OFFLINE:
         Log.d(TAG, String.format("add offlinemap num:%d", state));
         break;

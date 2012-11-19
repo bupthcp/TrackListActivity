@@ -53,6 +53,12 @@ public class IJoggingDatabaseUtils {
     }
   }
   
+  public Cursor getOfflineCitiesCursor(){
+    Cursor cursor = null;
+    cursor = db.query(TABLE_OFFLINE_NAME, null, null, null, null, null, null);
+    return cursor;
+  }
+  
   /*
    * cityName 为null，则返回全部城市
    * 如果不为null，则是进行搜索

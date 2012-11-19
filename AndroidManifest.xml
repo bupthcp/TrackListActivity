@@ -25,6 +25,8 @@ limitations under the License.
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
     </uses-permission>
     
+  <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+    
   <!-- Permission to initialize services -->
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <!-- Permissions to record locations -->
@@ -86,7 +88,7 @@ limitations under the License.
     android:protectionLevel="dangerous" />
 
   <uses-sdk
-    android:minSdkVersion="7"
+    android:minSdkVersion="9"
     android:targetSdkVersion="15" />
   <!-- Required features -->
   <uses-feature
@@ -233,6 +235,7 @@ limitations under the License.
     <activity android:name="com.hu.iJogging.HotOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.OfflineSearchResultActivity"/>
+    <activity android:name="com.hu.iJogging.AllOfflineMapActivity"/>
     
     <!-- Services -->
     <service

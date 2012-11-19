@@ -4,7 +4,7 @@ import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.HotOfflineMapActivity;
+import com.hu.iJogging.AllOfflineMapActivity;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.InstalledOfflineMapActivity;
@@ -58,6 +58,7 @@ public class OfflineMapFragment extends Fragment{
     activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
     activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
     mOffline = DownloadOfflineMapService.mOffline;
+    mOffline.scan();
     iJoggingDatabaseUtils = ((IJoggingApplication)(mActivity.getApplication())).getIJoggingDatabaseUtils();
   }
   
@@ -85,8 +86,10 @@ public class OfflineMapFragment extends Fragment{
     Zone2.setOnClickListener(new OnClickListener(){
       @Override
       public void onClick(View v) {
-        Intent startHotOfflineIntent = new Intent(getActivity(), HotOfflineMapActivity.class);
-        mActivity.startActivity(startHotOfflineIntent);
+//        Intent startHotOfflineIntent = new Intent(getActivity(), HotOfflineMapActivity.class);
+//        mActivity.startActivity(startHotOfflineIntent);
+        Intent startAllOfflineIntent = new Intent(getActivity(), AllOfflineMapActivity.class);
+        mActivity.startActivity(startAllOfflineIntent);
       }
     });
     TextView tvInstalledOfflineMapValue = (TextView)mFragmentView.findViewById(R.id.installed_offline_map_value);
