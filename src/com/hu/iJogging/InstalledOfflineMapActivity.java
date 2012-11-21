@@ -5,10 +5,12 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
+import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
+import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -17,22 +19,49 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class InstalledOfflineMapActivity extends SherlockActivity implements OnClickListener{
+  
+  private static final String TAG = InstalledOfflineMapActivity.class.getSimpleName();
  
   private MKOfflineMap mOffline = null;
   private ListView listview = null;
   private OfflineMapAdapter adapter = null;
   private ArrayList<MKOLUpdateElement> installedMapList;  
   
+  private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
+  private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
+  
+  private final Runnable bindChangedCallback = new Runnable() {
+    @Override
+    public void run() {
+      downloadOfflineMapServiceBinder = downloadOfflineMapServiceConnection.getServiceIfBound();
+      if (downloadOfflineMapServiceBinder == null) {
+        Log.d(TAG, "downloadOfflineMapService service not available");
+        return;
+      }
+      mOffline = downloadOfflineMapServiceBinder.getOfflineInstance();
+      mOffline.scan();
+      installedMapList = mOffline.getAllUpdateInfo();
+      adapter = new OfflineMapAdapter(InstalledOfflineMapActivity.this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);
+      listview.setAdapter(adapter);
+    }
+  };
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.offline_map_activity);
     setupActionBar();
-    mOffline=DownloadOfflineMapService.mOffline;
+    downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,bindChangedCallback);
+    downloadOfflineMapServiceConnection.bindService();
     listview =  (ListView)findViewById(R.id.map_list);
-    installedMapList = mOffline.getAllUpdateInfo();
-    adapter = new OfflineMapAdapter(this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);
-    listview.setAdapter(adapter);
+  }
+  
+  @Override
+  protected void onDestroy(){
+    if(downloadOfflineMapServiceConnection != null){
+      downloadOfflineMapServiceConnection.unbind();
+    }
+    super.onDestroy();
   }
   
   private void setupActionBar(){

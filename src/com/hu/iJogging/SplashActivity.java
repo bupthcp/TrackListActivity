@@ -27,6 +27,7 @@ public class SplashActivity extends Activity{
         return;
       }
       downloadOfflineMapServiceConnection.unbind();
+      downloadOfflineMapServiceConnection = null;
     }
   };
   
@@ -49,5 +50,13 @@ public class SplashActivity extends Activity{
     downloadOfflineMapServiceConnection.bindService();
     handler.postDelayed(delayedJob, 500);
     setContentView(R.layout.splash_activity);
+  }
+  
+  @Override
+  protected void onDestroy(){
+    if(downloadOfflineMapServiceConnection != null){
+      downloadOfflineMapServiceConnection.unbind();
+    }
+    super.onDestroy();
   }
 }

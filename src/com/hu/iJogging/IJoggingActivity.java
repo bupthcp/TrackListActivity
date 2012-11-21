@@ -17,6 +17,7 @@ import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import com.hu.iJogging.fragments.OfflineMapFragment;
@@ -50,6 +51,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   private TrackDataHub trackDataHub;
   public static final String EXTRA_STR_CURRENT_SPORT = "currentSport";
   public static final int SELECT_SPORT_REQUEST_CODE = 0;
+  public DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
   
   ViewPager mViewPager;
   ContainerPagerAdapter mContainerPagerAdapter;
@@ -65,6 +67,21 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     mActionBar.setListNavigationCallbacks(mAdapter, mAdapter.new OnNaviListener());
 //    mActionBar.setSelectedNavigationItem(1);
   }
+  
+  private final Runnable downloadOfflineMapBindChangedCallback = new Runnable() {
+    @Override
+    public void run() {
+      downloadOfflineMapServiceBinder = downloadOfflineMapServiceConnection.getServiceIfBound();
+      if (downloadOfflineMapServiceBinder == null) {
+        Log.d(TAG, "downloadOfflineMapService service not available");
+      }
+      mContainerPagerAdapter = new ContainerPagerAdapter(IJoggingActivity.this, getSupportFragmentManager());
+      mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
+      mViewPager.setVisibility(View.VISIBLE);
+      findViewById(R.id.fragment_container).setVisibility(View.GONE);
+      mViewPager.setAdapter(mContainerPagerAdapter);
+    }
+  };
 
   @Override
   protected void onCreate(Bundle bundle) {
@@ -79,7 +96,8 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     recordingTrackId = PreferencesUtils.getLong(this, R.string.recording_track_id_key);
     IJoggingApplication app = (IJoggingApplication) this.getApplication();
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
-    downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,null);
+    downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,downloadOfflineMapBindChangedCallback);
+    downloadOfflineMapServiceConnection.bindService();
     trackDataHub = app.getTrackDataHub();
     setupActionBar();
     if (null != mActionBar) {
@@ -87,14 +105,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     }
     
     this.setContentView(R.layout.i_jogging_main);
-    FragmentManager.enableDebugLogging(true);
-    
-    mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
-    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
-    mViewPager.setVisibility(View.VISIBLE);
-    findViewById(R.id.fragment_container).setVisibility(View.GONE);
-    mViewPager.setAdapter(mContainerPagerAdapter);
-
+    FragmentManager.enableDebugLogging(false);
   }
   
   @Override
@@ -160,6 +171,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
       case R.id.exit_action:
         stopRecording();
         downloadOfflineMapServiceConnection.stop();
+        downloadOfflineMapServiceConnection = null;
         finish();
         return true;
       default:
@@ -241,6 +253,14 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   public void onBackPressed(){
     super.onBackPressed();
     
+  }
+  
+  @Override
+  protected void onDestroy(){
+    if(downloadOfflineMapServiceConnection != null){
+      downloadOfflineMapServiceConnection.unbind();
+    }
+    super.onDestroy();
   }
   
   @Override

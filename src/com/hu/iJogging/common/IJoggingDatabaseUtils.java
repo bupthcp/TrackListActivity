@@ -59,6 +59,14 @@ public class IJoggingDatabaseUtils {
     return cursor;
   }
   
+  public int getAllOfflineCitiesCount(){
+    Cursor cursor = db.rawQuery("select count(*) from "+TABLE_OFFLINE_NAME,null);
+    cursor.moveToFirst();
+    int count= cursor.getInt(0);
+    cursor.close();
+    return count;
+  }
+  
   /*
    * cityName 为null，则返回全部城市
    * 如果不为null，则是进行搜索

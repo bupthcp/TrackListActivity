@@ -80,4 +80,6 @@ limitations under the License.
   <string name="settings_sensor_root_key">settingsSensorRoot</string>
   <string name="settings_sharing_key">settingsSharing</string>
   <string name="settings_stats_key">settingsStats</string>
+  
+  <string name="offline_download_id_key">offlineDownloadId</string>
 </resources>

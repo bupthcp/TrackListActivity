@@ -6,6 +6,7 @@ import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
+import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.common.NotificationCode;
 import com.hu.iJogging.common.OfflineCityItem;
@@ -14,7 +15,11 @@ import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
 import android.app.Notification;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -47,7 +52,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   private IBinder downloadOfflineMapServiceBinder = null;
   //百度MapAPI的管理类
   public static BMapManager mBMapMan = null;
-  public static MKOfflineMap mOffline = null;
+  private static MKOfflineMap mOffline = null;
   public static Set<OfflineCityItem> offlineCities = new HashSet<OfflineCityItem>();
   // 授权Key
   // TODO: 请输入您的Key,
@@ -68,6 +73,23 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   
   public static final String BMAP_SDK_PATH ="/BaiduMapSdk";
   private DownloadManager downloadMgr=null;
+  
+  private BroadcastReceiver onOfflineDownloadComplete=new BroadcastReceiver() {
+    public void onReceive(Context ctxt, Intent intent) {
+      long downloadId = PreferencesUtils.getLong(DownloadOfflineMapService.this, R.string.offline_download_id_key);
+      if(downloadId == -1L)
+        return;
+      Cursor cursor = downloadMgr.query(new DownloadManager.Query().setFilterById(downloadId));
+      if(cursor != null){
+        cursor.moveToFirst();
+        int fileNameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+        String uri = cursor.getString(fileNameIndex);
+        cursor.close();
+        InstallOfflineMapTask installOfflineMapTask = new InstallOfflineMapTask();
+        installOfflineMapTask.execute(uri);
+      }
+    }
+  };
 
   @Override
   public void onCreate() {
@@ -119,14 +141,15 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     mBMapMan.getLocationManager().setNotifyInternal(10, 5);
     mBMapMan.start();
     mOffline = new MKOfflineMap();
-    Log.d(TAG,"InitOfflineMapTask created");
     mOffline.init(mBMapMan, this);
     mOffline.scan();
     Log.d(TAG,"DownloadOfflineMapService created");
     if(null == downloadMgr){
       downloadMgr = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+      registerReceiver(onOfflineDownloadComplete,
+          new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
-    return START_STICKY;
+    return START_NOT_STICKY;
   }
   
   
@@ -136,6 +159,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     super.onDestroy();
     listenerHandlerThread.getLooper().quit();
     listenerHandlerThread = null;
+    unregisterReceiver(onOfflineDownloadComplete);
   }
   
   
@@ -159,6 +183,15 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       }
     });
   }
+  
+  private class InstallOfflineMapTask extends AsyncTask<String,Void,Void>{
+
+    @Override
+    protected Void doInBackground(String... params) {
+      return null;
+    }
+    
+  }
 
 
   private class InitOfflineMapTask extends AsyncTask<Void, Void, Void> {
@@ -177,7 +210,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
         file.createNewFile();
         OutputStream output = new FileOutputStream(file); 
         byte[] buffer = new byte[1024];  
-        while((input.read(buffer)) != -1){  
+        int len = 0;
+        while((len = input.read(buffer)) >0){  
             output.write(buffer);  
         }  
         output.flush();  
@@ -233,17 +267,16 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return result;
     }
     
-    public void startDownloadZip(String url){
+    public void startDownloadZip(String url,String cityName){
       Uri uri=Uri.parse(url);
       Request downloadRequst = new DownloadManager.Request(uri)
       .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
       .setAllowedOverRoaming(false)
-      .setTitle("Demo")
-      .setDescription("Something useful. No, really.")
-      .setDestinationInExternalPublicDir(BMAP_SDK_PATH,
-                                         "test.zip");
-      downloadMgr.enqueue(downloadRequst);
-      isDownloading = true;
+      .setTitle(getString(R.string.strDownloadOfflineTitle))
+      .setDescription(cityName)
+      .setDestinationInExternalPublicDir(BMAP_SDK_PATH,cityName+".zip");
+      long downloadId = downloadMgr.enqueue(downloadRequst);
+      PreferencesUtils.setLong(DownloadOfflineMapService.this, R.string.offline_download_id_key, downloadId);
     }
     
     public boolean isDownloading(){
@@ -254,6 +287,21 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return mOffline.getUpdateInfo(cityID);
     }
     
+    public MKOfflineMap getOfflineInstance(){
+      if(mOffline == null){
+        mOffline = new MKOfflineMap();
+        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
+        mOffline.scan();
+      }
+      return mOffline;
+    }
+    
+    public void resetBaiduMapSDK(){
+      if (mOffline != null) {
+        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
+        mOffline.scan();
+      }
+    }
     
     public boolean isBaiduMapInited(){
       return isBaiduMapInited;

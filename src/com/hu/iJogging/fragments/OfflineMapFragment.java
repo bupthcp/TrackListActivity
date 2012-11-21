@@ -1,6 +1,5 @@
 package com.hu.iJogging.fragments;
 
-import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
@@ -9,10 +8,10 @@ import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.InstalledOfflineMapActivity;
 import com.hu.iJogging.OfflineSearchResultActivity;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.common.IJoggingDatabaseUtils;
 import com.hu.iJogging.common.OfflineCityItem;
 import com.hu.iJogging.common.OfflineMapCitiesParser;
+import com.hu.iJogging.common.ZipUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -47,7 +46,7 @@ public class OfflineMapFragment extends Fragment{
   private MKOfflineMap mOffline = null;
   private View mFragmentView;
   private ArrayList<MKOLUpdateElement> installedMapList;  
-  private ArrayList<MKOLSearchRecord> searchedMapList;
+  private int allOfflineCitiesCount;
   
   @Override
   public void onAttach(Activity activity) {
@@ -57,7 +56,7 @@ public class OfflineMapFragment extends Fragment{
     mActivity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
     activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
     activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
-    mOffline = DownloadOfflineMapService.mOffline;
+    mOffline = ((IJoggingActivity)activity).downloadOfflineMapServiceBinder.getOfflineInstance();
     mOffline.scan();
     iJoggingDatabaseUtils = ((IJoggingApplication)(mActivity.getApplication())).getIJoggingDatabaseUtils();
   }
@@ -66,7 +65,7 @@ public class OfflineMapFragment extends Fragment{
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mFragmentView = getActivity().getLayoutInflater().inflate(R.layout.offline_map_introduction, container, false);
     installedMapList = mOffline.getAllUpdateInfo();
-    searchedMapList = mOffline.getOfflineCityList();
+    allOfflineCitiesCount = iJoggingDatabaseUtils.getAllOfflineCitiesCount();
     ImageView searchButton = (ImageView)mFragmentView.findViewById(R.id.search_offline_map_button);
     searchButton.setClickable(true);
     searchButton.setOnClickListener(new OnClickListener(){
@@ -80,7 +79,7 @@ public class OfflineMapFragment extends Fragment{
       }     
     });
     TextView tvHotOfflineMapValue = (TextView)mFragmentView.findViewById(R.id.hot_offline_map_value);
-    tvHotOfflineMapValue.setText(Integer.toString(searchedMapList.size()));
+    tvHotOfflineMapValue.setText(Integer.toString(allOfflineCitiesCount));
     View Zone2 = mFragmentView.findViewById(R.id.zone2);
     Zone2.setClickable(true);
     Zone2.setOnClickListener(new OnClickListener(){
@@ -114,6 +113,30 @@ public class OfflineMapFragment extends Fragment{
       @Override
       public void onClick(View v) {
         initOfflineMapTask.execute();
+      }
+      
+    });
+    
+    Button button2 = (Button)mFragmentView.findViewById(R.id.button2);
+    button2.setOnClickListener(new OnClickListener(){
+
+      @Override
+      public void onClick(View v) {
+        mActivity.downloadOfflineMapServiceBinder.resetBaiduMapSDK();
+      }
+      
+    });
+    
+    Button button3 = (Button)mFragmentView.findViewById(R.id.button3);
+    button3.setOnClickListener(new OnClickListener(){
+
+      @Override
+      public void onClick(View v) {
+        try{
+          ZipUtils.unZipOneFolder("/sdcard/BaiduMapSdk/…Ã¬Â –.zip","/sdcard/BaiduMapSdk","BaiduMap","utf-8");
+        }catch(Exception e){
+          e.printStackTrace();
+        }
       }
       
     });

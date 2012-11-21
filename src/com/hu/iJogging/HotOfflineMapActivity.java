@@ -7,7 +7,6 @@ import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineListener;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
@@ -37,12 +36,15 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
     @Override
     public void run() {
       downloadOfflineMapServiceBinder = downloadOfflineMapServiceConnection.getServiceIfBound();
-      adapter = new OfflineMapAdapter(HotOfflineMapActivity.this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
-      listview.setAdapter(adapter);
       if (downloadOfflineMapServiceBinder == null) {
         Log.d(TAG, "downloadOfflineMapService service not available");
         return;
       }
+      mOffline = downloadOfflineMapServiceBinder.getOfflineInstance();
+      mOffline.scan();
+      searchedMapList = mOffline.getOfflineCityList();
+      adapter = new OfflineMapAdapter(HotOfflineMapActivity.this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
+      listview.setAdapter(adapter);
       downloadOfflineMapServiceBinder.registerDownloadOfflineListener(HotOfflineMapActivity.this);
     }
   };
@@ -52,12 +54,12 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
     super.onCreate(savedInstanceState);
     setContentView(R.layout.offline_map_activity);
     setupActionBar();
-    mOffline = DownloadOfflineMapService.mOffline;
     listview =  (ListView)findViewById(R.id.map_list);
-    searchedMapList = mOffline.getOfflineCityList();
     downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,bindChangedCallback);
     downloadOfflineMapServiceConnection.bindService();
   }
+  
+  
   
   
   
@@ -82,9 +84,11 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
 
 
   @Override
-  protected void onDestroy() {
+  protected void onDestroy(){
+    if(downloadOfflineMapServiceConnection != null){
+      downloadOfflineMapServiceConnection.unbind();
+    }
     super.onDestroy();
-    downloadOfflineMapServiceConnection.unbind();
   }
   
   public DownloadOfflineMapServiceBinder getDownloadOfflineService(){

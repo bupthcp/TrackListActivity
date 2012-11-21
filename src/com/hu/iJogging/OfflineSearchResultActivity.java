@@ -5,7 +5,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.baidu.mapapi.MKOLSearchRecord;
 import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
@@ -29,11 +28,11 @@ public class OfflineSearchResultActivity extends SherlockActivity{
     setupActionBar();
     String searchStr = this.getIntent().getExtras().getString(OFFLIE_RESULT_STRING);
     if(searchStr != null){
-      mOffline = DownloadOfflineMapService.mOffline;
-      listview =  (ListView)findViewById(R.id.map_list);
-      searchedMapList = mOffline.searchCity(searchStr);
-      adapter = new OfflineMapAdapter(this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
-      listview.setAdapter(adapter);
+//      mOffline = DownloadOfflineMapService.mOffline;
+//      listview =  (ListView)findViewById(R.id.map_list);
+//      searchedMapList = mOffline.searchCity(searchStr);
+//      adapter = new OfflineMapAdapter(this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
+//      listview.setAdapter(adapter);
     }
   }
   

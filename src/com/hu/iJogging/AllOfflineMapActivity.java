@@ -59,18 +59,22 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         String ArLowUrl = cursor.getString(idx_ArLowUrl);
         String ArHighSize = cursor.getString(idx_ArHighSize);
         String ArLowSize = cursor.getString(idx_ArLowSize);
+        ViewHolder viewHolder = new ViewHolder();
         TextView list_item_name = (TextView) view.findViewById(R.id.list_item_name);
         if((name == null)||(name.equals(""))){
           list_item_name.setText(province);
+          viewHolder.cityName = province;
         }else{
           list_item_name.setText(name);
+          viewHolder.cityName = name;
         }        
         TextView list_item_total_size = (TextView) view.findViewById(R.id.list_item_total_size);
         list_item_total_size.setText(ArHighSize);
         View button_download = view.findViewById(R.id.button_download);
         button_download.setClickable(true);
         button_download.setOnClickListener(AllOfflineMapActivity.this);
-        button_download.setTag(ArHighUrl);
+        viewHolder.url = ArHighUrl;
+        button_download.setTag(viewHolder);
       }
     };
     downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,bindChangedCallback);
@@ -117,13 +121,30 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
     });
   }
   
+  private class ViewHolder{
+    String url;
+    String cityName;
+  }
+  
+  @Override
+  protected void onDestroy(){
+    if(downloadOfflineMapServiceConnection != null){
+      downloadOfflineMapServiceConnection.unbind();
+    }
+    Cursor cursor = resourceCursorAdapter.getCursor();
+    if(cursor != null){
+      cursor.close();
+    }
+    super.onDestroy();
+  }
+  
 
   @Override
   public void onClick(View v) {
     Object tmp = v.getTag();
     if(tmp != null){
-      String url = (String)tmp;
-      downloadOfflineMapServiceBinder.startDownloadZip(url);
+      ViewHolder viewHolder = (ViewHolder)tmp;
+      downloadOfflineMapServiceBinder.startDownloadZip(viewHolder.url,viewHolder.cityName);
     }
   }
 
