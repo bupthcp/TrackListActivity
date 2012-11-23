@@ -8,7 +8,11 @@ import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.maps.mytracks.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import com.hu.iJogging.common.NotificationCode;
+import com.hu.iJogging.common.OfflineCity;
 import com.hu.iJogging.common.OfflineCityItem;
 
 import android.app.DownloadManager;
@@ -23,6 +27,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -31,10 +36,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -297,10 +307,55 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     }
     
     public void resetBaiduMapSDK(){
-      if (mOffline != null) {
-        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
-        mOffline.scan();
+//      if (mOffline != null) {
+//        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
+//        mOffline.scan();
+//      }
+      if(mBMapMan != null){
+        mBMapMan.stop();
+        mBMapMan.destroy();
+        mBMapMan = null;
       }
+      mBMapMan = new BMapManager(DownloadOfflineMapService.this);
+      mBMapMan.init(mStrKey, new MyGeneralListener());
+      mBMapMan.getLocationManager().setNotifyInternal(10, 5);
+      mBMapMan.start();
+      mOffline = new MKOfflineMap();
+      mOffline.init(mBMapMan, DownloadOfflineMapService.this);
+      mOffline.scan();
+    }
+    
+    public void deleteOfflineMap(int cityID){
+      File file = new File(Environment.getExternalStorageDirectory().getPath()+"/BaiduMapSdk/OfflineUpdate.dat");
+      if(!file.exists())
+        return;
+      try{
+        FileInputStream input = new FileInputStream(file); 
+        JsonReader jsonReader = new JsonReader(new InputStreamReader(input,"GBK")); 
+        Gson gson = new Gson();
+        jsonReader.setLenient(true);
+        Type listType = new TypeToken<ArrayList<OfflineCity>>() {}.getType();
+        List<OfflineCity> cities = gson.fromJson(jsonReader, listType);
+        input.close();
+        jsonReader = null;
+        OfflineCity cityToBeDel = null;
+        for(OfflineCity city:cities){
+          if(city.li == cityID){
+            cityToBeDel = city;
+          }
+        }
+        if(cityToBeDel != null){
+          cities.remove(cityToBeDel);
+        }
+        String json = gson.toJson(cities);
+        FileOutputStream output = new FileOutputStream(file);
+        output.write(json.getBytes());
+        output.flush();
+        output.close();
+        Log.i(TAG, "get json");
+      }catch(Exception e){
+        e.printStackTrace();
+      } 
     }
     
     public boolean isBaiduMapInited(){
