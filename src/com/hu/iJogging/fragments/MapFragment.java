@@ -1,9 +1,8 @@
 package com.hu.iJogging.fragments;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.Mj;
-import com.baidu.mapapi.Overlay;
+import com.amap.mapapi.core.GeoPoint;
+import com.amap.mapapi.map.MapController;
+import com.amap.mapapi.map.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils.Factory;
@@ -108,18 +107,6 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment, container,false);
     mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
-    int i = 20;
-    int j = 40;
-    if (Mj.InitMapControlCC(i, j) == 1)
-    {
-      mapView.init();
-//      if (Mj.d != mapView)
-//      {
-//        Mj.d = mapView;
-//        if (mapView != null)
-//            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
-//      }
-    }
 
     
     mapOverlay = new MapOverlay(getActivity());
@@ -607,7 +594,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       keepMyLocationVisible = false;
       GeoPoint center = new GeoPoint(bottom + latitudeSpanE6 / 2, left + longitudeSpanE6 / 2);
       if (LocationUtils.isValidGeoPoint(center)) {
-        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
+        mapView.getController().setCenter(LocationUtils.convertToGaodeGeopoint(center));
         mapView.getController().zoomToSpan(latitudeSpanE6, longitudeSpanE6);
       }
     }

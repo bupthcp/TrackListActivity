@@ -7,7 +7,7 @@ package com.google.android.apps.mytracks.maps;
  * @author huchenpeng
  *
  */
-import com.baidu.mapapi.MapView;
+import com.amap.mapapi.map.MapView;
 
 import android.content.Context;
 import android.util.AttributeSet;

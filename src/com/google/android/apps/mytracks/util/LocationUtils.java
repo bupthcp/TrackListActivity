@@ -15,8 +15,8 @@
  */
 package com.google.android.apps.mytracks.util;
 
-import com.baidu.mapapi.CoordinateConvert;
-import com.baidu.mapapi.GeoPoint;
+import com.amap.mapapi.core.GeoPoint;
+import com.amap.mapapi.core.h;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.stats.TripStatistics;
@@ -252,11 +252,11 @@ public class LocationUtils {
    * 这个方法只能在需要在baidu地图上进行显示之前调用，存入数据库中的都必须是原始的地理信息
    */
   public static void setGeoInLocation(Location location){
-    GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
-                               (int) (location.getLongitude() * 1E6));
-    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
-    location.setLatitude((p2.getLatitudeE6())/1E6);
-    location.setLongitude((p2.getLongitudeE6())/1E6);
+//    GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
+//                               (int) (location.getLongitude() * 1E6));
+//    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
+//    location.setLatitude((p2.getLatitudeE6())/1E6);
+//    location.setLongitude((p2.getLongitudeE6())/1E6);
   }
   
   
@@ -264,11 +264,23 @@ public class LocationUtils {
    * 使用baidu地图提供的方法将一个原始的GeoPoint转化为可以在baidu地图上显示的GeoPoint
    * 即增加了便宜量
    */
-  public static GeoPoint convertToBaiduGeopoint(GeoPoint geoPoint){
+  public static GeoPoint convertToGaodeGeopoint(GeoPoint geoPoint){
     GeoPoint p1 = new GeoPoint((int) (geoPoint.getLatitudeE6() ),
                                (int) (geoPoint.getLongitudeE6()) );
-    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
-    return p2;
+    try
+    {
+      GeoPoint.b localb1 = new GeoPoint.b(geoPoint.getLatitudeE6(), geoPoint.getLongitudeE6());
+      h localh = new h(localb1, d.b(this.b), this.a, null);
+
+      GeoPoint.b localb2 = (GeoPoint.b)localh.j();
+      if (null != localb2) {
+        paramDouble2 = localb2.a;
+        paramDouble1 = localb2.b;
+      }
+    } catch (Exception localException) {
+      return new ArrayList();
+    }
+    return p1;
   }
 
   /**

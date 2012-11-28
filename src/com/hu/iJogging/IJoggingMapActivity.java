@@ -1,10 +1,10 @@
 package com.hu.iJogging;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.MapActivity;
-import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.MapView;
-import com.baidu.mapapi.Overlay;
+import com.amap.mapapi.core.GeoPoint;
+import com.amap.mapapi.map.MapActivity;
+import com.amap.mapapi.map.MapController;
+import com.amap.mapapi.map.MapView;
+import com.amap.mapapi.map.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils.Factory;
@@ -18,7 +18,6 @@ import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.common.LocationUtility;
 
 import android.content.Intent;
@@ -90,11 +89,10 @@ public class IJoggingMapActivity extends MapActivity implements View.OnTouchList
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
     this.setContentView(R.layout.map_activity);
-    super.initMapActivity(DownloadOfflineMapService.mBMapMan);
     isViewHistory = this.getIntent().getBooleanExtra(IS_VIEW_HISTORY,false);
     loadedTrackID = this.getIntent().getLongExtra(TRACK_ID, -1L);
     mapView = (MapView) findViewById(R.id.map_view);
-    
+    mapView.setVectorMap(true);
     mapOverlay = new MapOverlay(this);
     
     List<Overlay> overlays = mapView.getOverlays();
@@ -562,7 +560,7 @@ public class IJoggingMapActivity extends MapActivity implements View.OnTouchList
       keepMyLocationVisible = false;
       GeoPoint center = new GeoPoint(bottom + latitudeSpanE6 / 2, left + longitudeSpanE6 / 2);
       if (LocationUtils.isValidGeoPoint(center)) {
-        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
+        mapView.getController().setCenter(LocationUtils.convertToGaodeGeopoint(center));
         mapView.getController().zoomToSpan(latitudeSpanE6, longitudeSpanE6);
       }
     }

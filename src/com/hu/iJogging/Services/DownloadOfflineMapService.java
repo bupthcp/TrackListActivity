@@ -1,11 +1,5 @@
 package com.hu.iJogging.Services;
 
-import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.MKEvent;
-import com.baidu.mapapi.MKGeneralListener;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.maps.mytracks.R;
 import com.google.gson.Gson;
@@ -33,7 +27,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,15 +47,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class DownloadOfflineMapService extends Service implements MKOfflineMapListener {
+public class DownloadOfflineMapService extends Service {
   
   public static final String TAG = DownloadOfflineMapService.class.getSimpleName();
 
   static DownloadOfflineMapService downloadOfflineMapService;
   private IBinder downloadOfflineMapServiceBinder = null;
-  //百度MapAPI的管理类
-  public static BMapManager mBMapMan = null;
-  private static MKOfflineMap mOffline = null;
+
   public static Set<OfflineCityItem> offlineCities = new HashSet<OfflineCityItem>();
   // 授权Key
   // TODO: 请输入您的Key,
@@ -116,27 +107,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   }
   
   
-  // 常用事件监听，用来处理通常的网络错误，授权验证错误等
-  public static class MyGeneralListener implements MKGeneralListener {
-      @Override
-      public void onGetNetworkState(int iError) {
-          Log.d("MyGeneralListener", "onGetNetworkState error is "+ iError);
-          Toast.makeText(downloadOfflineMapService, "您的网络出错啦！",
-                  Toast.LENGTH_LONG).show();
-      }
-
-      @Override
-      public void onGetPermissionState(int iError) {
-          Log.d("MyGeneralListener", "onGetPermissionState error is "+ iError);
-          if (iError ==  MKEvent.ERROR_PERMISSION_DENIED) {
-              // 授权Key错误：
-              Toast.makeText(downloadOfflineMapService, 
-                      "请在BMapApiDemoApp.java文件输入正确的授权Key！",
-                      Toast.LENGTH_LONG).show();
-              downloadOfflineMapService.m_bKeyRight = false;
-          }
-      }
-  }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
@@ -146,13 +116,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     downloadOfflineListeners = new DownloadOfflineListeners();
     downloadOfflineMapService = this;
     downloadOfflineMapServiceBinder = new DownloadOfflineMapServiceBinder();
-    mBMapMan = new BMapManager(DownloadOfflineMapService.this);
-    mBMapMan.init(mStrKey, new MyGeneralListener());
-    mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-    mBMapMan.start();
-    mOffline = new MKOfflineMap();
-    mOffline.init(mBMapMan, this);
-    mOffline.scan();
     Log.d(TAG,"DownloadOfflineMapService created");
     if(null == downloadMgr){
       downloadMgr = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
@@ -182,13 +145,13 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     listenerHandler.post(runnable);
   }
   
-  private void notifyOfflineUpdate(final MKOLUpdateElement update){
+  private void notifyOfflineUpdate(){
     final Set<DownloadOfflineListener> listeners= downloadOfflineListeners.getRegisteredListeners();
     runInListenerThread(new Runnable() {
       @Override
       public void run() {
         for (DownloadOfflineListener listener : listeners) {
-          listener.notifyOfflineMapStateUpdate(update);
+          listener.notifyOfflineMapStateUpdate();
         }
       }
     });
@@ -265,15 +228,12 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
 
   public class DownloadOfflineMapServiceBinder extends Binder {
     public boolean startDownload(int cityId) {
-      boolean result = mOffline.start(cityId);
-      isDownloading = result;
-      //showNotification();
+      boolean result = true;
       return result;
     }
 
     public boolean pauseDownload(int cityId) {
-      boolean result = mOffline.pause(cityId);
-      isDownloading = result;
+      boolean result = true;
       return result;
     }
     
@@ -293,37 +253,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return isDownloading;
     }
     
-    public MKOLUpdateElement getOfflineUpdateInfo(int cityID){
-      return mOffline.getUpdateInfo(cityID);
-    }
+
     
-    public MKOfflineMap getOfflineInstance(){
-      if(mOffline == null){
-        mOffline = new MKOfflineMap();
-        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
-        mOffline.scan();
-      }
-      return mOffline;
-    }
-    
-    public void resetBaiduMapSDK(){
-//      if (mOffline != null) {
-//        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
-//        mOffline.scan();
-//      }
-      if(mBMapMan != null){
-        mBMapMan.stop();
-        mBMapMan.destroy();
-        mBMapMan = null;
-      }
-      mBMapMan = new BMapManager(DownloadOfflineMapService.this);
-      mBMapMan.init(mStrKey, new MyGeneralListener());
-      mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-      mBMapMan.start();
-      mOffline = new MKOfflineMap();
-      mOffline.init(mBMapMan, DownloadOfflineMapService.this);
-      mOffline.scan();
-    }
     
     public void deleteOfflineMap(int cityID){
       File file = new File(Environment.getExternalStorageDirectory().getPath()+"/BaiduMapSdk/OfflineUpdate.dat");
@@ -372,27 +303,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     
     public void startDownloadXml(){
       initOfflineMapTask.execute();
-    }
-  }
-
-  @Override
-  public void onGetOfflineMapState(int type, int state) {
-    switch (type) {
-      case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-        Log.d(TAG, String.format("cityid:%d update", state));
-        MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-        notifyOfflineUpdate(update);
-      }
-        break;
-        //调用scan完成之后会发出这个消息
-      case MKOfflineMap.TYPE_NEW_OFFLINE:
-        Log.d(TAG, String.format("add offlinemap num:%d", state));
-        break;
-      case MKOfflineMap.TYPE_VER_UPDATE:
-        Log.d(TAG, String.format("new offlinemap ver"));
-        break;
-      default:
-        break;
     }
   }
 

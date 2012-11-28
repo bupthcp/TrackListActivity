@@ -15,8 +15,8 @@
  */
 package com.google.android.apps.mytracks.maps;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.Projection;
+import com.amap.mapapi.core.GeoPoint;
+import com.amap.mapapi.map.Projection;
 import com.google.android.apps.mytracks.MapOverlay.CachedLocation;
 import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;

@@ -2,8 +2,6 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLSearchRecord;
-import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
 
@@ -12,13 +10,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class OfflineSearchResultActivity extends SherlockActivity{
-  private MKOfflineMap mOffline = null;
   private ListView listview = null;
   private OfflineMapAdapter adapter = null;
-  private ArrayList<MKOLSearchRecord> searchedMapList;
   public static final String OFFLIE_RESULT_STRING = "city_name";
   
   @Override

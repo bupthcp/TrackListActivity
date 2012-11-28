@@ -15,12 +15,6 @@
  */
 package com.google.android.apps.mytracks;
 
-import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.MKEvent;
-import com.baidu.mapapi.MKGeneralListener;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.MKOfflineMapListener;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
@@ -30,8 +24,6 @@ import com.hu.iJogging.common.ConfigFree;
 
 import android.app.Application;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * MyTracksApplication for keeping global state.
@@ -44,77 +36,22 @@ public class MyTracksApplication extends Application {
   
   static MyTracksApplication mDemoApp;
   
-  //百度MapAPI的管理类
-  public BMapManager mBMapMan = null;
-  public MKOfflineMap mOffline = null;
-  
-  // 授权Key
-  // TODO: 请输入您的Key,
-  // 申请地址：http://dev.baidu.com/wiki/static/imap/key/
-  public String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
-  public boolean m_bKeyRight = true; // 授权Key正确，验证通过
-  
-  // 常用事件监听，用来处理通常的网络错误，授权验证错误等
-  public static class MyGeneralListener implements MKGeneralListener {
-      @Override
-      public void onGetNetworkState(int iError) {
-          Log.d("MyGeneralListener", "onGetNetworkState error is "+ iError);
-          Toast.makeText(MyTracksApplication.mDemoApp.getApplicationContext(), "您的网络出错啦！",
-                  Toast.LENGTH_LONG).show();
-      }
 
-      @Override
-      public void onGetPermissionState(int iError) {
-          Log.d("MyGeneralListener", "onGetPermissionState error is "+ iError);
-          if (iError ==  MKEvent.ERROR_PERMISSION_DENIED) {
-              // 授权Key错误：
-              Toast.makeText(MyTracksApplication.mDemoApp.getApplicationContext(), 
-                      "请在BMapApiDemoApp.java文件输入正确的授权Key！",
-                      Toast.LENGTH_LONG).show();
-              MyTracksApplication.mDemoApp.m_bKeyRight = false;
-          }
-      }
-  }
+  
 
   
   @Override
   //建议在您app的退出之前调用mapadpi的destroy()函数，避免重复初始化带来的时间消耗
   public void onTerminate() {
       // TODO Auto-generated method stub
-      if (mBMapMan != null) {
-          mBMapMan.destroy();
-          mBMapMan = null;
-      }
+
       super.onTerminate();
   }
   @Override
   public void onCreate() {
     super.onCreate();
     mDemoApp = this;
-    mBMapMan = new BMapManager(this);
-    mBMapMan.init(this.mStrKey, new MyGeneralListener());
-    mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-    mBMapMan.start();
-    mOffline = new MKOfflineMap();
-    mOffline.init(mBMapMan, new MKOfflineMapListener() {
-      @Override
-      public void onGetOfflineMapState(int type, int state) {
-        switch (type) {
-          case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-            MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-            // mText.setText(String.format("%s : %d%%", update.cityName,
-            // update.ratio));
-          }
-            break;
-          case MKOfflineMap.TYPE_NEW_OFFLINE:
-            Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
-            break;
-          case MKOfflineMap.TYPE_VER_UPDATE:
-            Log.d("OfflineDemo", String.format("new offlinemap ver"));
-            break;
-        }
-      }
-    });
+
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }

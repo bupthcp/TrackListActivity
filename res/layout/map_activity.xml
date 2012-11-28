@@ -4,7 +4,7 @@
 
     <!-- apiKey corresponds to certificate md5: 81:DF:A2:63:53:C7:6B:1E:6C:24:62:D4:91:1C:36:3A -->
 
-    <com.baidu.mapapi.MapView
+    <com.amap.mapapi.map.MapView
         android:id="@+id/map_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

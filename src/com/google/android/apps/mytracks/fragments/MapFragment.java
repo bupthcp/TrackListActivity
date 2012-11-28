@@ -16,10 +16,9 @@
 
 package com.google.android.apps.mytracks.fragments;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.Mj;
-import com.baidu.mapapi.Overlay;
+import com.amap.mapapi.core.GeoPoint;
+import com.amap.mapapi.map.MapController;
+import com.amap.mapapi.map.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.TrackDetailActivity;
@@ -113,16 +112,16 @@ public class MapFragment extends Fragment
     mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
     int i = 20;
     int j = 40;
-    if (Mj.InitMapControlCC(i, j) == 1)
-    {
-      mapView.init();
-//      if (Mj.d != mapView)
-//      {
-//        Mj.d = mapView;
-//        if (mapView != null)
-//            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
-//      }
-    }
+//    if (Mj.InitMapControlCC(i, j) == 1)
+//    {
+//      mapView.init();
+////      if (Mj.d != mapView)
+////      {
+////        Mj.d = mapView;
+////        if (mapView != null)
+////            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
+////      }
+//    }
 
     
     mapOverlay = new MapOverlay(getActivity());

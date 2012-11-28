@@ -2,8 +2,6 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
@@ -16,16 +14,13 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class InstalledOfflineMapActivity extends SherlockActivity implements OnClickListener{
   
   private static final String TAG = InstalledOfflineMapActivity.class.getSimpleName();
  
-  private MKOfflineMap mOffline = null;
   private ListView listview = null;
   private OfflineMapAdapter adapter = null;
-  private ArrayList<MKOLUpdateElement> installedMapList;  
+
   
   private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
   private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
@@ -38,10 +33,7 @@ public class InstalledOfflineMapActivity extends SherlockActivity implements OnC
         Log.d(TAG, "downloadOfflineMapService service not available");
         return;
       }
-      mOffline = downloadOfflineMapServiceBinder.getOfflineInstance();
-      mOffline.scan();
-      installedMapList = mOffline.getAllUpdateInfo();
-      adapter = new OfflineMapAdapter(InstalledOfflineMapActivity.this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);
+      adapter = new OfflineMapAdapter(InstalledOfflineMapActivity.this,null,null,OfflineMapAdapter.TYPE_INSTALLED);
       listview.setAdapter(adapter);
     }
   };
@@ -87,16 +79,5 @@ public class InstalledOfflineMapActivity extends SherlockActivity implements OnC
 
   @Override
   public void onClick(View view) {
-    Object tmp = view.getTag();
-    if((tmp != null)&&(tmp instanceof MKOLUpdateElement)){
-      MKOLUpdateElement updateElement = (MKOLUpdateElement)tmp;
-      Log.i(TAG, "cityId= "+updateElement.cityID);
-//      downloadOfflineMapServiceBinder.deleteOfflineMap(updateElement.cityID);
-      mOffline.remove(updateElement.cityID);
-//      Bundle a = new Bundle();
-//      a.putInt("act", 16010300);
-//      a.putInt("opt", updateElement.cityID);
-//      Mj.sendBundle(a);
-    }
   }
 }

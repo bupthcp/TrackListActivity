@@ -2,9 +2,6 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLSearchRecord;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
@@ -18,16 +15,12 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class HotOfflineMapActivity extends SherlockActivity implements OnClickListener, DownloadOfflineListener{
   
   private static final String TAG = HotOfflineMapActivity.class.getSimpleName();
   
-  private MKOfflineMap mOffline = null;
   private ListView listview = null;
   private OfflineMapAdapter adapter = null;
-  private ArrayList<MKOLSearchRecord> searchedMapList;
   private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
   private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
   
@@ -40,10 +33,7 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
         Log.d(TAG, "downloadOfflineMapService service not available");
         return;
       }
-      mOffline = downloadOfflineMapServiceBinder.getOfflineInstance();
-      mOffline.scan();
-      searchedMapList = mOffline.getOfflineCityList();
-      adapter = new OfflineMapAdapter(HotOfflineMapActivity.this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
+      adapter = new OfflineMapAdapter(HotOfflineMapActivity.this,null,null,OfflineMapAdapter.TYPE_SEARCHED);
       listview.setAdapter(adapter);
       downloadOfflineMapServiceBinder.registerDownloadOfflineListener(HotOfflineMapActivity.this);
     }
@@ -121,32 +111,16 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
   @Override
   public void onClick(View v) {
     Object tmp = v.getTag();
-    if((tmp !=null)&&( tmp instanceof MKOLSearchRecord)){
-      MKOLSearchRecord searchRecord =(MKOLSearchRecord)tmp ;
-      if(downloadOfflineMapServiceBinder != null){
-        Log.d(TAG, searchRecord.cityName+" is clicked");
-        MKOLUpdateElement updateInfo = downloadOfflineMapServiceBinder.getOfflineUpdateInfo(searchRecord.cityID);
-        if(updateInfo != null){
-          if(updateInfo.status == MKOLUpdateElement.FINISHED){
-            //对已经下载完成的离线地图包不做处理
-          }else{
-            //正在下载的离线地图，进行暂停操作
-            downloadOfflineMapServiceBinder.pauseDownload(searchRecord.cityID);
-          }
-        }else{
-          //updateInfo为null说明下载并没有开始,则开始下载这个城市的离线地图包
-          downloadOfflineMapServiceBinder.startDownload(searchRecord.cityID);
-        }
-      }
-    }
   }
 
 
 
   @Override
-  public void notifyOfflineMapStateUpdate(MKOLUpdateElement update) {
+  public void notifyOfflineMapStateUpdate() {
     // TODO Auto-generated method stub
     adapter.notifyDataSetChanged();
   }
+
+
 
 }

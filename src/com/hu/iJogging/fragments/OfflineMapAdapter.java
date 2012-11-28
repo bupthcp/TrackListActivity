@@ -1,10 +1,8 @@
 package com.hu.iJogging.fragments;
 
-import com.baidu.mapapi.MKOLSearchRecord;
-import com.baidu.mapapi.MKOLUpdateElement;
+
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.HotOfflineMapActivity;
-import com.hu.iJogging.InstalledOfflineMapActivity;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 
 import android.content.Context;
@@ -18,37 +16,29 @@ import java.util.ArrayList;
 public class OfflineMapAdapter extends BaseAdapter{
   
   Context mCtx;
-  private ArrayList<MKOLUpdateElement> mInstalledMapList;  
-  private ArrayList<MKOLSearchRecord> mSearchedMapList;
+
   public final static  int TYPE_INSTALLED = 1;
   public final static  int TYPE_SEARCHED= 2;
   private int mType;
   private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
   
   
-  public OfflineMapAdapter(Context ctx,ArrayList<MKOLUpdateElement> installedMapList,ArrayList<MKOLSearchRecord> searchedMapList,int type){
+  public OfflineMapAdapter(Context ctx,ArrayList installedMapList,ArrayList searchedMapList,int type){
     mCtx = ctx;
     mType = type;
     if(type == TYPE_INSTALLED){
-      mInstalledMapList = installedMapList;
+
     }else if(type == TYPE_SEARCHED){
-      mSearchedMapList = searchedMapList;
+
       downloadOfflineMapServiceBinder = ((HotOfflineMapActivity)mCtx).getDownloadOfflineService();
     }else{
-      mInstalledMapList = installedMapList;
+
     }
   }
 
   @Override
   public int getCount() {
-    int count;
-    if((mType == TYPE_INSTALLED)&&(mInstalledMapList != null)){
-      count = mInstalledMapList.size();
-    }else if((mType == TYPE_SEARCHED)&&(mSearchedMapList!=null)){
-      count = mSearchedMapList.size();
-    }else{
-      count = 0;
-    }
+    int count=0;
     return count;
   }
 
@@ -85,42 +75,10 @@ public class OfflineMapAdapter extends BaseAdapter{
       viewholder = (ViewHolder) convertView.getTag();
     }
     if(mType == TYPE_INSTALLED){
-      MKOLUpdateElement updateElement = (MKOLUpdateElement)mInstalledMapList.get(position);
-      viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
-      viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
-      viewholder.button_download.setOnClickListener((InstalledOfflineMapActivity)mCtx);
-      viewholder.button_download.setClickable(true);
-      viewholder.download.setText(R.string.strDownloadOfflineDelete);
-      viewholder.button_download.setTag(updateElement);
+
     }else if(mType == TYPE_SEARCHED){
-      MKOLSearchRecord searchRecord = (MKOLSearchRecord)mSearchedMapList.get(position);
-      viewholder.list_item_name.setText(searchRecord.cityName);
-      viewholder.list_item_total_size.setText(Integer.toString(searchRecord.size));
-      viewholder.button_download.setClickable(true);
-      viewholder.button_download.setTag(searchRecord);
-      viewholder.button_download.setOnClickListener((HotOfflineMapActivity)mCtx);
-      if(downloadOfflineMapServiceBinder != null){
-        MKOLUpdateElement updateInfo = downloadOfflineMapServiceBinder.getOfflineUpdateInfo(searchRecord.cityID);
-        if(updateInfo != null){
-          if(updateInfo.status == MKOLUpdateElement.FINISHED){
-            viewholder.download_percentage.setVisibility(View.GONE);
-            viewholder.download.setText(R.string.strDownloadOfflineFinished);
-            viewholder.button_download.setClickable(false);
-            viewholder.button_download.setBackgroundResource(R.drawable.btn_style_one);
-          }else{
-            String percentage = mCtx.getString(R.string.strDownloadOfflinePercetage, updateInfo.ratio);
-            viewholder.download_percentage.setText(percentage);
-            viewholder.download.setText(R.string.strDownloadOfflineING);
-          }
-        }else{
-          //updateInfo为null说明下载并没有开始
-          String percentage = mCtx.getString(R.string.strDownloadOfflinePercetage, 0);
-          viewholder.download_percentage.setText(percentage);
-        }
-      }
+
     }else{
-      viewholder.list_item_name.setText(((MKOLUpdateElement)mInstalledMapList.get(position)).cityName);
-      viewholder.list_item_total_size.setText(Integer.toString(((MKOLUpdateElement)mInstalledMapList.get(position)).size));
     }
 
     return convertView;

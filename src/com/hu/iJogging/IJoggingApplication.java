@@ -5,7 +5,6 @@ import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.maps.mytracks.BuildConfig;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.common.ConfigFree;
 import com.hu.iJogging.common.IJoggingDatabaseUtils;
 
@@ -20,10 +19,6 @@ public class IJoggingApplication extends Application{
   //建议在您app的退出之前调用mapadpi的destroy()函数，避免重复初始化带来的时间消耗
   public void onTerminate() {
       // TODO Auto-generated method stub
-      if (DownloadOfflineMapService.mBMapMan != null) {
-        DownloadOfflineMapService.mBMapMan.destroy();
-        DownloadOfflineMapService.mBMapMan = null;
-      }
       super.onTerminate();
   }
   @Override
