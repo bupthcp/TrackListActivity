@@ -1,8 +1,9 @@
-package com.hu.iJogging.fragments;
+package com.hu.iJogging;
 
 import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.MapActivity;
 import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.Mj;
+import com.baidu.mapapi.MapView;
 import com.baidu.mapapi.Overlay;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
@@ -12,32 +13,24 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.maps.bMapView;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.IJoggingActivity;
-import com.hu.iJogging.IJoggingApplication;
-import com.hu.iJogging.ViewHistoryActivity;
+import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.common.LocationUtility;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -46,16 +39,25 @@ import android.widget.Toast;
 import java.util.EnumSet;
 import java.util.List;
 
-public class MapFragment extends Fragment
-implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
-  public static final String MAP_FRAGMENT_TAG = "MapFragment";
-  Activity mActivity;
-  Boolean isViewHistory = false;
+public class IJoggingMapActivity extends MapActivity implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   
+  
+
+  @Override
+  protected boolean isRouteDisplayed() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+  
+  private boolean isViewHistory;
+
   private Handler mapFragmentHandler= new Handler();
   
   private static final String KEY_CURRENT_LOCATION = "currentLocation";
   private static final String KEY_KEEP_MY_LOCATION_VISIBLE = "keepMyLocationVisible";
+  public static final  String IS_VIEW_HISTORY = "isViewHistory";
+  public static final  String TRACK_ID = "trackID";
+  private long loadedTrackID = -1L;
 
   private TrackDataHub trackDataHub;
 
@@ -78,51 +80,22 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private Location currentLocation;
 
   // UI elements
-  private View mapViewContainer;
-  private bMapView mapView;
+  private MapView mapView;
   private MapOverlay mapOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
-  
-  @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    if(activity instanceof IJoggingActivity){
-      isViewHistory = false;
-    }else if(activity instanceof ViewHistoryActivity){
-      isViewHistory = true;
-    }
-    mActivity = activity;
-    activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
-    activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
-  }
+
 
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    setHasOptionsMenu(true);
-  }
-
-  @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment, container,false);
-    mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
-    int i = 20;
-    int j = 40;
-    if (Mj.InitMapControlCC(i, j) == 1)
-    {
-      mapView.init();
-//      if (Mj.d != mapView)
-//      {
-//        Mj.d = mapView;
-//        if (mapView != null)
-//            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
-//      }
-    }
-
+    this.setContentView(R.layout.map_activity);
+    super.initMapActivity(DownloadOfflineMapService.mBMapMan);
+    isViewHistory = this.getIntent().getBooleanExtra(IS_VIEW_HISTORY,false);
+    loadedTrackID = this.getIntent().getLongExtra(TRACK_ID, -1L);
+    mapView = (MapView) findViewById(R.id.map_view);
     
-    mapOverlay = new MapOverlay(getActivity());
+    mapOverlay = new MapOverlay(this);
     
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
@@ -131,57 +104,49 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapView.requestFocus();
     mapView.setOnTouchListener(this);
     mapView.setBuiltInZoomControls(false);
-    myLocationImageButton = (ImageButton) mapViewContainer.findViewById(R.id.map_my_location);
+    myLocationImageButton = (ImageButton) findViewById(R.id.map_my_location);
     myLocationImageButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         showMyLocation();       
       }
     });
-    messageTextView = (TextView) mapViewContainer.findViewById(R.id.map_message);
+    messageTextView = (TextView) findViewById(R.id.map_message);
 
-    ApiAdapterFactory.getApiAdapter().invalidMenu(getActivity());
+    ApiAdapterFactory.getApiAdapter().invalidMenu(this);
     
-    ((Button) this.mapViewContainer.findViewById(R.id.ButtonDashboardCorner))
+    ((Button) findViewById(R.id.ButtonDashboardCorner))
     .setOnTouchListener(new View.OnTouchListener() {
       public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
         if (paramMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-//           backStack();
-          if(isViewHistory){
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.remove(MapFragment.this);
-            ft.commit();
-            ((ViewHistoryActivity)mActivity).switchToTrainingDetailContainer();
-          }else{
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.remove(MapFragment.this);
-            ft.commit();
-            ((IJoggingActivity)mActivity).switchToTrainingDetailContainer();            
-          }
+          finish();
         }
         return true;
       }
     });
     
-    return mapViewContainer;
-  }
-
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    if (savedInstanceState != null) {
-      keepMyLocationVisible = savedInstanceState.getBoolean(KEY_KEEP_MY_LOCATION_VISIBLE, false);
-      currentLocation = (Location) savedInstanceState.getParcelable(KEY_CURRENT_LOCATION);
+    if (bundle != null) {
+      keepMyLocationVisible = bundle.getBoolean(KEY_KEEP_MY_LOCATION_VISIBLE, false);
+      currentLocation = (Location) bundle.getParcelable(KEY_CURRENT_LOCATION);
       if (currentLocation != null) {
         updateCurrentLocation();
       }
     }
+    
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
   }
 
   @Override
   public void onResume() {
     super.onResume();
     myLocationImageButton.setVisibility(View.VISIBLE);
+    trackDataHub = ((IJoggingApplication) getApplication()).getTrackDataHub();
+    trackDataHub.loadTrack(loadedTrackID);
+    trackDataHub.start();
     resumeTrackDataHub();
     initMapCenter();
   }
@@ -198,35 +163,25 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onPause() {
     super.onPause();
+    trackDataHub.stop();
     pauseTrackDataHub();
   }
 
-  //在这里实现onDestroyView是为了保证在fragment切换的
-  //时候，fragment的container是干净的，
-  //如果不加上这个清理过程，有可能会出现两个fragment重叠
-  //在一起显示的情况
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    ViewGroup parentViewGroup = (ViewGroup) mapViewContainer.getParent();
-    if (parentViewGroup != null) {
-      parentViewGroup.removeView(mapViewContainer);
-    }
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = this.getMenuInflater();
+    inflater.inflate(R.menu.map, menu);
+    return super.onCreateOptionsMenu(menu);
   }
 
   @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflator) {
-    menuInflator.inflate(R.menu.map, menu);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
+  public boolean onPrepareOptionsMenu(Menu menu) {
     int titleId = R.string.menu_satellite_mode;
     if (mapView != null) {
       titleId = mapView.isSatellite() ? R.string.menu_map_mode : R.string.menu_satellite_mode;
     }
     menu.findItem(R.id.map_satellite_mode).setTitle(titleId);
-    super.onPrepareOptionsMenu(menu);
+    return super.onPrepareOptionsMenu(menu);
   }
 
   @Override
@@ -256,7 +211,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * @param id the marker id
    */
   private void showMarker(long id) {
-    MyTracksProviderUtils MyTracksProviderUtils = Factory.get(getActivity());
+    MyTracksProviderUtils MyTracksProviderUtils = Factory.get(this);
     Waypoint waypoint = MyTracksProviderUtils.getWaypoint(id);
     if (waypoint != null && waypoint.getLocation() != null) {
       keepMyLocationVisible = false;
@@ -338,7 +293,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         throw new IllegalArgumentException("Unexpected state: " + state);
     }
 
-    getActivity().runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         if (messageId != -1) {
@@ -347,10 +302,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
           myLocationImageButton.setVisibility(View.VISIBLE);
 
           if (isGpsDisabled) {
-            Toast.makeText(getActivity(), R.string.gps_not_found, Toast.LENGTH_LONG).show();
+            Toast.makeText(IJoggingMapActivity.this, R.string.gps_not_found, Toast.LENGTH_LONG).show();
 
             // Click to show the location source settings
-            messageTextView.setOnClickListener(MapFragment.this);
+            messageTextView.setOnClickListener(IJoggingMapActivity.this);
           } else {
             messageTextView.setOnClickListener(null);
           }
@@ -376,7 +331,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onSelectedTrackChanged(final Track track, final boolean isRecording) {
-    getActivity().runOnUiThread(new Runnable() {
+    runOnUiThread(new Runnable() {
       @Override
       public void run() {
         boolean hasTrack = track != null;
@@ -469,7 +424,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((IJoggingApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub = ((IJoggingApplication)getApplication()).getTrackDataHub();
     //如果是查看界面，不需要启动gps信息，所以就不用注册location相关的listener了，
     //也就不会触发gps
     if(isViewHistory){
@@ -619,7 +574,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    */
   private void initMapCenter(){
     if(currentLocation == null){
-      Location locationTmp=LocationUtility.getInstance(getActivity()).getLastKnownLocation();
+      Location locationTmp=LocationUtility.getInstance(this).getLastKnownLocation();
       if(locationTmp == null)
         return;
       currentLocation = locationTmp;
@@ -632,7 +587,4 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     }
   }
   
-  private void backStack(){
-    getFragmentManager().popBackStack();
-  }
 }

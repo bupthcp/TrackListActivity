@@ -236,6 +236,7 @@ limitations under the License.
     <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.OfflineSearchResultActivity"/>
     <activity android:name="com.hu.iJogging.AllOfflineMapActivity"/>
+    <activity android:name="com.hu.iJogging.IJoggingMapActivity"/>
     
     <!-- Services -->
     <service

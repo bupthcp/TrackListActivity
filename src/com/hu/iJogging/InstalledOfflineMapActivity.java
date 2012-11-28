@@ -93,6 +93,10 @@ public class InstalledOfflineMapActivity extends SherlockActivity implements OnC
       Log.i(TAG, "cityId= "+updateElement.cityID);
 //      downloadOfflineMapServiceBinder.deleteOfflineMap(updateElement.cityID);
       mOffline.remove(updateElement.cityID);
+//      Bundle a = new Bundle();
+//      a.putInt("act", 16010300);
+//      a.putInt("opt", updateElement.cityID);
+//      Mj.sendBundle(a);
     }
   }
 }

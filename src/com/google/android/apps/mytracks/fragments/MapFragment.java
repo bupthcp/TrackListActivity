@@ -116,12 +116,12 @@ public class MapFragment extends Fragment
     if (Mj.InitMapControlCC(i, j) == 1)
     {
       mapView.init();
-      if (Mj.d != mapView)
-      {
-        Mj.d = mapView;
-        if (mapView != null)
-            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
-      }
+//      if (Mj.d != mapView)
+//      {
+//        Mj.d = mapView;
+//        if (mapView != null)
+//            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
+//      }
     }
 
     

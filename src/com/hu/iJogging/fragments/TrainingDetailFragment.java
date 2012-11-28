@@ -12,6 +12,7 @@ import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.IJoggingApplication;
+import com.hu.iJogging.IJoggingMapActivity;
 import com.hu.iJogging.MainZoneLayout;
 import com.hu.iJogging.MotivationMainButton;
 import com.hu.iJogging.SelectSportsActivity;
@@ -284,7 +285,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
         .setOnTouchListener(new View.OnTouchListener() {
           public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
             if (paramMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-               startMapFragment();
+              startMapActivity();
             }
             return true;
           }
@@ -476,6 +477,20 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     ft.add(R.id.fragment_container, mapFragment, MapFragment.MAP_FRAGMENT_TAG);
     ft.commit();
   }
+  
+  private void startMapActivity(){
+    Intent startMapActivityIntent = new Intent(getActivity(),IJoggingMapActivity.class);
+    startMapActivityIntent.putExtra(IJoggingMapActivity.IS_VIEW_HISTORY, isViewHistory);
+    if(isViewHistory){
+      startMapActivityIntent.putExtra(IJoggingMapActivity.TRACK_ID, ((ViewHistoryActivity)mActivity).trackId);
+    }else{
+      startMapActivityIntent.putExtra(IJoggingMapActivity.TRACK_ID, ((IJoggingActivity)mActivity).recordingTrackId);
+    }
+    
+    getActivity().startActivity(startMapActivityIntent);
+    getActivity().overridePendingTransition(R.anim.enter_workout_map,R.anim.exit_workout_map);
+  }
+
   
   private void startSelectSportsFragment(){
     SelectSportsFragment selectSportsFragment = new SelectSportsFragment();

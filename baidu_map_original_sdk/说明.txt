@@ -1,0 +1,2 @@
+BaiduMapApi_All_Android_1.3.3.rar是百度离线地图sdk的1.3.3版
+而baidumapapi_modified.jar是在BaiduMapApi_All_Android_1.3.2的基础上去除mapActivity与mapview关联的jar包
