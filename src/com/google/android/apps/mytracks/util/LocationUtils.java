@@ -16,7 +16,6 @@
 package com.google.android.apps.mytracks.util;
 
 import com.amap.mapapi.core.GeoPoint;
-import com.amap.mapapi.core.h;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.stats.TripStatistics;
@@ -267,19 +266,6 @@ public class LocationUtils {
   public static GeoPoint convertToGaodeGeopoint(GeoPoint geoPoint){
     GeoPoint p1 = new GeoPoint((int) (geoPoint.getLatitudeE6() ),
                                (int) (geoPoint.getLongitudeE6()) );
-    try
-    {
-      GeoPoint.b localb1 = new GeoPoint.b(geoPoint.getLatitudeE6(), geoPoint.getLongitudeE6());
-      h localh = new h(localb1, d.b(this.b), this.a, null);
-
-      GeoPoint.b localb2 = (GeoPoint.b)localh.j();
-      if (null != localb2) {
-        paramDouble2 = localb2.a;
-        paramDouble1 = localb2.b;
-      }
-    } catch (Exception localException) {
-      return new ArrayList();
-    }
     return p1;
   }
 
