@@ -4,6 +4,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
+import com.baidu.mapapi.Mj;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
@@ -40,6 +41,9 @@ public class InstalledOfflineMapActivity extends SherlockActivity implements OnC
       }
       mOffline = downloadOfflineMapServiceBinder.getOfflineInstance();
       mOffline.scan();
+      int i = 20;
+      int j = 40;
+      Mj.InitMapControlCC(i, j);
       installedMapList = mOffline.getAllUpdateInfo();
       adapter = new OfflineMapAdapter(InstalledOfflineMapActivity.this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);
       listview.setAdapter(adapter);

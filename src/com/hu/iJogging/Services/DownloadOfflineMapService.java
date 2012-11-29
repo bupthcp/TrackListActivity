@@ -306,6 +306,10 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return mOffline;
     }
     
+    public BMapManager getBMapManager(){
+      return mBMapMan;
+    }
+    
     public void resetBaiduMapSDK(){
 //      if (mOffline != null) {
 //        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
