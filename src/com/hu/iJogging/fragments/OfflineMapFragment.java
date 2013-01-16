@@ -11,7 +11,6 @@ import com.hu.iJogging.OfflineSearchResultActivity;
 import com.hu.iJogging.common.IJoggingDatabaseUtils;
 import com.hu.iJogging.common.OfflineCityItem;
 import com.hu.iJogging.common.OfflineMapCitiesParser;
-import com.hu.iJogging.common.ZipUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -107,40 +105,6 @@ public class OfflineMapFragment extends Fragment{
       }
     });
     
-    Button button = (Button)mFragmentView.findViewById(R.id.button1);
-    button.setOnClickListener(new OnClickListener(){
-
-      @Override
-      public void onClick(View v) {
-        initOfflineMapTask.execute();
-      }
-      
-    });
-    
-    Button button2 = (Button)mFragmentView.findViewById(R.id.button2);
-    button2.setOnClickListener(new OnClickListener(){
-
-      @Override
-      public void onClick(View v) {
-        mActivity.downloadOfflineMapServiceBinder.resetBaiduMapSDK();
-      }
-      
-    });
-    
-    Button button3 = (Button)mFragmentView.findViewById(R.id.button3);
-    button3.setOnClickListener(new OnClickListener(){
-
-      @Override
-      public void onClick(View v) {
-        try{
-          ZipUtils.unZipOneFolder("/sdcard/BaiduMapSdk/…Ã¬Â –.zip","/sdcard/BaiduMapSdk","BaiduMap","utf-8");
-        }catch(Exception e){
-          e.printStackTrace();
-        }
-      }
-      
-    });
-    
     return mFragmentView;
   }
   
@@ -159,18 +123,6 @@ public class OfflineMapFragment extends Fragment{
         HttpResponse response = (HttpResponse) httpClient.execute(request);
         HttpEntity entity = response.getEntity();
         InputStream input = entity.getContent();
-//        File file = new File("/sdcard/baiduMap.xml");
-//        if (file.exists()) {
-//          file.delete();
-//        }
-//        file.createNewFile();
-//        OutputStream output = new FileOutputStream(file);
-//        byte[] buffer = new byte[1024];
-//        while ((input.read(buffer)) != -1) {
-//          output.write(buffer);
-//        }
-//        output.flush();
-//        output.close();
 
         OfflineMapCitiesParser parser = new OfflineMapCitiesParser();
         Set<OfflineCityItem> offlineCities =  parser.parse(input);

@@ -270,10 +270,31 @@ public class ZipUtils {
     }
     try {
       ZipFile zip = new ZipFile(zipFileFullName, encoding);
-      Enumeration zipFileEntries = zip.getEntries();
-
-      while (zipFileEntries.hasMoreElements()) {
-        ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+      Enumeration zipFileEntriesForDirs = zip.getEntries();
+      
+      //首先获得zip包中所有的路径信息，创建路径
+      while (zipFileEntriesForDirs.hasMoreElements()) {
+        ZipEntry entry = (ZipEntry) zipFileEntriesForDirs.nextElement();
+        String entryName = entry.getName();
+        int position = entryName.indexOf(prefix);
+        if (position == -1) {
+          continue;
+        } else {
+          String tmp = entryName.substring(position + prefix.length());
+          if (tmp.endsWith("/")) {
+            String folderStr = outputFolder + "/" + tmp;
+            File folder = new File(folderStr);
+            if (!folder.exists()) {
+              folder.mkdirs();
+            }
+          }
+        }
+      }
+      
+      //路径创建完成之后，才可以继续读取文件信息，创建对应的文件
+      Enumeration zipFileEntriesForFiles = zip.getEntries();
+      while (zipFileEntriesForFiles.hasMoreElements()) {
+        ZipEntry entry = (ZipEntry) zipFileEntriesForFiles.nextElement();
         String entryName = entry.getName();
         int position = entryName.indexOf(prefix);
         if (position == -1) {
@@ -295,17 +316,12 @@ public class ZipUtils {
             }  
             output.flush();  
             output.close();
-          }else{
-            String folderStr = outputFolder + "/" + tmp;  
-            File folder = new File(folderStr);  
-            if (!folder.exists()) {  
-                folder.mkdirs();  
-            }  
           }
         }
       }
+      
     } catch (Exception e) {
-
+      e.printStackTrace();
     }
   }
   

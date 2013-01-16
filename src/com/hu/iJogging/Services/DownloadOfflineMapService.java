@@ -11,9 +11,13 @@ import com.google.android.maps.mytracks.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.hu.iJogging.IJoggingApplication;
+import com.hu.iJogging.common.IJoggingDatabaseUtils;
 import com.hu.iJogging.common.NotificationCode;
 import com.hu.iJogging.common.OfflineCity;
 import com.hu.iJogging.common.OfflineCityItem;
+import com.hu.iJogging.common.OfflineMapCitiesParser;
+import com.hu.iJogging.common.ZipUtils;
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
@@ -40,7 +44,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,6 +76,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   
   private String baiduMapUrl = "http://shouji.baidu.com/resource/xml/map/city.xml";
   private String baiduMapUrlVector = "http://shouji.baidu.com/resource/xml/map/city_vector.xml";
+  
+  private IJoggingDatabaseUtils iJoggingDatabaseUtils = null;
 
   private boolean isDownloading = false;
   private InitOfflineMapTask initOfflineMapTask = new InitOfflineMapTask();
@@ -140,6 +145,12 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
+    iJoggingDatabaseUtils = ((IJoggingApplication)getApplication()).getIJoggingDatabaseUtils();
+    if(null != iJoggingDatabaseUtils){
+      if(iJoggingDatabaseUtils.getAllOfflineCitiesCount() == 0){
+        initOfflineMapTask.execute();
+      }
+    }
     listenerHandlerThread = new HandlerThread("downLoadOfflineListenerThread");
     listenerHandlerThread.start();
     listenerHandler = new Handler(listenerHandlerThread.getLooper());
@@ -198,6 +209,15 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
 
     @Override
     protected Void doInBackground(String... params) {
+      try{
+        String fileUriTemp = params[0];
+        if(fileUriTemp.startsWith("file:")){
+          fileUriTemp = fileUriTemp.substring(5);
+        }
+        ZipUtils.unZipOneFolder(fileUriTemp,"/sdcard/BaiduMapSdk","BaiduMap","utf-8");
+      }catch(Exception e){
+        e.printStackTrace();
+      }
       return null;
     }
     
@@ -209,24 +229,15 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     protected Void doInBackground(Void... params) {
       HttpClient httpClient = new DefaultHttpClient();
       HttpUriRequest request = new HttpGet(baiduMapUrl);
-      try{
-        HttpResponse response = (HttpResponse)httpClient.execute(request);
+      try {
+        HttpResponse response = (HttpResponse) httpClient.execute(request);
         HttpEntity entity = response.getEntity();
         InputStream input = entity.getContent();
-        File file = new File("/sdcard/baiduMap.xml");
-        if(file.exists()){
-          file.delete();
-        }
-        file.createNewFile();
-        OutputStream output = new FileOutputStream(file); 
-        byte[] buffer = new byte[1024];  
-        int len = 0;
-        while((len = input.read(buffer)) >0){  
-            output.write(buffer);  
-        }  
-        output.flush();  
-        output.close();
-      }catch(Exception e){
+
+        OfflineMapCitiesParser parser = new OfflineMapCitiesParser();
+        Set<OfflineCityItem> offlineCities =  parser.parse(input);
+        iJoggingDatabaseUtils.updateAllCities(offlineCities);
+      } catch (Exception e) {
         e.printStackTrace();
       }
       return null;
@@ -325,6 +336,10 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       mOffline.scan();
     }
     
+    
+    //这个方法是直接操作SDK中的配置文件，解析其中的json对象，但是从实际的使用结果看，并不奏效
+    //可能SDK使用了不同的json解析库，并且对json中各个项检查比较严格，所以，通过直接操作json的方式
+    //无法奏效
     public void deleteOfflineMap(int cityID){
       File file = new File(Environment.getExternalStorageDirectory().getPath()+"/BaiduMapSdk/OfflineUpdate.dat");
       if(!file.exists())
@@ -370,7 +385,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return downloadOfflineListeners.unRegisterDownloadOfflineListener(listener);
     }
     
-    public void startDownloadXml(){
+    public void startInitMapDatabase(){
       initOfflineMapTask.execute();
     }
   }

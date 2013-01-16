@@ -145,6 +145,11 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
     if(tmp != null){
       ViewHolder viewHolder = (ViewHolder)tmp;
       downloadOfflineMapServiceBinder.startDownloadZip(viewHolder.url,viewHolder.cityName);
+//      try{
+//        ZipUtils.unZipOneFolder("//mnt/sdcard/BaiduMapSdk/½ð²ýÊÐ.zip","/sdcard/BaiduMapSdk","BaiduMap","utf-8");
+//      }catch(Exception e){
+//        e.printStackTrace();
+//      }
     }
   }
 
