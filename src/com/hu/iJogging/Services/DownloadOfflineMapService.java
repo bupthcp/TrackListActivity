@@ -6,7 +6,6 @@ import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.MKOLUpdateElement;
 import com.baidu.mapapi.MKOfflineMap;
 import com.baidu.mapapi.MKOfflineMapListener;
-import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.maps.mytracks.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -89,22 +88,46 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   public static final String BMAP_SDK_PATH ="/BaiduMapSdk";
   private DownloadManager downloadMgr=null;
   
-  private BroadcastReceiver onOfflineDownloadComplete=new BroadcastReceiver() {
+  private BroadcastReceiver onOfflineDownloadComplete = new BroadcastReceiver() {
     public void onReceive(Context ctxt, Intent intent) {
-      long downloadId = PreferencesUtils.getLong(DownloadOfflineMapService.this, R.string.offline_download_id_key);
-      if(downloadId == -1L)
-        return;
-      Cursor cursor = downloadMgr.query(new DownloadManager.Query().setFilterById(downloadId));
-      if(cursor != null){
-        cursor.moveToFirst();
-        int fileNameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-        String uri = cursor.getString(fileNameIndex);
-        cursor.close();
+      if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+        long downloadID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+        Log.v(TAG, " download complete! id : " + downloadID);
+        if (downloadID == -1) 
+          return;
+        String fileUriTemp = getDownloadFileUri(downloadID);
+        if(fileUriTemp == null)
+          return;
+        DownloadsObserver observer = DownloadsObserver.observerMap.get(fileUriTemp);
+        if(observer != null){
+          observer.stopWatching();
+          DownloadsObserver.observerMap.remove(fileUriTemp);
+        }
         InstallOfflineMapTask installOfflineMapTask = new InstallOfflineMapTask();
-        installOfflineMapTask.execute(uri);
+        installOfflineMapTask.execute(fileUriTemp);
       }
     }
   };
+  
+  private String getDownloadFileUri(long downloadID){
+    if (downloadID == -1) 
+      return null;
+    Cursor cursor = downloadMgr.query(new DownloadManager.Query().setFilterById(downloadID));
+    if (cursor != null) {
+      cursor.moveToFirst();
+      int fileNameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+      String uri = cursor.getString(fileNameIndex);
+      cursor.close();
+      // uri是以file:开头的，但是文件系同默认是/开头的，所以需要把file:去掉
+      String fileUriTemp = uri;
+      if (fileUriTemp.startsWith("file:")) {
+        fileUriTemp = fileUriTemp.substring(5);
+      }
+      return fileUriTemp;
+    }else{
+      return null;
+    }
+  }
 
   @Override
   public void onCreate() {
@@ -210,11 +233,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     @Override
     protected Void doInBackground(String... params) {
       try{
-        String fileUriTemp = params[0];
-        if(fileUriTemp.startsWith("file:")){
-          fileUriTemp = fileUriTemp.substring(5);
-        }
-        ZipUtils.unZipOneFolder(fileUriTemp,"/sdcard/BaiduMapSdk","BaiduMap","utf-8");
+        ZipUtils.unZipOneFolder(params[0],"/sdcard/BaiduMapSdk","BaiduMap","utf-8");
       }catch(Exception e){
         e.printStackTrace();
       }
@@ -297,7 +316,14 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       .setDescription(cityName)
       .setDestinationInExternalPublicDir(BMAP_SDK_PATH,cityName+".zip");
       long downloadId = downloadMgr.enqueue(downloadRequst);
-      PreferencesUtils.setLong(DownloadOfflineMapService.this, R.string.offline_download_id_key, downloadId);
+      if(downloadId != -1L){
+        String fileUri = getDownloadFileUri(downloadId);
+        if(fileUri != null){
+          DownloadsObserver fileObserver = new DownloadsObserver(fileUri);
+          DownloadsObserver.observerMap.put(fileUri, fileObserver);
+          fileObserver.startWatching();
+        }
+      }
     }
     
     public boolean isDownloading(){
