@@ -7,4 +7,6 @@ public class OfflineCityItem {
   public String ArLowUrl;
   public String ArHighSize;
   public String ArLowSize;
+  public int BytesDownloadedSoFar = 0;
+  public int TotalSizeBytes = 0;
 }

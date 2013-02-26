@@ -31,8 +31,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -81,8 +79,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   private boolean isDownloading = false;
   private InitOfflineMapTask initOfflineMapTask = new InitOfflineMapTask();
   
-  private HandlerThread listenerHandlerThread;
-  private Handler listenerHandler;
   private DownloadOfflineListeners downloadOfflineListeners;
   
   public static final String BMAP_SDK_PATH ="/BaiduMapSdk";
@@ -96,15 +92,24 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
         if (downloadID == -1) 
           return;
         String fileUriTemp = getDownloadFileUri(downloadID);
-        if(fileUriTemp == null)
-          return;
-        DownloadsObserver observer = DownloadsObserver.observerMap.get(fileUriTemp);
-        if(observer != null){
-          observer.stopWatching();
-          DownloadsObserver.observerMap.remove(fileUriTemp);
+        if(fileUriTemp != null){
+          InstallOfflineMapTask installOfflineMapTask = new InstallOfflineMapTask();
+          installOfflineMapTask.execute(fileUriTemp);
         }
-        InstallOfflineMapTask installOfflineMapTask = new InstallOfflineMapTask();
-        installOfflineMapTask.execute(fileUriTemp);
+        DownloadsTimerObserver observer = DownloadsTimerObserver.getObserver(downloadID);
+        if(observer != null){
+          observer.stopObserve();
+        }
+      }
+    }
+  };
+  
+  private BroadcastReceiver onNotificationClick=new BroadcastReceiver() {
+    public void onReceive(Context ctxt, Intent intent) {
+      if (intent.getAction().equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
+        Intent dm = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        dm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(dm);
       }
     }
   };
@@ -114,16 +119,21 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       return null;
     Cursor cursor = downloadMgr.query(new DownloadManager.Query().setFilterById(downloadID));
     if (cursor != null) {
-      cursor.moveToFirst();
-      int fileNameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-      String uri = cursor.getString(fileNameIndex);
-      cursor.close();
-      // uri是以file:开头的，但是文件系同默认是/开头的，所以需要把file:去掉
-      String fileUriTemp = uri;
-      if (fileUriTemp.startsWith("file:")) {
-        fileUriTemp = fileUriTemp.substring(5);
+      try{
+        cursor.moveToFirst();
+        int fileNameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+        String uri = cursor.getString(fileNameIndex);
+        cursor.close();
+        // uri是以file:开头的，但是文件系同默认是/开头的，所以需要把file:去掉
+        String fileUriTemp = uri;
+        if (fileUriTemp.startsWith("file:")) {
+          fileUriTemp = fileUriTemp.substring(5);
+        }
+        return fileUriTemp;
+      }catch(Exception e){
+        e.printStackTrace();
+        return null;
       }
-      return fileUriTemp;
     }else{
       return null;
     }
@@ -174,9 +184,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
         initOfflineMapTask.execute();
       }
     }
-    listenerHandlerThread = new HandlerThread("downLoadOfflineListenerThread");
-    listenerHandlerThread.start();
-    listenerHandler = new Handler(listenerHandlerThread.getLooper());
     downloadOfflineListeners = new DownloadOfflineListeners();
     downloadOfflineMapService = this;
     downloadOfflineMapServiceBinder = new DownloadOfflineMapServiceBinder();
@@ -192,6 +199,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       downloadMgr = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
       registerReceiver(onOfflineDownloadComplete,
           new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+      registerReceiver(onNotificationClick,
+          new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
     }
     return START_NOT_STICKY;
   }
@@ -201,32 +210,10 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   @Override
   public void onDestroy() {
     super.onDestroy();
-    listenerHandlerThread.getLooper().quit();
-    listenerHandlerThread = null;
     unregisterReceiver(onOfflineDownloadComplete);
   }
   
-  
-  private void runInListenerThread(Runnable runnable) {
-    if (listenerHandler == null) {
-      // Use a Throwable to ensure the stack trace is logged.
-      Log.e(TAG, "Tried to use listener thread before start()", new Throwable());
-      return;
-    }
-    listenerHandler.post(runnable);
-  }
-  
-  private void notifyOfflineUpdate(final MKOLUpdateElement update){
-    final Set<DownloadOfflineListener> listeners= downloadOfflineListeners.getRegisteredListeners();
-    runInListenerThread(new Runnable() {
-      @Override
-      public void run() {
-        for (DownloadOfflineListener listener : listeners) {
-          listener.notifyOfflineMapStateUpdate(update);
-        }
-      }
-    });
-  }
+ 
   
   private class InstallOfflineMapTask extends AsyncTask<String,Void,Void>{
 
@@ -319,9 +306,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       if(downloadId != -1L){
         String fileUri = getDownloadFileUri(downloadId);
         if(fileUri != null){
-          DownloadsObserver fileObserver = new DownloadsObserver(fileUri);
-          DownloadsObserver.observerMap.put(fileUri, fileObserver);
-          fileObserver.startWatching();
+          DownloadsTimerObserver observer = new DownloadsTimerObserver(downloadId, cityName, downloadMgr, downloadOfflineListeners, DownloadOfflineMapService.this);
+          observer.startObserve();
         }
       }
     }
@@ -421,8 +407,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     switch (type) {
       case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
         Log.d(TAG, String.format("cityid:%d update", state));
-        MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-        notifyOfflineUpdate(update);
       }
         break;
         //调用scan完成之后会发出这个消息

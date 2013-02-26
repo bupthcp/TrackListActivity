@@ -19,6 +19,8 @@ public class IJoggingDatabaseUtils {
   public static final String ArLowUrl = "ArLowUrl";
   public static final String ArHighSize = "ArHighSize";
   public static final String ArLowSize = "ArLowSize";
+  public static final String BytesDownloadedSoFar = "BytesDownloadedSoFar";
+  public static final String TotalSizeBytes = "TotalSizeBytes";
   
   public IJoggingDatabaseUtils(Context context){
     IJoggingDatabaseHelper dbHelper = new IJoggingDatabaseHelper(context);
@@ -33,6 +35,8 @@ public class IJoggingDatabaseUtils {
     values.put(ArLowUrl, item.ArLowUrl);
     values.put(ArHighSize, item.ArHighSize);
     values.put(ArLowSize, item.ArLowSize);
+    values.put(BytesDownloadedSoFar, item.BytesDownloadedSoFar);
+    values.put(TotalSizeBytes, item.TotalSizeBytes);
     db.insert(TABLE_OFFLINE_NAME, null, values);
   }
   
@@ -51,6 +55,14 @@ public class IJoggingDatabaseUtils {
     }finally{
       db.endTransaction();
     }
+  }
+  
+  public void updateDownloadBytes(String cityName, int downloadBytes){
+    ContentValues values = new ContentValues();
+    values.put(BytesDownloadedSoFar, downloadBytes);
+    String[] args = new String[1];
+    args[0] = cityName;
+    db.update(TABLE_OFFLINE_NAME, values, "name=? ",args);
   }
   
   public Cursor getOfflineCitiesCursor(){

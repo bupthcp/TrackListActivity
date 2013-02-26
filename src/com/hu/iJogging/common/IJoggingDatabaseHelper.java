@@ -16,7 +16,9 @@ public class IJoggingDatabaseHelper extends SQLiteOpenHelper{
       + IJoggingDatabaseUtils.ArHighUrl + " STRING, " 
       + IJoggingDatabaseUtils.ArLowUrl + " STRING, " 
       + IJoggingDatabaseUtils.ArHighSize + " STRING, " 
-      + IJoggingDatabaseUtils.ArLowSize + " STRING" 
+      + IJoggingDatabaseUtils.ArLowSize + " STRING, "
+      + IJoggingDatabaseUtils.BytesDownloadedSoFar + " INTEGER, "
+      + IJoggingDatabaseUtils.TotalSizeBytes + " INTEGER"
       + ");";
   
   public IJoggingDatabaseHelper(Context context) {

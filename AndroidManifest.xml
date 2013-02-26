@@ -281,7 +281,6 @@ limitations under the License.
       android:exported="false"
       android:name="com.google.android.apps.mytracks.content.SearchEngineProvider" />
 
-    <uses-library android:name="com.google.android.maps" />
   </application>
 
 </manifest>

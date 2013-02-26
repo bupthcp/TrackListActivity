@@ -3,8 +3,10 @@ package com.hu.iJogging;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
+import com.hu.iJogging.Services.DownloadState;
 import com.hu.iJogging.common.IJoggingDatabaseUtils;
 
 import android.content.Context;
@@ -18,7 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class AllOfflineMapActivity  extends SherlockActivity implements OnClickListener{
+public class AllOfflineMapActivity  extends SherlockActivity implements OnClickListener, DownloadOfflineListener{
   
   private static final String TAG = AllOfflineMapActivity.class.getSimpleName();
   private ListView listView = null;
@@ -26,6 +28,7 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
   private LoadOfflineMapTask loadOfflineMapTask;
   private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
   private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
+  private DownloadState downloadState = null;
   
   private final Runnable bindChangedCallback = new Runnable() {
     @Override
@@ -35,6 +38,7 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         Log.d(TAG, "downloadOfflineMapService service not available");
         return;
       }
+      downloadOfflineMapServiceBinder.registerDownloadOfflineListener(AllOfflineMapActivity.this);
     }
   };
   
@@ -45,6 +49,7 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
     setupActionBar();
     listView =  (ListView)findViewById(R.id.map_list);
     resourceCursorAdapter = new ResourceCursorAdapter(this, R.layout.offline_map_list_item, null, 0){
+      
       @Override
       public void bindView(View view, Context context, Cursor cursor) {
         int idx_name = cursor.getColumnIndex(IJoggingDatabaseUtils.name);
@@ -53,12 +58,14 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         int idx_ArLowUrl = cursor.getColumnIndex(IJoggingDatabaseUtils.ArLowUrl);
         int idx_ArHighSize = cursor.getColumnIndex(IJoggingDatabaseUtils.ArHighSize);
         int idx_ArLowSize = cursor.getColumnIndex(IJoggingDatabaseUtils.ArLowSize);
+        int idx_BytesDownloadedSoFar = cursor.getColumnIndex(IJoggingDatabaseUtils.BytesDownloadedSoFar);
         String name = cursor.getString(idx_name);
         String province = cursor.getString(idx_province);
         String ArHighUrl = cursor.getString(idx_ArHighUrl);
         String ArLowUrl = cursor.getString(idx_ArLowUrl);
         String ArHighSize = cursor.getString(idx_ArHighSize);
         String ArLowSize = cursor.getString(idx_ArLowSize);
+        int BytesDownloadedSoFar = cursor.getInt(idx_BytesDownloadedSoFar);
         ViewHolder viewHolder = new ViewHolder();
         TextView list_item_name = (TextView) view.findViewById(R.id.list_item_name);
         if((name == null)||(name.equals(""))){
@@ -75,6 +82,12 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         button_download.setOnClickListener(AllOfflineMapActivity.this);
         viewHolder.url = ArHighUrl;
         button_download.setTag(viewHolder);
+        if(downloadState !=null){
+          TextView percentage = (TextView) button_download.findViewById(R.id.download_percentage);
+//          percentage.setText(Integer.toString(downloadState.bytesDownloadedSoFar));  
+          Log.d(TAG, "download update list"+ BytesDownloadedSoFar);
+          percentage.setText(Integer.toString(BytesDownloadedSoFar)); 
+        }
       }
     };
     downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,bindChangedCallback);
@@ -128,6 +141,7 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
   
   @Override
   protected void onDestroy(){
+    downloadOfflineMapServiceBinder.unRegisterDownloadOfflineListener(AllOfflineMapActivity.this);
     if(downloadOfflineMapServiceConnection != null){
       downloadOfflineMapServiceConnection.unbind();
     }
@@ -160,6 +174,21 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
 //        e.printStackTrace();
 //      }
     }
+  }
+
+
+  @Override
+  public void notifyOfflineMapStateUpdate(final DownloadState state) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        downloadState = state;
+        Log.d(TAG, "download update "+state.totalSizeBytes+"current bytes"+ state.bytesDownloadedSoFar);
+        Cursor cursor = resourceCursorAdapter.getCursor();
+        cursor.requery();
+        resourceCursorAdapter.notifyDataSetChanged();
+      }
+    });
   }
 
 }
