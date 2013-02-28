@@ -9,7 +9,6 @@ import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
-import com.hu.iJogging.Services.DownloadState;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
@@ -145,7 +144,7 @@ public class HotOfflineMapActivity extends SherlockActivity implements OnClickLi
 
 
   @Override
-  public void notifyOfflineMapStateUpdate(DownloadState state) {
+  public void notifyOfflineMapStateUpdate() {
     // TODO Auto-generated method stub
     adapter.notifyDataSetChanged();
   }

@@ -2,24 +2,48 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLSearchRecord;
-import com.baidu.mapapi.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.fragments.OfflineMapAdapter;
+import com.hu.iJogging.Services.DownloadOfflineListener;
+import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
+import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
+import com.hu.iJogging.common.IJoggingDatabaseUtils;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.ResourceCursorAdapter;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-public class OfflineSearchResultActivity extends SherlockActivity{
-  private MKOfflineMap mOffline = null;
-  private ListView listview = null;
-  private OfflineMapAdapter adapter = null;
-  private ArrayList<MKOLSearchRecord> searchedMapList;
+public class OfflineSearchResultActivity extends SherlockActivity implements OnClickListener, DownloadOfflineListener{
+  
+  private static final String TAG = OfflineSearchResultActivity.class.getSimpleName();
+  
+  private ListView listView = null;
+  private ResourceCursorAdapter resourceCursorAdapter;
+  private LoadOfflineMapTask loadOfflineMapTask;
   public static final String OFFLIE_RESULT_STRING = "city_name";
+  
+  private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
+  private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
+  
+  
+  private final Runnable bindChangedCallback = new Runnable() {
+    @Override
+    public void run() {
+      downloadOfflineMapServiceBinder = downloadOfflineMapServiceConnection.getServiceIfBound();
+      if (downloadOfflineMapServiceBinder == null) {
+        Log.d(TAG, "downloadOfflineMapService service not available");
+        return;
+      }
+      downloadOfflineMapServiceBinder.registerDownloadOfflineListener(OfflineSearchResultActivity.this);
+    }
+  };
+  
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +52,89 @@ public class OfflineSearchResultActivity extends SherlockActivity{
     setupActionBar();
     String searchStr = this.getIntent().getExtras().getString(OFFLIE_RESULT_STRING);
     if(searchStr != null){
-//      mOffline = DownloadOfflineMapService.mOffline;
-//      listview =  (ListView)findViewById(R.id.map_list);
-//      searchedMapList = mOffline.searchCity(searchStr);
-//      adapter = new OfflineMapAdapter(this,null,searchedMapList,OfflineMapAdapter.TYPE_SEARCHED);
-//      listview.setAdapter(adapter);
+      listView =  (ListView)findViewById(R.id.map_list);
+      resourceCursorAdapter = new ResourceCursorAdapter(this, R.layout.offline_map_list_item, null, 0){
+        
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+          int idx_name = cursor.getColumnIndex(IJoggingDatabaseUtils.name);
+          int idx_province = cursor.getColumnIndex(IJoggingDatabaseUtils.province);
+          int idx_ArHighUrl = cursor.getColumnIndex(IJoggingDatabaseUtils.ArHighUrl);
+          int idx_ArLowUrl = cursor.getColumnIndex(IJoggingDatabaseUtils.ArLowUrl);
+          int idx_ArHighSize = cursor.getColumnIndex(IJoggingDatabaseUtils.ArHighSize);
+          int idx_ArLowSize = cursor.getColumnIndex(IJoggingDatabaseUtils.ArLowSize);
+          int idx_BytesDownloadedSoFar = cursor.getColumnIndex(IJoggingDatabaseUtils.BytesDownloadedSoFar);
+          int idx_TotalSizeBytes = cursor.getColumnIndex(IJoggingDatabaseUtils.TotalSizeBytes);
+          String name = cursor.getString(idx_name);
+          String province = cursor.getString(idx_province);
+          String ArHighUrl = cursor.getString(idx_ArHighUrl);
+          String ArLowUrl = cursor.getString(idx_ArLowUrl);
+          String ArHighSize = cursor.getString(idx_ArHighSize);
+          String ArLowSize = cursor.getString(idx_ArLowSize);
+          int BytesDownloadedSoFar = cursor.getInt(idx_BytesDownloadedSoFar);
+          int TotalSizeBytes = cursor.getInt(idx_TotalSizeBytes);
+          ViewHolder viewHolder = new ViewHolder();
+          TextView list_item_name = (TextView) view.findViewById(R.id.list_item_name);
+          if((name == null)||(name.equals(""))){
+            list_item_name.setText(province);
+            viewHolder.cityName = province;
+          }else{
+            list_item_name.setText(name);
+            viewHolder.cityName = name;
+          }        
+          TextView list_item_total_size = (TextView) view.findViewById(R.id.list_item_total_size);
+          list_item_total_size.setText(ArHighSize);
+          View button_download = view.findViewById(R.id.button_download);
+          button_download.setClickable(true);
+          button_download.setOnClickListener(OfflineSearchResultActivity.this);
+          viewHolder.url = ArHighUrl;
+          button_download.setTag(viewHolder);
+          TextView percentage = (TextView) button_download.findViewById(R.id.download_percentage);
+          float per = 0f;
+          if(TotalSizeBytes != 0){
+            if(BytesDownloadedSoFar < 0)
+              BytesDownloadedSoFar = 0;
+            per = ((float)BytesDownloadedSoFar)/((float)TotalSizeBytes) ;
+          }
+          String perStr = String.format("%1$3d%%", (int)(per*100));
+          percentage.setText(perStr); 
+        }
+      };
+      downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,bindChangedCallback);
+      downloadOfflineMapServiceConnection.bindService();
+      loadOfflineMapTask = new LoadOfflineMapTask();
+      listView.setAdapter(resourceCursorAdapter);
+      loadOfflineMapTask.execute(searchStr);
+    }
+  }
+  
+  private class ViewHolder{
+    String url;
+    String cityName;
+  }
+  
+  private class LoadOfflineMapTask extends AsyncTask<String, Void, Cursor> {
+    @Override
+    protected Cursor doInBackground(String... params) {
+      IJoggingDatabaseUtils iJoggingDatabaseUtils =((IJoggingApplication)(getApplication())).getIJoggingDatabaseUtils();
+      Cursor cursor = iJoggingDatabaseUtils.queryOfflineCities(params[0]);
+      return cursor;
+    }
+
+    @Override
+    protected void onPostExecute(Cursor cursor) {
+      if(cursor != null){
+        resourceCursorAdapter.swapCursor(cursor);
+      }
+    }
+   }
+  
+  @Override
+  public void onClick(View v) {
+    Object tmp = v.getTag();
+    if(tmp != null){
+      ViewHolder viewHolder = (ViewHolder)tmp;
+      downloadOfflineMapServiceBinder.startDownloadZip(viewHolder.url,viewHolder.cityName);
     }
   }
   
@@ -55,6 +157,18 @@ public class OfflineSearchResultActivity extends SherlockActivity{
       public void onClick(View v) {
         finish();
       }    
+    });
+  }
+  
+  @Override
+  public void notifyOfflineMapStateUpdate() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        Cursor cursor = resourceCursorAdapter.getCursor();
+        cursor.requery();
+        resourceCursorAdapter.notifyDataSetChanged();
+      }
     });
   }
 }

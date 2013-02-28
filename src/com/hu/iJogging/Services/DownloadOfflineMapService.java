@@ -69,6 +69,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   // 申请地址：http://dev.baidu.com/wiki/static/imap/key/
   public String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
   public boolean m_bKeyRight = true; // 授权Key正确，验证通过
+  public static final String BMAP_SDK_PATH ="/BaiduMapSdk";
+  
   private boolean isBaiduMapInited = false;
   
   private String baiduMapUrl = "http://shouji.baidu.com/resource/xml/map/city.xml";
@@ -79,10 +81,8 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
   private boolean isDownloading = false;
   private InitOfflineMapTask initOfflineMapTask = new InitOfflineMapTask();
   
-  private DownloadOfflineListeners downloadOfflineListeners;
-  
-  public static final String BMAP_SDK_PATH ="/BaiduMapSdk";
-  private DownloadManager downloadMgr=null;
+  DownloadOfflineListeners downloadOfflineListeners;
+  DownloadManager downloadMgr=null;
   
   private BroadcastReceiver onOfflineDownloadComplete = new BroadcastReceiver() {
     public void onReceive(Context ctxt, Intent intent) {
@@ -136,6 +136,14 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       }
     }else{
       return null;
+    }
+  }
+  
+  void notifyOfflineUpdate(){
+    final Set<DownloadOfflineListener> listeners = downloadOfflineListeners
+        .getRegisteredListeners();
+    for (DownloadOfflineListener listener : listeners) {
+      listener.notifyOfflineMapStateUpdate();
     }
   }
 
@@ -220,7 +228,9 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     @Override
     protected Void doInBackground(String... params) {
       try{
-        ZipUtils.unZipOneFolder(params[0],"/sdcard/BaiduMapSdk","BaiduMap","utf-8");
+        ZipUtils.unZipOneFolder(params[0],Environment.getExternalStorageDirectory().getPath() +"/BaiduMapSdk","BaiduMap","utf-8");
+        File file = new File(params[0]);
+        file.delete();
       }catch(Exception e){
         e.printStackTrace();
       }
@@ -306,7 +316,7 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
       if(downloadId != -1L){
         String fileUri = getDownloadFileUri(downloadId);
         if(fileUri != null){
-          DownloadsTimerObserver observer = new DownloadsTimerObserver(downloadId, cityName, downloadMgr, downloadOfflineListeners, DownloadOfflineMapService.this);
+          DownloadsTimerObserver observer = new DownloadsTimerObserver(downloadId, cityName, DownloadOfflineMapService.this);
           observer.startObserve();
         }
       }

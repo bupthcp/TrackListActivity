@@ -6,7 +6,6 @@ import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
-import com.hu.iJogging.Services.DownloadState;
 import com.hu.iJogging.common.IJoggingDatabaseUtils;
 
 import android.content.Context;
@@ -28,7 +27,6 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
   private LoadOfflineMapTask loadOfflineMapTask;
   private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
   private DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
-  private DownloadState downloadState = null;
   
   private final Runnable bindChangedCallback = new Runnable() {
     @Override
@@ -59,6 +57,7 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         int idx_ArHighSize = cursor.getColumnIndex(IJoggingDatabaseUtils.ArHighSize);
         int idx_ArLowSize = cursor.getColumnIndex(IJoggingDatabaseUtils.ArLowSize);
         int idx_BytesDownloadedSoFar = cursor.getColumnIndex(IJoggingDatabaseUtils.BytesDownloadedSoFar);
+        int idx_TotalSizeBytes = cursor.getColumnIndex(IJoggingDatabaseUtils.TotalSizeBytes);
         String name = cursor.getString(idx_name);
         String province = cursor.getString(idx_province);
         String ArHighUrl = cursor.getString(idx_ArHighUrl);
@@ -66,6 +65,7 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         String ArHighSize = cursor.getString(idx_ArHighSize);
         String ArLowSize = cursor.getString(idx_ArLowSize);
         int BytesDownloadedSoFar = cursor.getInt(idx_BytesDownloadedSoFar);
+        int TotalSizeBytes = cursor.getInt(idx_TotalSizeBytes);
         ViewHolder viewHolder = new ViewHolder();
         TextView list_item_name = (TextView) view.findViewById(R.id.list_item_name);
         if((name == null)||(name.equals(""))){
@@ -82,12 +82,15 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
         button_download.setOnClickListener(AllOfflineMapActivity.this);
         viewHolder.url = ArHighUrl;
         button_download.setTag(viewHolder);
-        if(downloadState !=null){
-          TextView percentage = (TextView) button_download.findViewById(R.id.download_percentage);
-//          percentage.setText(Integer.toString(downloadState.bytesDownloadedSoFar));  
-          Log.d(TAG, "download update list"+ BytesDownloadedSoFar);
-          percentage.setText(Integer.toString(BytesDownloadedSoFar)); 
+        TextView percentage = (TextView) button_download.findViewById(R.id.download_percentage);
+        float per = 0f;
+        if(TotalSizeBytes != 0){
+          if(BytesDownloadedSoFar < 0)
+            BytesDownloadedSoFar = 0;
+          per = ((float)BytesDownloadedSoFar)/((float)TotalSizeBytes) ;
         }
+        String perStr = String.format("%1$3d%%", (int)(per*100));
+        percentage.setText(perStr); 
       }
     };
     downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,bindChangedCallback);
@@ -178,12 +181,10 @@ public class AllOfflineMapActivity  extends SherlockActivity implements OnClickL
 
 
   @Override
-  public void notifyOfflineMapStateUpdate(final DownloadState state) {
+  public void notifyOfflineMapStateUpdate() {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        downloadState = state;
-        Log.d(TAG, "download update "+state.totalSizeBytes+"current bytes"+ state.bytesDownloadedSoFar);
         Cursor cursor = resourceCursorAdapter.getCursor();
         cursor.requery();
         resourceCursorAdapter.notifyDataSetChanged();
