@@ -16,11 +16,9 @@
 package com.google.android.apps.mytracks;
 
 import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.MKEvent;
 import com.baidu.mapapi.MKGeneralListener;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.MKOfflineMapListener;
+import com.baidu.mapapi.map.MKEvent;
+import com.baidu.mapapi.map.MKOfflineMap;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
@@ -51,7 +49,7 @@ public class MyTracksApplication extends Application {
   // 授权Key
   // TODO: 请输入您的Key,
   // 申请地址：http://dev.baidu.com/wiki/static/imap/key/
-  public String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
+  public static final String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
   public boolean m_bKeyRight = true; // 授权Key正确，验证通过
   
   // 常用事件监听，用来处理通常的网络错误，授权验证错误等
@@ -92,29 +90,7 @@ public class MyTracksApplication extends Application {
     super.onCreate();
     mDemoApp = this;
     mBMapMan = new BMapManager(this);
-    mBMapMan.init(this.mStrKey, new MyGeneralListener());
-    mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-    mBMapMan.start();
-    mOffline = new MKOfflineMap();
-    mOffline.init(mBMapMan, new MKOfflineMapListener() {
-      @Override
-      public void onGetOfflineMapState(int type, int state) {
-        switch (type) {
-          case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-            MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-            // mText.setText(String.format("%s : %d%%", update.cityName,
-            // update.ratio));
-          }
-            break;
-          case MKOfflineMap.TYPE_NEW_OFFLINE:
-            Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
-            break;
-          case MKOfflineMap.TYPE_VER_UPDATE:
-            Log.d("OfflineDemo", String.format("new offlinemap ver"));
-            break;
-        }
-      }
-    });
+//    mBMapMan.init(this.mStrKey, new MyGeneralListener());
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }

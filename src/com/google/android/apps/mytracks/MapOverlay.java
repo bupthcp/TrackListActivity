@@ -17,10 +17,10 @@ package com.google.android.apps.mytracks;
 
 import static com.google.android.apps.mytracks.Constants.TAG;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.MapView;
-import com.baidu.mapapi.Overlay;
-import com.baidu.mapapi.Projection;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Overlay;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
+import com.baidu.platform.comapi.map.Projection;
 import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.maps.TrackPathPainter;
 import com.google.android.apps.mytracks.maps.TrackPathPainterFactory;
@@ -240,7 +240,7 @@ public class MapOverlay extends Overlay implements OnSharedPreferenceChangeListe
     this.showEndMarker = showEndMarker;
   }
 
-  @Override
+
   public void draw(Canvas canvas, MapView mapView, boolean shadow) {
     if (shadow) {
       return;
@@ -417,7 +417,7 @@ public class MapOverlay extends Overlay implements OnSharedPreferenceChangeListe
     }
   }
 
-  @Override
+
   public boolean onTap(GeoPoint p, MapView mapView) {
     if (p.equals(mapView.getMapCenter())) {
       // There is (unfortunately) no good way to determine whether the tap was
@@ -450,7 +450,7 @@ public class MapOverlay extends Overlay implements OnSharedPreferenceChangeListe
       context.startActivity(intent);
       return true;
     }
-    return super.onTap(p, mapView);
+    return false;
   }
   
   /**

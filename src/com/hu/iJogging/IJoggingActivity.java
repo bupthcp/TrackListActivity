@@ -5,7 +5,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.baidu.mapapi.BMapManager;
 import com.google.android.apps.mytracks.ImportActivity;
+import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.fragments.DeleteAllTrackDialogFragment;
 import com.google.android.apps.mytracks.io.file.SaveActivity;
@@ -55,6 +57,8 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   
   ViewPager mViewPager;
   ContainerPagerAdapter mContainerPagerAdapter;
+  
+  public BMapManager mBMapMan = null;
 
   public void setupActionBar() {
     this.mActionBar = getSupportActionBar();
@@ -106,6 +110,9 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
     
     this.setContentView(R.layout.i_jogging_main);
     FragmentManager.enableDebugLogging(false);
+    
+    mBMapMan=new BMapManager(getApplication());  
+    mBMapMan.init(MyTracksApplication.mStrKey, null); 
   }
   
   @Override

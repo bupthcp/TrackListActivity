@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/antlib.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/google-api-client-1.5.0-beta.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/google-common.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/google-http-client-1.5.0-beta.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/google-oauth-client-1.5.0-beta.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/gson-1.6.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/guava-r09.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/jackson-core-asl-1.6.7.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/jsr305-1.3.9.jar"/>
-	<classpathentry kind="lib" path="D:/hu/Track_Project/TrackListActivity/libs/libGoogleAnalytics.jar"/>
-	<classpathentry kind="lib" path="/library/libs/android-support-v4.jar" sourcepath="D:/hu/software/android-sdk_r20.0.1-windows/android-sdk-windows/extras/android/support/v4/src"/>
-	<classpathentry kind="lib" path="libs/baiduMapApi_1_3_4_modified.jar"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -1,11 +1,11 @@
 package com.hu.iJogging.Services;
 
 import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.MKEvent;
 import com.baidu.mapapi.MKGeneralListener;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.MKOfflineMapListener;
+import com.baidu.mapapi.map.MKEvent;
+import com.baidu.mapapi.map.MKOLUpdateElement;
+import com.baidu.mapapi.map.MKOfflineMap;
+import com.baidu.mapapi.map.MKOfflineMapListener;
 import com.google.android.maps.mytracks.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -195,13 +195,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     downloadOfflineListeners = new DownloadOfflineListeners();
     downloadOfflineMapService = this;
     downloadOfflineMapServiceBinder = new DownloadOfflineMapServiceBinder();
-    mBMapMan = new BMapManager(DownloadOfflineMapService.this);
-    mBMapMan.init(mStrKey, new MyGeneralListener());
-    mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-    mBMapMan.start();
-    mOffline = new MKOfflineMap();
-    mOffline.init(mBMapMan, this);
-    mOffline.scan();
     Log.d(TAG,"DownloadOfflineMapService created");
     if(null == downloadMgr){
       downloadMgr = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
@@ -333,8 +326,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
     public MKOfflineMap getOfflineInstance(){
       if(mOffline == null){
         mOffline = new MKOfflineMap();
-        mOffline.init(mBMapMan, DownloadOfflineMapService.this);
-        mOffline.scan();
       }
       return mOffline;
     }
@@ -350,12 +341,6 @@ public class DownloadOfflineMapService extends Service implements MKOfflineMapLi
         mBMapMan = null;
       }
       mBMapMan = new BMapManager(DownloadOfflineMapService.this);
-      mBMapMan.init(mStrKey, new MyGeneralListener());
-      mBMapMan.getLocationManager().setNotifyInternal(10, 5);
-      mBMapMan.start();
-      mOffline = new MKOfflineMap();
-      mOffline.init(mBMapMan, DownloadOfflineMapService.this);
-      mOffline.scan();
     }
     
     

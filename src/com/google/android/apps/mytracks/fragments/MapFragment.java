@@ -16,10 +16,10 @@
 
 package com.google.android.apps.mytracks.fragments;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.Mj;
-import com.baidu.mapapi.Overlay;
+import com.baidu.mapapi.map.MapController;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Overlay;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.TrackDetailActivity;
@@ -30,7 +30,6 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.maps.bMapView;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
@@ -95,7 +94,7 @@ public class MapFragment extends Fragment
 
   // UI elements
   private View mapViewContainer;
-  private bMapView mapView;
+  private MapView mapView;
   private MapOverlay mapOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
@@ -110,19 +109,7 @@ public class MapFragment extends Fragment
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mapViewContainer = ((TrackDetailActivity) getActivity()).getMapViewContainer();
-    mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
-    int i = 20;
-    int j = 40;
-    if (Mj.InitMapControlCC(i, j) == 1)
-    {
-      mapView.init();
-      if (Mj.d != mapView)
-      {
-        Mj.d = mapView;
-        if (mapView != null)
-            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
-      }
-    }
+    mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
 
     
     mapOverlay = new MapOverlay(getActivity());
@@ -162,6 +149,7 @@ public class MapFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
+    mapView.onResume();
     myLocationImageButton.setVisibility(View.VISIBLE);
     resumeTrackDataHub();
   }
@@ -178,12 +166,14 @@ public class MapFragment extends Fragment
   @Override
   public void onPause() {
     super.onPause();
+    mapView.onPause();
     pauseTrackDataHub();
   }
 
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    mapView.destroy();
     ViewGroup parentViewGroup = (ViewGroup) mapViewContainer.getParent();
     if (parentViewGroup != null) {
       parentViewGroup.removeView(mapViewContainer);
@@ -384,7 +374,7 @@ public class MapFragment extends Fragment
   @Override
   public void onNewTrackPoint(Location location) {
     if (LocationUtils.isValidLocation(location)) {
-      LocationUtils.setGeoInLocation(location);
+//      LocationUtils.setGeoInLocation(location);
       mapOverlay.addLocation(location);
     }
   }
@@ -414,7 +404,7 @@ public class MapFragment extends Fragment
     if (waypoint != null && LocationUtils.isValidLocation(waypoint.getLocation())) {
       // TODO: Optimize locking inside addWaypoint
       Location locationTmp = waypoint.getLocation();
-      LocationUtils.setGeoInLocation(locationTmp);
+//      LocationUtils.setGeoInLocation(locationTmp);
       waypoint.setLocation(locationTmp);
       mapOverlay.addWaypoint(waypoint);
     }
@@ -526,7 +516,7 @@ public class MapFragment extends Fragment
     }
 
     final Location locationTmp = new Location(currentLocation);
-    LocationUtils.setGeoInLocation(locationTmp);
+//    LocationUtils.setGeoInLocation(locationTmp);
     
     mapOverlay.setMyLocation(locationTmp);
     mapView.postInvalidate();

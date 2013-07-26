@@ -15,11 +15,11 @@
  */
 package com.google.android.apps.mytracks.util;
 
-import com.baidu.mapapi.CoordinateConvert;
-import com.baidu.mapapi.GeoPoint;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.stats.TripStatistics;
+import com.hu.iJogging.common.CoordinateConvert;
 
 import android.location.Location;
 import android.util.Log;
@@ -28,12 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+
+
 /**
  * Utility class for decimating tracks at a given level of precision.
  *
  * @author Leif Hendrik Wilden
  */
 public class LocationUtils {
+  
   /**
    * Computes the distance on the two sphere between the point c0 and the line
    * segment c1 to c2.

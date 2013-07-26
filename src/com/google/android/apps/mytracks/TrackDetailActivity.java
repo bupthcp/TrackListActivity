@@ -17,9 +17,7 @@
 package com.google.android.apps.mytracks;
 
 import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.MKOfflineMapListener;
+import com.baidu.mapapi.map.MKOfflineMap;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.content.TrackDataHub;
@@ -155,26 +153,6 @@ public class TrackDetailActivity extends AbstractMyTracksActivity implements Del
         app.mBMapMan.init(app.mStrKey, new MyTracksApplication.MyGeneralListener());
     }
     app.mBMapMan.start();
-    mOffline = new MKOfflineMap();
-    mOffline.init(app.mBMapMan, new MKOfflineMapListener() {
-      @Override
-      public void onGetOfflineMapState(int type, int state) {
-        switch (type) {
-          case MKOfflineMap.TYPE_DOWNLOAD_UPDATE: {
-            MKOLUpdateElement update = mOffline.getUpdateInfo(state);
-            // mText.setText(String.format("%s : %d%%", update.cityName,
-            // update.ratio));
-          }
-            break;
-          case MKOfflineMap.TYPE_NEW_OFFLINE:
-            Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
-            break;
-          case MKOfflineMap.TYPE_VER_UPDATE:
-            Log.d("OfflineDemo", String.format("new offlinemap ver"));
-            break;
-        }
-      }
-    });
     mapViewContainer = getLayoutInflater().inflate(R.layout.map, null);
     ApiAdapterFactory.getApiAdapter().disableHardwareAccelerated(mapViewContainer);
 

@@ -2,9 +2,9 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLSearchRecord;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
+import com.baidu.mapapi.map.MKOLSearchRecord;
+import com.baidu.mapapi.map.MKOLUpdateElement;
+import com.baidu.mapapi.map.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;

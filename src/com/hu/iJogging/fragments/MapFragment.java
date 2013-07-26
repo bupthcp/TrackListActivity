@@ -1,9 +1,9 @@
 package com.hu.iJogging.fragments;
 
-import com.baidu.mapapi.GeoPoint;
-import com.baidu.mapapi.MapController;
-import com.baidu.mapapi.Mj;
-import com.baidu.mapapi.Overlay;
+import com.baidu.mapapi.map.MapController;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Overlay;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils.Factory;
@@ -12,7 +12,6 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.apps.mytracks.maps.bMapView;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
@@ -79,7 +78,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   // UI elements
   private View mapViewContainer;
-  private bMapView mapView;
+  private MapView mapView;
   private MapOverlay mapOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
@@ -107,19 +106,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment, container,false);
-    mapView = (bMapView) mapViewContainer.findViewById(R.id.map_view);
-    int i = 20;
-    int j = 40;
-    if (Mj.InitMapControlCC(i, j) == 1)
-    {
-      mapView.init();
-      if (Mj.d != mapView)
-      {
-        Mj.d = mapView;
-        if (mapView != null)
-            mapView.b.a(mapView.getLeft(), mapView.getTop(), mapView.getRight(), mapView.getBottom());
-      }
-    }
+    mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
 
     
     mapOverlay = new MapOverlay(getActivity());
@@ -411,7 +398,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onNewTrackPoint(Location location) {
     if (LocationUtils.isValidLocation(location)) {
-      LocationUtils.setGeoInLocation(location);
+//      LocationUtils.setGeoInLocation(location);
       mapOverlay.addLocation(location);
     }
   }
@@ -441,7 +428,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     if (waypoint != null && LocationUtils.isValidLocation(waypoint.getLocation())) {
       // TODO: Optimize locking inside addWaypoint
       Location locationTmp = waypoint.getLocation();
-      LocationUtils.setGeoInLocation(locationTmp);
+//      LocationUtils.setGeoInLocation(locationTmp);
       waypoint.setLocation(locationTmp);
       mapOverlay.addWaypoint(waypoint);
     }
@@ -563,7 +550,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     }
 
     final Location locationTmp = new Location(currentLocation);
-    LocationUtils.setGeoInLocation(locationTmp);
+//    LocationUtils.setGeoInLocation(locationTmp);
     
     mapOverlay.setMyLocation(locationTmp);
     mapView.postInvalidate();
@@ -607,7 +594,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       keepMyLocationVisible = false;
       GeoPoint center = new GeoPoint(bottom + latitudeSpanE6 / 2, left + longitudeSpanE6 / 2);
       if (LocationUtils.isValidGeoPoint(center)) {
-        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
+        mapView.getController().setCenter(center);
+//        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
         mapView.getController().zoomToSpan(latitudeSpanE6, longitudeSpanE6);
       }
     }
@@ -623,7 +611,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       if(locationTmp == null)
         return;
       currentLocation = locationTmp;
-      LocationUtils.setGeoInLocation(locationTmp);
+//      LocationUtils.setGeoInLocation(locationTmp);
       MapController mMapController = mapView.getController();  // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
       GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
       mMapController.setCenter(geoPoint);  //设置地图中心点

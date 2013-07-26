@@ -2,9 +2,8 @@ package com.hu.iJogging;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
-import com.baidu.mapapi.MKOLUpdateElement;
-import com.baidu.mapapi.MKOfflineMap;
-import com.baidu.mapapi.Mj;
+import com.baidu.mapapi.map.MKOLUpdateElement;
+import com.baidu.mapapi.map.MKOfflineMap;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
 import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
@@ -40,11 +39,6 @@ public class InstalledOfflineMapActivity extends SherlockActivity implements OnC
         return;
       }
       mOffline = downloadOfflineMapServiceBinder.getOfflineInstance();
-      //这句话很重要，从查看baidu的map activity的初始化过程看，InitMapControlCC是一个
-      //很关键的语句，这句话具体做的工作无法知晓了，但是如果没有这句话，会导致native层面
-      //无法获得java层面的某些信息，导致程序崩溃。如果不在acitivity的初始化阶段就加上
-      //这句话，delete离线地图的操作是会造成程序崩溃的。
-      Mj.InitMapControlCC(20, 40);
       mOffline.scan();
       installedMapList = mOffline.getAllUpdateInfo();
       adapter = new OfflineMapAdapter(InstalledOfflineMapActivity.this,installedMapList,null,OfflineMapAdapter.TYPE_INSTALLED);

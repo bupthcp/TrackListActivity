@@ -1,7 +1,7 @@
 package com.hu.iJogging.fragments;
 
-import com.baidu.mapapi.MKOLSearchRecord;
-import com.baidu.mapapi.MKOLUpdateElement;
+import com.baidu.mapapi.map.MKOLSearchRecord;
+import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.HotOfflineMapActivity;
 import com.hu.iJogging.InstalledOfflineMapActivity;
