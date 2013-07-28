@@ -1,11 +1,10 @@
 package com.hu.iJogging;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
-public class MainActivity extends SherlockFragmentActivity{
+public class MainActivity extends ActionBarActivity{
   private ActionBar mActionBar;
   private ActionBarAdapter mAdapter = null;
   private WorkoutPage mWorkoutPage = null;

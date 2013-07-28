@@ -1,6 +1,5 @@
 package com.hu.iJogging;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.google.android.maps.mytracks.R;
 
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

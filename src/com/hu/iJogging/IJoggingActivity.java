@@ -1,10 +1,5 @@
 package com.hu.iJogging;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.baidu.mapapi.BMapManager;
 import com.google.android.apps.mytracks.ImportActivity;
 import com.google.android.apps.mytracks.MyTracksApplication;
@@ -33,11 +28,16 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class IJoggingActivity extends SherlockFragmentActivity implements DeleteOneTrackCaller{
+public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrackCaller{
   private static final String TAG = IJoggingActivity.class.getSimpleName();
 
   private ActionBar mActionBar;
@@ -151,7 +151,7 @@ public class IJoggingActivity extends SherlockFragmentActivity implements Delete
   
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = this.getSupportMenuInflater();
+    MenuInflater inflater = this.getMenuInflater();
     inflater.inflate(R.menu.ijogging_activity_menu, menu);
     return super.onCreateOptionsMenu(menu);
   }

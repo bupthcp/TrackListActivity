@@ -1,11 +1,12 @@
 package com.hu.iJogging;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import com.google.android.maps.mytracks.R;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
-public class SelectSportsActivity extends SherlockFragmentActivity{
+public class SelectSportsActivity extends ActionBarActivity{
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

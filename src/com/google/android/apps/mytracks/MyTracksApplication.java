@@ -21,7 +21,6 @@ import com.baidu.mapapi.map.MKEvent;
 import com.baidu.mapapi.map.MKOfflineMap;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
-import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.maps.mytracks.BuildConfig;
 import com.hu.iJogging.common.ConfigFree;
@@ -94,7 +93,7 @@ public class MyTracksApplication extends Application {
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }
-    AnalyticsUtils.sendPageViews(getApplicationContext(), "/appstart");
+//    AnalyticsUtils.sendPageViews(getApplicationContext(), "/appstart");
     Intent intent = new Intent(this, RemoveTempFilesService.class);
     startService(intent);
     ConfigFree.configure();

@@ -1,7 +1,5 @@
 package com.hu.iJogging;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.baidu.mapapi.map.MKOLSearchRecord;
 import com.baidu.mapapi.map.MKOLUpdateElement;
 import com.baidu.mapapi.map.MKOfflineMap;
@@ -12,6 +10,8 @@ import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
 import com.hu.iJogging.fragments.OfflineMapAdapter;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class HotOfflineMapActivity extends SherlockActivity implements OnClickListener, DownloadOfflineListener{
+public class HotOfflineMapActivity extends ActionBarActivity implements OnClickListener, DownloadOfflineListener{
   
   private static final String TAG = HotOfflineMapActivity.class.getSimpleName();
   

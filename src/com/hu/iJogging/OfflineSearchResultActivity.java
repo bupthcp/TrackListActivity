@@ -1,7 +1,5 @@
 package com.hu.iJogging;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.Services.DownloadOfflineListener;
 import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
@@ -13,13 +11,15 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.ResourceCursorAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class OfflineSearchResultActivity extends SherlockActivity implements OnClickListener, DownloadOfflineListener{
+public class OfflineSearchResultActivity extends ActionBarActivity implements OnClickListener, DownloadOfflineListener{
   
   private static final String TAG = OfflineSearchResultActivity.class.getSimpleName();
   
