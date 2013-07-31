@@ -89,7 +89,7 @@ limitations under the License.
 
   <uses-sdk
     android:minSdkVersion="9"
-    android:targetSdkVersion="15" />
+    android:targetSdkVersion="9" />
   <!-- Required features -->
   <uses-feature
     android:name="android.hardware.location"
@@ -228,6 +228,10 @@ limitations under the License.
         </intent-filter>
     </activity>
     <activity android:name="com.hu.iJogging.SplashActivity" >
+    </activity>
+    
+    <activity android:name="com.hu.walkingnotes.NotesActivity" >
+
     </activity>
 
     <activity android:name="com.hu.iJogging.ViewHistoryActivity" />

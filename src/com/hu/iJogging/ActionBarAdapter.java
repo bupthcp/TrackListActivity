@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
@@ -249,6 +250,11 @@ public class ActionBarAdapter implements SpinnerAdapter {
         localTextView1.setText(Integer.toString(n));
       }
     }
+    if (localView.getLayoutParams() == null) {
+      localView.setLayoutParams(new AbsListView.LayoutParams(
+          AbsListView.LayoutParams.WRAP_CONTENT,
+          AbsListView.LayoutParams.WRAP_CONTENT));
+  }
     return localView;
   }
 

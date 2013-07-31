@@ -9,4 +9,10 @@
     <item>@string/strOrienteering</item>
     <item>@string/strWalking</item>
   </string-array>
+  
+  <string-array name="actionbar_navigation">
+    <item>@string/actionbarListItemNewNote</item>
+    <item>@string/actionbarListItemNotes</item>
+    <item>@string/actionbarListItemMapData</item>
+  </string-array>
 </resources>

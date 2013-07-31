@@ -169,6 +169,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public void onResume() {
     super.onResume();
     myLocationImageButton.setVisibility(View.VISIBLE);
+    mapView.onResume();
     resumeTrackDataHub();
     initMapCenter();
   }
@@ -186,6 +187,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public void onPause() {
     super.onPause();
     pauseTrackDataHub();
+    mapView.onPause();
   }
 
   //在这里实现onDestroyView是为了保证在fragment切换的
@@ -195,6 +197,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    mapView.destroy();
     ViewGroup parentViewGroup = (ViewGroup) mapViewContainer.getParent();
     if (parentViewGroup != null) {
       parentViewGroup.removeView(mapViewContainer);

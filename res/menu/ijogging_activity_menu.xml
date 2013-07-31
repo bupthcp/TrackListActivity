@@ -18,7 +18,7 @@
     <item
         android:id="@+id/exit_action"
         android:icon="@drawable/logout_white"
-        android:showAsAction="never"
+        android:showAsAction="always|collapseActionView"
         android:title="@string/strExit"/>
 
 </menu>
