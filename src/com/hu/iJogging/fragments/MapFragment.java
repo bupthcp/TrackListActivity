@@ -4,7 +4,6 @@ import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.google.android.apps.mytracks.MapOverlay;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils.Factory;
 import com.google.android.apps.mytracks.content.Track;
@@ -79,7 +78,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   // UI elements
   private View mapViewContainer;
   private MapView mapView;
-  private MapOverlay mapOverlay;
+  private com.hu.walkingnotes.MapOverlay mapOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
   
@@ -109,7 +108,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
 
     
-    mapOverlay = new MapOverlay(getActivity());
+    mapOverlay = new com.hu.walkingnotes.MapOverlay(getActivity(),mapView);
     
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
