@@ -359,7 +359,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onCurrentHeadingChanged(double heading) {
     if (mapOverlay.setHeading((float) heading)) {
-      mapView.postInvalidate();
+//      mapView.postInvalidate();
+      mapView.refresh();
     }
   }
 
@@ -417,7 +418,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onNewTrackPointsDone() {
-    mapView.postInvalidate();
+//    mapView.postInvalidate();
+    mapView.refresh();
   }
 
   @Override
@@ -438,7 +440,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onNewWaypointsDone() {
-    mapView.postInvalidate();
+//    mapView.postInvalidate();
+    mapView.refresh();
   }
 
   @Override

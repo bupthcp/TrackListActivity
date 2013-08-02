@@ -92,7 +92,7 @@ public class MapOverlay extends GraphicsOverlay{
       Graphic pointGraphic = new Graphic(pointGeometry, pointSymbol);
       setData(pointGraphic);
       
-      mMapView.refresh();
+//      mMapView.refresh();
     }
     
   }
