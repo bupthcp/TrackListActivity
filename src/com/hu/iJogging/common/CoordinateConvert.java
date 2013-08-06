@@ -1,24 +1,11 @@
 package com.hu.iJogging.common;
 
+import com.baidu.mapapi.Mj;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 import android.os.Bundle;
-import android.util.Log;
 
 public class CoordinateConvert {
-  static
-  {
-    try
-    {
-      System.loadLibrary("BMapApiEngine_v1_3_5");
-    }
-    catch (UnsatisfiedLinkError localUnsatisfiedLinkError)
-    {
-      Log.d("BMapApiEngine_v1_3_5", "BMapApiEngine_v1_3_5 library not found!");
-      Log.d("BMapApiEngine_v1_3_5", localUnsatisfiedLinkError.getLocalizedMessage());
-    }
-  }
-  
   
   public static Bundle fromWgs84ToBaidu(GeoPoint paramGeoPoint)
   {
@@ -53,7 +40,7 @@ public class CoordinateConvert {
     localBundle.putInt("x", paramGeoPoint.getLongitudeE6());
     localBundle.putInt("y", paramGeoPoint.getLatitudeE6());
     localBundle.putInt("t", paramInt);
-    sendBundle(localBundle);
+    Mj.sendBundle(localBundle);
     int i = localBundle.getInt("x");
     int j = localBundle.getInt("y");
     String str = String.valueOf(i);
@@ -69,6 +56,4 @@ public class CoordinateConvert {
     return localBundle;
   }
   
-  
-  public static native int sendBundle(Bundle paramBundle);
 }
