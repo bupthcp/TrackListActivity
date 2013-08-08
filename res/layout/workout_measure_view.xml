@@ -3,14 +3,14 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout android:layout_gravity="top|left|center" android:orientation="vertical" android:longClickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:weightSum="50.0">
         <LinearLayout android:id="@+id/spaceTop" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="10.0" />
-        <com.hu.iJogging.DashBoardView android:id="@+id/LLMainZone" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="20.0"  />
+        <com.hu.iJogging.common.DashBoardView android:id="@+id/LLMainZone" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="20.0"  />
         <LinearLayout android:id="@+id/spaceBelowDashBoard" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="10.0" />
-        <com.hu.iJogging.SportMainButton android:id="@+id/SportMainButton" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+        <com.hu.iJogging.common.SportMainButton android:id="@+id/SportMainButton" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" />
         <View android:id="@+id/SportMainButtonSeperator" android:background="@color/MainSeperatorColor" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginLeft="15.0dip" android:layout_marginTop="5.0dip" android:layout_marginRight="15.0dip" />
         <LinearLayout android:id="@+id/spaceBelowSport" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="10.0" />
         <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="20.0dip" android:weightSum="1.0">
             <Button android:id="@+id/ButtonStartPause" android:background="@drawable/dashboard_button_start" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:hapticFeedbackEnabled="true" />
-            <com.hu.iJogging.MotivationMainButton android:id="@+id/MotivationMainButton" android:paddingLeft="10.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" />
+            <com.hu.iJogging.common.MotivationMainButton android:id="@+id/MotivationMainButton" android:paddingLeft="10.0dip" android:paddingRight="15.0dip" android:visibility="invisible" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout android:layout_gravity="bottom|left|center" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="20.0dip">

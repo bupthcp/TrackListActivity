@@ -12,12 +12,12 @@ import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.IJoggingApplication;
-import com.hu.iJogging.MainZoneLayout;
-import com.hu.iJogging.MotivationMainButton;
 import com.hu.iJogging.SelectSportsActivity;
-import com.hu.iJogging.SportMainButton;
-import com.hu.iJogging.TextMeasuredView;
 import com.hu.iJogging.ViewHistoryActivity;
+import com.hu.iJogging.common.MainZoneLayout;
+import com.hu.iJogging.common.MotivationMainButton;
+import com.hu.iJogging.common.SportMainButton;
+import com.hu.iJogging.common.TextMeasuredView;
 
 import android.app.Activity;
 import android.content.Intent;

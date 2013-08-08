@@ -1,10 +1,7 @@
 package com.hu.iJogging;
 
 import com.baidu.mapapi.BMapManager;
-import com.google.android.apps.mytracks.ImportActivity;
-import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.TrackDataHub;
-import com.google.android.apps.mytracks.fragments.DeleteAllTrackDialogFragment;
 import com.google.android.apps.mytracks.io.file.SaveActivity;
 import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
@@ -14,10 +11,8 @@ import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.google.android.maps.mytracks.R;
-import com.hu.iJogging.Services.DownloadOfflineMapService.DownloadOfflineMapServiceBinder;
-import com.hu.iJogging.Services.DownloadOfflineMapServiceConnection;
+import com.hu.iJogging.fragments.DeleteAllTrackDialogFragment;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
-import com.hu.iJogging.fragments.OfflineMapFragment;
 import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
@@ -48,12 +43,10 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   public static final String EXTRA_TRACK_ID = "track_id";
   
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
-  private DownloadOfflineMapServiceConnection downloadOfflineMapServiceConnection;
   private boolean startNewRecording = false;
   private TrackDataHub trackDataHub;
   public static final String EXTRA_STR_CURRENT_SPORT = "currentSport";
   public static final int SELECT_SPORT_REQUEST_CODE = 0;
-  public DownloadOfflineMapServiceBinder downloadOfflineMapServiceBinder;
   
   ViewPager mViewPager;
   ContainerPagerAdapter mContainerPagerAdapter;
@@ -75,33 +68,18 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   private final Runnable downloadOfflineMapBindChangedCallback = new Runnable() {
     @Override
     public void run() {
-      downloadOfflineMapServiceBinder = downloadOfflineMapServiceConnection.getServiceIfBound();
-      if (downloadOfflineMapServiceBinder == null) {
-        Log.d(TAG, "downloadOfflineMapService service not available");
-      }
-      mContainerPagerAdapter = new ContainerPagerAdapter(IJoggingActivity.this, getSupportFragmentManager());
-      mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
-      mViewPager.setVisibility(View.VISIBLE);
-      findViewById(R.id.fragment_container).setVisibility(View.GONE);
-      mViewPager.setAdapter(mContainerPagerAdapter);
+
     }
   };
 
   @Override
   protected void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    //如果离线地图service没有启动，说明是第一次运行ijogging应用，需要启动
-    //splash activity初始化离线地图service
-    if(!DownloadOfflineMapServiceConnection.isOfflineServiceRunning(this)){
-      Intent intent = new Intent(this,SplashActivity.class);
-      startActivity(intent);
-      finish();
-    }
     recordingTrackId = PreferencesUtils.getLong(this, R.string.recording_track_id_key);
     IJoggingApplication app = (IJoggingApplication) this.getApplication();
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
-    downloadOfflineMapServiceConnection = new DownloadOfflineMapServiceConnection(this ,downloadOfflineMapBindChangedCallback);
-    downloadOfflineMapServiceConnection.bindService();
+    mContainerPagerAdapter = new ContainerPagerAdapter(IJoggingActivity.this, getSupportFragmentManager());
+    
     trackDataHub = app.getTrackDataHub();
     setupActionBar();
     if (null != mActionBar) {
@@ -110,9 +88,12 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     
     this.setContentView(R.layout.i_jogging_main);
     FragmentManager.enableDebugLogging(false);
-    
+    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
+    mViewPager.setVisibility(View.VISIBLE);
+    findViewById(R.id.fragment_container).setVisibility(View.GONE);
+    mViewPager.setAdapter(mContainerPagerAdapter);
     mBMapMan=new BMapManager(getApplication());  
-    mBMapMan.init(MyTracksApplication.mStrKey, null); 
+    mBMapMan.init(IJoggingApplication.mStrKey, null); 
   }
   
   @Override
@@ -131,14 +112,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     ft.commit();
   }
   
-  public void switchToOfflineMapFragment() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    FragmentTransaction ft = fragmentManager.beginTransaction();
-    OfflineMapFragment OfflineMapFragment = new OfflineMapFragment();
-    ft.replace(R.id.fragment_container, OfflineMapFragment);
-    ft.commit();
-  }
   
   public void switchToTrainingDetailContainer() {
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -177,8 +150,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
         return true;
       case R.id.exit_action:
         stopRecording();
-        downloadOfflineMapServiceConnection.stop();
-        downloadOfflineMapServiceConnection = null;
         finish();
         return true;
       default:
@@ -264,9 +235,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   
   @Override
   protected void onDestroy(){
-    if(downloadOfflineMapServiceConnection != null){
-      downloadOfflineMapServiceConnection.unbind();
-    }
     super.onDestroy();
   }
   

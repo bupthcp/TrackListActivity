@@ -15,10 +15,7 @@
  */
 package com.google.android.apps.mytracks.util;
 
-import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.ContextualActionModeCallback;
-import com.google.android.apps.mytracks.io.backup.BackupPreferencesListener;
-import com.google.android.apps.mytracks.services.sensors.BluetoothConnectionManager;
 import com.google.android.apps.mytracks.services.tasks.PeriodicTask;
 import com.google.android.apps.mytracks.services.tasks.StatusAnnouncerTask;
 import com.google.api.client.http.HttpTransport;
@@ -28,9 +25,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -38,8 +33,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -54,15 +47,6 @@ public class Api7Adapter implements ApiAdapter {
     return new StatusAnnouncerTask(context);
   }
 
-  @Override
-  public BackupPreferencesListener getBackupPreferencesListener(Context context) {
-    return new BackupPreferencesListener() {
-      @Override
-      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // Do nothing
-      }
-    };
-  }
 
   @Override
   public void applyPreferenceChanges(Editor editor) {
@@ -92,26 +76,6 @@ public class Api7Adapter implements ApiAdapter {
     return true;
   }
 
-  @Override
-  public BluetoothSocket getBluetoothSocket(BluetoothDevice bluetoothDevice) throws IOException {
-    try {
-      Class<? extends BluetoothDevice> c = bluetoothDevice.getClass();
-      Method insecure = c.getMethod("createInsecureRfcommSocket", Integer.class);
-      insecure.setAccessible(true);
-      return (BluetoothSocket) insecure.invoke(bluetoothDevice, 1);
-    } catch (SecurityException e) {
-      Log.d(Constants.TAG, "Unable to create insecure connection", e);
-    } catch (NoSuchMethodException e) {
-      Log.d(Constants.TAG, "Unable to create insecure connection", e);
-    } catch (IllegalArgumentException e) {
-      Log.d(Constants.TAG, "Unable to create insecure connection", e);
-    } catch (IllegalAccessException e) {
-      Log.d(Constants.TAG, "Unable to create insecure connection", e);
-    } catch (InvocationTargetException e) {
-      Log.d(Constants.TAG, "Unable to create insecure connection", e);
-    }
-    return bluetoothDevice.createRfcommSocketToServiceRecord(BluetoothConnectionManager.MY_TRACKS_UUID);
-  }
 
   @Override
   public void hideTitle(Activity activity) {
@@ -161,5 +125,12 @@ public class Api7Adapter implements ApiAdapter {
   public boolean handleSearchKey(MenuItem menuItem) {
     // Return false and allow the framework to handle the search key.
     return false;
+  }
+
+
+  @Override
+  public BluetoothSocket getBluetoothSocket(BluetoothDevice bluetoothDevice) throws IOException {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

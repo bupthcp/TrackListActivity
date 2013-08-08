@@ -5,25 +5,19 @@ import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.maps.mytracks.BuildConfig;
-import com.hu.iJogging.Services.DownloadOfflineMapService;
 import com.hu.iJogging.common.ConfigFree;
-import com.hu.iJogging.common.IJoggingDatabaseUtils;
 
 import android.app.Application;
 import android.content.Intent;
 
 public class IJoggingApplication extends Application{
   private TrackDataHub trackDataHub;
-  private IJoggingDatabaseUtils iJoggingDatabaseUtils;
+  
+  public static final String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
   
   @Override
   //建议在您app的退出之前调用mapadpi的destroy()函数，避免重复初始化带来的时间消耗
   public void onTerminate() {
-      // TODO Auto-generated method stub
-      if (DownloadOfflineMapService.mBMapMan != null) {
-        DownloadOfflineMapService.mBMapMan.destroy();
-        DownloadOfflineMapService.mBMapMan = null;
-      }
       super.onTerminate();
   }
   @Override
@@ -50,10 +44,4 @@ public class IJoggingApplication extends Application{
     return trackDataHub;
   }
   
-  public synchronized IJoggingDatabaseUtils getIJoggingDatabaseUtils(){
-    if(iJoggingDatabaseUtils == null){
-      iJoggingDatabaseUtils = new IJoggingDatabaseUtils(getApplicationContext());
-    }
-    return iJoggingDatabaseUtils;
-  }
 }

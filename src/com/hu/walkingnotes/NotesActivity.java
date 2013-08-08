@@ -1,7 +1,6 @@
 package com.hu.walkingnotes;
 
 import com.baidu.mapapi.BMapManager;
-import com.google.android.apps.mytracks.MyTracksApplication;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.maps.mytracks.R;
@@ -56,7 +55,7 @@ public class NotesActivity extends ActionBarActivity{
     FragmentManager.enableDebugLogging(false);
     
     mBMapMan=new BMapManager(getApplication());  
-    mBMapMan.init(MyTracksApplication.mStrKey, null); 
+    mBMapMan.init(IJoggingApplication.mStrKey, null); 
   }
   
   private void startMapFragment() {

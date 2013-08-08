@@ -301,7 +301,6 @@ public class ActionBarAdapter implements SpinnerAdapter {
         ((IJoggingActivity)mContext).switchToTrackListFragment();
         break;
       case 4:
-        ((IJoggingActivity)mContext).switchToOfflineMapFragment();
         break;
       case 5:
         break;

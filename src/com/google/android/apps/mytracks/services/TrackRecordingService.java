@@ -21,18 +21,13 @@ import static com.google.android.apps.mytracks.Constants.TAG;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.DescriptionGenerator;
 import com.google.android.apps.mytracks.content.DescriptionGeneratorImpl;
-import com.google.android.apps.mytracks.content.MyTracksLocation;
 import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
-import com.google.android.apps.mytracks.content.Sensor;
-import com.google.android.apps.mytracks.content.Sensor.SensorDataSet;
 import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.content.TracksColumns;
 import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.content.WaypointCreationRequest;
 import com.google.android.apps.mytracks.content.WaypointCreationRequest.WaypointType;
 import com.google.android.apps.mytracks.content.WaypointsColumns;
-import com.google.android.apps.mytracks.services.sensors.SensorManager;
-import com.google.android.apps.mytracks.services.sensors.SensorManagerFactory;
 import com.google.android.apps.mytracks.services.tasks.PeriodicTaskExecutor;
 import com.google.android.apps.mytracks.services.tasks.SplitTask;
 import com.google.android.apps.mytracks.services.tasks.StatusAnnouncerFactory;
@@ -65,6 +60,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Process;
+import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -121,7 +117,6 @@ public class TrackRecordingService extends Service {
   private PeriodicTaskExecutor announcementExecutor;
   private PeriodicTaskExecutor splitExecutor;
 
-  private SensorManager sensorManager;
 
   private PreferenceManager prefereceManager;
 
@@ -361,10 +356,6 @@ public class TrackRecordingService extends Service {
     timer.purge();
     unregisterLocationListener();
     shutdownTaskExecutors();
-    if (sensorManager != null) {
-      SensorManagerFactory.releaseSystemSensorManager();
-      sensorManager = null;
-    }
 
     // Make sure we have no indirect references to this service.
     locationManager = null;
@@ -600,7 +591,6 @@ public class TrackRecordingService extends Service {
     length = 0;
     showNotification();
     registerLocationListener();
-    sensorManager = SensorManagerFactory.getSystemSensorManager(this);
 
     // Reset the number of auto-resume retries.
     setAutoResumeTrackRetries(0);
@@ -726,11 +716,7 @@ public class TrackRecordingService extends Service {
       if (lastLocation != null) {
         distanceToLast = location.distanceTo(lastLocation);
       }
-      boolean hasSensorData = sensorManager != null
-          && sensorManager.isEnabled()
-          && sensorManager.getSensorDataSet() != null
-          && sensorManager.isSensorDataSetValid();
-
+      boolean hasSensorData = false;
       // If the user has been stationary for two recording just record the first
       // two and ignore the rest. This code will only have an effect if the
       // maxRecordingDistance = 0
@@ -826,12 +812,7 @@ public class TrackRecordingService extends Service {
     // Insert the new location:
     try {
       Location locationToInsert = location;
-      if (sensorManager != null && sensorManager.isEnabled()) {
-        SensorDataSet sd = sensorManager.getSensorDataSet();
-        if (sd != null && sensorManager.isSensorDataSetValid()) {
-          locationToInsert = new MyTracksLocation(location, sd);
-        }
-      }
+
       Uri pointUri = providerUtils.insertTrackPoint(locationToInsert, trackId);
       int pointId = Integer.parseInt(pointUri.getLastPathSegment());
 
@@ -1050,10 +1031,6 @@ public class TrackRecordingService extends Service {
     recordingTrackId = -1L;
     PreferencesUtils.setLong(this, R.string.recording_track_id_key, recordingTrackId);
 
-    if (sensorManager != null) {
-      SensorManagerFactory.releaseSystemSensorManager();
-      sensorManager = null;
-    }
 
     releaseWakeLock();
 
@@ -1286,31 +1263,15 @@ public class TrackRecordingService extends Service {
     }
 
     @Override
-    public byte[] getSensorData() {
-      if (!canAccess()) {
-        return null;
-      }
-      if (service.sensorManager == null) {
-        Log.d(TAG, "No sensor manager for data.");
-        return null;
-      }
-      if (service.sensorManager.getSensorDataSet() == null) {
-        Log.d(TAG, "Sensor data set is null.");
-        return null;
-      }
-      return service.sensorManager.getSensorDataSet().toByteArray();
+    public byte[] getSensorData() throws RemoteException {
+      // TODO Auto-generated method stub
+      return null;
     }
 
     @Override
-    public int getSensorState() {
-      if (!canAccess()) {
-        return Sensor.SensorState.NONE.getNumber();
-      }
-      if (service.sensorManager == null) {
-        Log.d(TAG, "No sensor manager for data.");
-        return Sensor.SensorState.NONE.getNumber();
-      }
-      return service.sensorManager.getSensorState().getNumber();
+    public int getSensorState() throws RemoteException {
+      // TODO Auto-generated method stub
+      return 0;
     }
   }
 

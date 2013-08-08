@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/dashboard_duration_icon" />
 
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/search_offline_map_title"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/dashboard_calories_icon" />
 
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/hot_offline_map_title"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
             android:text="@string/strHotMap"
             android:textSize="@dimen/dbv_title_z1_normal" />
 
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/hot_offline_map_value"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
             android:text="0"
             android:textSize="@dimen/dbv_value_z1_normal"/>
         
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/hot_offline_map_value_descri"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"
@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/dashboard_goal_icon" />
 
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/installed_offline_map_title"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"
@@ -180,7 +180,7 @@
             android:text="@string/strInstalledMap"
             android:textSize="@dimen/dbv_title_z1_normal" />
 
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/installed_offline_map_value"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
             android:text="0"
             android:textSize="@dimen/dbv_value_z1_normal"/>
         
-        <com.hu.iJogging.TextMeasuredView
+        <com.hu.iJogging.common.TextMeasuredView
             android:id="@+id/installed_offline_map_value_descri"
             style="@style/dashboard_text_style"
             android:layout_width="wrap_content"

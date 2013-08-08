@@ -16,7 +16,6 @@
 package com.google.android.apps.mytracks.util;
 
 import com.google.android.apps.mytracks.ContextualActionModeCallback;
-import com.google.android.apps.mytracks.io.backup.BackupPreferencesListener;
 import com.google.android.apps.mytracks.services.tasks.PeriodicTask;
 import com.google.api.client.http.HttpTransport;
 
@@ -50,14 +49,6 @@ public interface ApiAdapter {
    */
   public PeriodicTask getStatusAnnouncerTask(Context context);
 
-  /**
-   * Gets a {@link BackupPreferencesListener}.
-   * <p>
-   * Due to changes in API level 8.
-   * 
-   * @param context the context
-   */
-  public BackupPreferencesListener getBackupPreferencesListener(Context context);
 
   /**
    * Applies all the changes done to a given preferences editor. Changes may or

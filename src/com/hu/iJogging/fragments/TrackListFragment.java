@@ -1,6 +1,5 @@
 package com.hu.iJogging.fragments;
 
-import com.google.android.apps.mytracks.TrackDetailActivity;
 import com.google.android.apps.mytracks.content.TracksColumns;
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
@@ -34,6 +33,8 @@ import android.widget.ListView;
 public class TrackListFragment extends Fragment{
 
   public static final String TRACK_LIST_FTAGMENT_TAG = "TrackListFragment";
+  public static final String EXTRA_TRACK_ID = "track_id";
+  public static final String EXTRA_MARKER_ID = "marker_id";
   
 
   private boolean metricUnits = true;
@@ -84,7 +85,7 @@ public class TrackListFragment extends Fragment{
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = IntentUtils.newIntent(mActivity, ViewHistoryActivity.class)
-            .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, id);
+            .putExtra(EXTRA_TRACK_ID, id);
         startActivity(intent);
       }
     });

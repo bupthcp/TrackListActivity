@@ -16,7 +16,6 @@
 
 package com.google.android.apps.mytracks.util;
 
-import com.google.android.apps.mytracks.TrackEditActivity;
 import com.google.android.apps.mytracks.content.WaypointCreationRequest;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingService;
@@ -27,7 +26,6 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
@@ -112,12 +110,6 @@ public class TrackRecordingServiceConnectionUtils {
           long recordingTrackId = PreferencesUtils.getLong(
               context, R.string.recording_track_id_key);
           trackRecordingService.endCurrentTrack();
-          if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
-            Intent intent = IntentUtils.newIntent(context, TrackEditActivity.class)
-                .putExtra(TrackEditActivity.EXTRA_TRACK_ID, recordingTrackId)
-                .putExtra(TrackEditActivity.EXTRA_NEW_TRACK, true);
-            context.startActivity(intent);
-          }
         } else {
           trackRecordingService.endCurrentTrack();
         }

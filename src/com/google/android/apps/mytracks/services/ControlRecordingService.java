@@ -18,7 +18,6 @@ package com.google.android.apps.mytracks.services;
 
 import static com.google.android.apps.mytracks.Constants.TAG;
 
-import com.google.android.apps.mytracks.widgets.TrackWidgetProvider;
 import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;
 
