@@ -2,7 +2,6 @@ package com.hu.iJogging;
 
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
-import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.hu.iJogging.common.ConfigFree;
 
@@ -25,7 +24,6 @@ public class IJoggingApplication extends Application{
     if (BuildConfig.DEBUG) {
       ApiAdapterFactory.getApiAdapter().enableStrictMode();
     }
-    AnalyticsUtils.sendPageViews(getApplicationContext(), "/appstart");
     Intent intent = new Intent(this, RemoveTempFilesService.class);
     startService(intent);
     ConfigFree.configure();

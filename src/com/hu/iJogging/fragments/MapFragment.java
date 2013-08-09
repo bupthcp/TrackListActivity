@@ -1,7 +1,10 @@
 package com.hu.iJogging.fragments;
 
+import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.content.TrackDataHub;
@@ -79,8 +82,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private View mapViewContainer;
   private MapView mapView;
   private com.hu.walkingnotes.MapOverlay mapOverlay;
+  private com.baidu.mapapi.map.MyLocationOverlay myLocationOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
+  private MKOfflineMap mOffline = null;
   
   @Override
   public void onAttach(Activity activity) {
@@ -109,14 +114,27 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
     
     mapOverlay = new com.hu.walkingnotes.MapOverlay(getActivity(),mapView);
+    myLocationOverlay = new MyLocationOverlay(mapView);
     
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
     overlays.add(mapOverlay);
+    overlays.add(myLocationOverlay);
+    myLocationOverlay.enableCompass();
     
     mapView.requestFocus();
     mapView.setOnTouchListener(this);
     mapView.setBuiltInZoomControls(false);
+    
+//    mOffline = new MKOfflineMap();    
+//    mOffline.init(mapView.getController(), new MKOfflineMapListener(){
+//      @Override
+//      public void onGetOfflineMapState(int arg0, int arg1) {
+//        // TODO Auto-generated method stub
+//        
+//      }});
+//    mOffline.scan();
+    
     myLocationImageButton = (ImageButton) mapViewContainer.findViewById(R.id.map_my_location);
     myLocationImageButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -148,7 +166,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         return true;
       }
     });
-    
+    mapView.refresh();
     return mapViewContainer;
   }
 
@@ -557,8 +575,11 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     final Location locationTmp = new Location(currentLocation);
     LocationUtils.setGeoInLocation(locationTmp);
     
-    mapOverlay.setMyLocation(locationTmp);
-    mapView.postInvalidate();
+    LocationData locData = new LocationData();
+    locData.latitude = locationTmp.getLatitude();
+    locData.longitude = locationTmp.getLongitude();
+    myLocationOverlay.setData(locData);
+    mapView.refresh();
 
     if (locationTmp != null && keepMyLocationVisible && !isVisible(locationTmp)) {
       Runnable animateRunnable = new Runnable(){
@@ -621,7 +642,11 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
       mMapController.setCenter(geoPoint);  //设置地图中心点
       mMapController.setZoom(12);    //设置地图zoom级别
-      mapOverlay.setMyLocation(locationTmp);
+      LocationData locData = new LocationData();
+      locData.latitude = locationTmp.getLatitude();
+      locData.longitude = locationTmp.getLongitude();
+      myLocationOverlay.setData(locData);
+      mapView.refresh();
     }
   }
   
