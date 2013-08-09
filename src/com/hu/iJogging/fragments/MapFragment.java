@@ -401,7 +401,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onNewTrackPoint(Location location) {
     if (LocationUtils.isValidLocation(location)) {
-//      LocationUtils.setGeoInLocation(location);
+      LocationUtils.setGeoInLocation(location);
       mapOverlay.addLocation(location);
     }
   }
@@ -432,7 +432,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     if (waypoint != null && LocationUtils.isValidLocation(waypoint.getLocation())) {
       // TODO: Optimize locking inside addWaypoint
       Location locationTmp = waypoint.getLocation();
-//      LocationUtils.setGeoInLocation(locationTmp);
+      LocationUtils.setGeoInLocation(locationTmp);
       waypoint.setLocation(locationTmp);
       mapOverlay.addWaypoint(waypoint);
     }
@@ -555,7 +555,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     }
 
     final Location locationTmp = new Location(currentLocation);
-//    LocationUtils.setGeoInLocation(locationTmp);
+    LocationUtils.setGeoInLocation(locationTmp);
     
     mapOverlay.setMyLocation(locationTmp);
     mapView.postInvalidate();
@@ -600,7 +600,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       GeoPoint center = new GeoPoint(bottom + latitudeSpanE6 / 2, left + longitudeSpanE6 / 2);
       if (LocationUtils.isValidGeoPoint(center)) {
         mapView.getController().setCenter(center);
-//        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
+        mapView.getController().setCenter(LocationUtils.convertToBaiduGeopoint(center));
         mapView.getController().zoomToSpan(latitudeSpanE6, longitudeSpanE6);
       }
     }
@@ -616,7 +616,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       if(locationTmp == null)
         return;
       currentLocation = locationTmp;
-//      LocationUtils.setGeoInLocation(locationTmp);
+      LocationUtils.setGeoInLocation(locationTmp);
       MapController mMapController = mapView.getController();  // 得到mMapView的控制权,可以用它控制和驱动平移和缩放
       GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
       mMapController.setCenter(geoPoint);  //设置地图中心点

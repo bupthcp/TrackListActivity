@@ -15,10 +15,10 @@
  */
 package com.google.android.apps.mytracks.util;
 
+import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.stats.TripStatistics;
-import com.hu.iJogging.common.CoordinateConvert;
 import com.hu.iJogging.content.Track;
 
 import android.location.Location;
@@ -257,7 +257,7 @@ public class LocationUtils {
   public static void setGeoInLocation(Location location){
     GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
                                (int) (location.getLongitude() * 1E6));
-    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
+    GeoPoint p2 = CoordinateConvert.fromWgs84ToBaidu(p1);
     location.setLatitude((p2.getLatitudeE6())/1E6);
     location.setLongitude((p2.getLongitudeE6())/1E6);
   }
@@ -270,7 +270,7 @@ public class LocationUtils {
   public static GeoPoint convertToBaiduGeopoint(GeoPoint geoPoint){
     GeoPoint p1 = new GeoPoint((int) (geoPoint.getLatitudeE6() ),
                                (int) (geoPoint.getLongitudeE6()) );
-    GeoPoint p2 = CoordinateConvert.bundleDecode(CoordinateConvert.fromWgs84ToBaidu(p1));
+    GeoPoint p2 = CoordinateConvert.fromWgs84ToBaidu(p1);
     return p2;
   }
 
