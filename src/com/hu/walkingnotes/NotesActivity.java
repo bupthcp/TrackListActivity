@@ -3,9 +3,9 @@ package com.hu.walkingnotes;
 import com.baidu.mapapi.BMapManager;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
-import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.ActionBarAdapter;
 import com.hu.iJogging.IJoggingApplication;
+import com.hu.iJogging.R;
 import com.hu.iJogging.fragments.MapFragment;
 
 import android.os.Bundle;

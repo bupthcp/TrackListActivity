@@ -1,13 +1,13 @@
 package com.hu.iJogging.fragments;
 
-import com.google.android.apps.mytracks.content.TracksColumns;
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
-import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.R;
 import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.IconUtils;
+import com.hu.iJogging.content.TracksColumns;
 
 import android.app.Activity;
 import android.content.Context;

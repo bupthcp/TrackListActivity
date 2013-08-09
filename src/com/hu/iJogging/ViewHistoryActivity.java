@@ -1,10 +1,9 @@
 package com.hu.iJogging;
 
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.content.TrackDataHub;
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.content.MyTracksProviderUtils;
+import com.hu.iJogging.content.Waypoint;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
 import android.content.Intent;

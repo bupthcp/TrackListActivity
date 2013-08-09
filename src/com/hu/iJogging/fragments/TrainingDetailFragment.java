@@ -1,23 +1,23 @@
 package com.hu.iJogging.fragments;
 
-import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
-import com.google.android.apps.mytracks.content.TracksColumns;
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
-import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.IJoggingApplication;
+import com.hu.iJogging.R;
 import com.hu.iJogging.SelectSportsActivity;
 import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.MainZoneLayout;
 import com.hu.iJogging.common.MotivationMainButton;
 import com.hu.iJogging.common.SportMainButton;
 import com.hu.iJogging.common.TextMeasuredView;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.TracksColumns;
+import com.hu.iJogging.content.Waypoint;
 
 import android.app.Activity;
 import android.content.Intent;

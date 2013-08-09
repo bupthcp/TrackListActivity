@@ -16,12 +16,11 @@
 
 package com.hu.iJogging;
 
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.io.file.GpxImporter;
 import com.google.android.apps.mytracks.util.FileUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.SystemUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.content.MyTracksProviderUtils;
 
 import android.os.AsyncTask;
 import android.os.PowerManager.WakeLock;

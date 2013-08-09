@@ -1,8 +1,6 @@
 package com.hu.iJogging;
 
 
-import com.google.android.maps.mytracks.R;
-
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 

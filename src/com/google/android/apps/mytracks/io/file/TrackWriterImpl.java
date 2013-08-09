@@ -18,14 +18,14 @@ package com.google.android.apps.mytracks.io.file;
 import static com.google.android.apps.mytracks.Constants.TAG;
 
 import com.google.android.apps.mytracks.Constants;
-import com.google.android.apps.mytracks.content.MyTracksLocation;
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils.LocationIterator;
-import com.google.android.apps.mytracks.content.Track;
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.util.FileUtils;
 import com.google.android.apps.mytracks.util.LocationUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.MyTracksLocation;
+import com.hu.iJogging.content.MyTracksProviderUtils;
+import com.hu.iJogging.content.MyTracksProviderUtils.LocationIterator;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.app.Activity;
 import android.content.Context;

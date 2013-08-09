@@ -1,7 +1,7 @@
 package com.hu.iJogging.fragments;
 
-import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.IJoggingActivity;
+import com.hu.iJogging.R;
 import com.hu.iJogging.SelectSportsActivity;
 
 import android.app.Activity;

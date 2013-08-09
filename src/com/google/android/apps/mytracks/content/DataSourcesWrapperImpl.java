@@ -19,7 +19,7 @@ import static com.google.android.apps.mytracks.Constants.MAX_LOCATION_AGE_MS;
 import static com.google.android.apps.mytracks.Constants.MAX_NETWORK_AGE_MS;
 
 import com.google.android.apps.mytracks.Constants;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
 
 import android.content.ContentResolver;
 import android.content.Context;

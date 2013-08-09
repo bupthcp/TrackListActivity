@@ -18,7 +18,7 @@ limitations under the License.
   android:installLocation="auto"
   android:versionCode="47"
   android:versionName="2.0"
-  package="com.google.android.maps.mytracks" >
+  package="com.hu.iJogging" >
 
       <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
     </uses-permission>
@@ -131,7 +131,6 @@ limitations under the License.
     android:xlargeScreens="true" />
 
   <application
-    android:backupAgent="com.google.android.apps.mytracks.io.backup.MyTracksBackupAgent"
     android:icon="@drawable/ic_launcher"
     android:hardwareAccelerated="true"
     android:label="@string/my_tracks_app_name"
@@ -201,16 +200,14 @@ limitations under the License.
     <!-- Providers -->
     <!-- My Tracks data provider -->
     <provider
-      android:authorities="com.google.android.maps.mytracks"
-      android:exported="true"
-      android:name="com.google.android.apps.mytracks.content.MyTracksProvider"
-      android:readPermission="com.google.android.apps.mytracks.READ_TRACK_DATA"
-      android:writePermission="com.google.android.apps.mytracks.WRITE_TRACK_DATA" />
+      android:authorities="com.hu.iJogging"
+      android:exported="false"
+      android:name="com.hu.iJogging.content.IJoggingProvider" />
     <!-- Search suggestion provider -->
-    <provider
+    <!--provider
       android:authorities="com.google.android.maps.mytracks.search"
       android:exported="false"
-      android:name="com.google.android.apps.mytracks.content.SearchEngineProvider" />
+      android:name="com.google.android.apps.mytracks.content.SearchEngineProvider" -->
 
   </application>
 

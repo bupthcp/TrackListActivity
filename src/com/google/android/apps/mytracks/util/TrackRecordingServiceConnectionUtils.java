@@ -16,11 +16,11 @@
 
 package com.google.android.apps.mytracks.util;
 
-import com.google.android.apps.mytracks.content.WaypointCreationRequest;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.WaypointCreationRequest;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;

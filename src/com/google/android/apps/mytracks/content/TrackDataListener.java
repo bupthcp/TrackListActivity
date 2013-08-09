@@ -15,8 +15,8 @@
  */
 package com.google.android.apps.mytracks.content;
 
-import com.google.android.apps.mytracks.content.Track;
-import com.google.android.apps.mytracks.content.Waypoint;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.location.Location;
 

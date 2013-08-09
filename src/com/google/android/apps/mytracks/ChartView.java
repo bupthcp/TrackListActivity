@@ -16,12 +16,12 @@
 
 package com.google.android.apps.mytracks;
 
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.stats.ExtremityMonitor;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
-import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.Waypoint;
 
 import android.content.Context;
 import android.graphics.Canvas;

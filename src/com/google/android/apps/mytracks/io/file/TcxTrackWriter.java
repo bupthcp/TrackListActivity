@@ -15,15 +15,12 @@
  */
 package com.google.android.apps.mytracks.io.file;
 
-import com.google.android.apps.mytracks.content.MyTracksLocation;
-import com.google.android.apps.mytracks.content.Sensor;
-import com.google.android.apps.mytracks.content.Sensor.SensorDataSet;
-import com.google.android.apps.mytracks.content.Track;
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.apps.mytracks.util.SystemUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.content.Context;
 import android.location.Location;
@@ -208,54 +205,54 @@ public class TcxTrackWriter implements TrackFormatWriter {
       printWriter.println("</Position>");
       printWriter.println("<AltitudeMeters>" + location.getAltitude() + "</AltitudeMeters>");
 
-      if (location instanceof MyTracksLocation) {
-        SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
-        if (sensorDataSet != null) {
-          boolean heartRateAvailable = sensorDataSet.hasHeartRate()
-              && sensorDataSet.getHeartRate().hasValue()
-              && sensorDataSet.getHeartRate().getState() == Sensor.SensorState.SENDING;
-          boolean cadenceAvailable = sensorDataSet.hasCadence()
-            && sensorDataSet.getCadence().hasValue()
-            && sensorDataSet.getCadence().getState() == Sensor.SensorState.SENDING;
-          boolean powerAvailable = sensorDataSet.hasPower() 
-            && sensorDataSet.getPower().hasValue()
-            && sensorDataSet.getPower().getState() == Sensor.SensorState.SENDING;
-          
-          if (heartRateAvailable) {
-            printWriter.println("<HeartRateBpm>");
-            printWriter.println("<Value>" + sensorDataSet.getHeartRate().getValue() + "</Value>");
-            printWriter.println("</HeartRateBpm>");
-          }
-
-          // <Cadence> needs to be put before <Extensions>.
-          // According to the TCX spec, <Cadence> is only for the biking sport
-          // type. For others, use <RunCadence> in <Extensions>.
-          if (cadenceAvailable && sportType == SportType.BIKING) {
-            // The spec requires the max value be 254.
-            printWriter.println(
-                "<Cadence>" + Math.min(254, sensorDataSet.getCadence().getValue()) + "</Cadence>");
-          }
-
-          if ((cadenceAvailable && sportType != SportType.BIKING) || powerAvailable) {
-            printWriter.println("<Extensions>");
-            printWriter.println(
-                "<TPX xmlns=\"http://www.garmin.com/xmlschemas/ActivityExtension/v2\">");
-
-            // <RunCadence> needs to be put before <Watts>.
-            if (cadenceAvailable && sportType != SportType.BIKING) {
-              // The spec requires the max value to be 254.
-              printWriter.println("<RunCadence>"
-                  + Math.min(254, sensorDataSet.getCadence().getValue()) + "</RunCadence>");
-            }
-
-            if (powerAvailable) {
-              printWriter.println("<Watts>" + sensorDataSet.getPower().getValue() + "</Watts>");
-            }
-            printWriter.println("</TPX>");
-            printWriter.println("</Extensions>");
-          }
-        }
-      }
+//      if (location instanceof MyTracksLocation) {
+//        SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
+//        if (sensorDataSet != null) {
+//          boolean heartRateAvailable = sensorDataSet.hasHeartRate()
+//              && sensorDataSet.getHeartRate().hasValue()
+//              && sensorDataSet.getHeartRate().getState() == Sensor.SensorState.SENDING;
+//          boolean cadenceAvailable = sensorDataSet.hasCadence()
+//            && sensorDataSet.getCadence().hasValue()
+//            && sensorDataSet.getCadence().getState() == Sensor.SensorState.SENDING;
+//          boolean powerAvailable = sensorDataSet.hasPower() 
+//            && sensorDataSet.getPower().hasValue()
+//            && sensorDataSet.getPower().getState() == Sensor.SensorState.SENDING;
+//          
+//          if (heartRateAvailable) {
+//            printWriter.println("<HeartRateBpm>");
+//            printWriter.println("<Value>" + sensorDataSet.getHeartRate().getValue() + "</Value>");
+//            printWriter.println("</HeartRateBpm>");
+//          }
+//
+//          // <Cadence> needs to be put before <Extensions>.
+//          // According to the TCX spec, <Cadence> is only for the biking sport
+//          // type. For others, use <RunCadence> in <Extensions>.
+//          if (cadenceAvailable && sportType == SportType.BIKING) {
+//            // The spec requires the max value be 254.
+//            printWriter.println(
+//                "<Cadence>" + Math.min(254, sensorDataSet.getCadence().getValue()) + "</Cadence>");
+//          }
+//
+//          if ((cadenceAvailable && sportType != SportType.BIKING) || powerAvailable) {
+//            printWriter.println("<Extensions>");
+//            printWriter.println(
+//                "<TPX xmlns=\"http://www.garmin.com/xmlschemas/ActivityExtension/v2\">");
+//
+//            // <RunCadence> needs to be put before <Watts>.
+//            if (cadenceAvailable && sportType != SportType.BIKING) {
+//              // The spec requires the max value to be 254.
+//              printWriter.println("<RunCadence>"
+//                  + Math.min(254, sensorDataSet.getCadence().getValue()) + "</RunCadence>");
+//            }
+//
+//            if (powerAvailable) {
+//              printWriter.println("<Watts>" + sensorDataSet.getPower().getValue() + "</Watts>");
+//            }
+//            printWriter.println("</TPX>");
+//            printWriter.println("</Extensions>");
+//          }
+//        }
+//      }
       printWriter.println("</Trackpoint>");
     }
   }

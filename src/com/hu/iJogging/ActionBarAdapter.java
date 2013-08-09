@@ -1,7 +1,5 @@
 package com.hu.iJogging;
 
-import com.google.android.maps.mytracks.R;
-
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;

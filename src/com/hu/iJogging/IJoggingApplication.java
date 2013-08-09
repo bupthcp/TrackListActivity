@@ -4,7 +4,6 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
-import com.google.android.maps.mytracks.BuildConfig;
 import com.hu.iJogging.common.ConfigFree;
 
 import android.app.Application;

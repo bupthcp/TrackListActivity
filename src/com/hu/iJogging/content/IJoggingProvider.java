@@ -14,11 +14,11 @@
  * the License.
  */
 
-package com.google.android.apps.mytracks.content;
+package com.hu.iJogging.content;
 
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -36,15 +36,14 @@ import android.os.Binder;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
-
 /**
  * A provider that handles recorded (GPS) tracks and their track points.
  *
  * @author Leif Hendrik Wilden
  */
-public class MyTracksProvider extends ContentProvider {
+public class IJoggingProvider extends ContentProvider {
 
-  private static final String DATABASE_NAME = "mytracks.db";
+  private static final String DATABASE_NAME = "iJogging.db";
   private static final int DATABASE_VERSION = 20;
   private static final int TRACKPOINTS = 1;
   private static final int TRACKPOINTS_ID = 2;
@@ -52,7 +51,7 @@ public class MyTracksProvider extends ContentProvider {
   private static final int TRACKS_ID = 4;
   private static final int WAYPOINTS = 5;
   private static final int WAYPOINTS_ID = 6;
-  private static final String TAG = MyTracksProvider.class.getSimpleName();
+  private static final String TAG = IJoggingProvider.class.getSimpleName();
 
   /**
    * Helper which creates or upgrades the database if necessary.
@@ -109,7 +108,7 @@ public class MyTracksProvider extends ContentProvider {
 
   private SQLiteDatabase db;
 
-  public MyTracksProvider() {
+  public IJoggingProvider() {
     urlMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     urlMatcher.addURI(MyTracksProviderUtils.AUTHORITY,
         "trackpoints", TRACKPOINTS);
@@ -167,7 +166,7 @@ public class MyTracksProvider extends ContentProvider {
         throw new IllegalArgumentException("Unknown URL " + url);
     }
 
-    Log.w(MyTracksProvider.TAG, "provider delete in " + table + "!");
+    Log.w(IJoggingProvider.TAG, "provider delete in " + table + "!");
     int count = db.delete(table, where, selectionArgs);
     getContext().getContentResolver().notifyChange(url, null, true);
 
@@ -208,7 +207,7 @@ public class MyTracksProvider extends ContentProvider {
     if (!canAccess()) {
       return null;
     }
-    Log.d(MyTracksProvider.TAG, "MyTracksProvider.insert");
+    Log.d(IJoggingProvider.TAG, "MyTracksProvider.insert");
     ContentValues values;
     if (initialValues != null) {
       values = initialValues;
@@ -239,7 +238,7 @@ public class MyTracksProvider extends ContentProvider {
     if (!canAccess()) {
       return 0;
     }
-    Log.d(MyTracksProvider.TAG, "MyTracksProvider.bulkInsert");
+    Log.d(IJoggingProvider.TAG, "MyTracksProvider.bulkInsert");
     int numInserted = 0;
     try {
       // Use a transaction in order to make the insertions run as a single batch

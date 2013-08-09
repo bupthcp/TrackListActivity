@@ -1,6 +1,6 @@
 package com.hu.iJogging.fragments;
 
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
 import com.hu.iJogging.common.IconUtils;
 
 import android.content.Context;

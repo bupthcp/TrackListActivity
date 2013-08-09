@@ -23,13 +23,16 @@ import static com.google.android.apps.mytracks.Constants.TARGET_DISPLAYED_TRACK_
 
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.DataSourceManager.DataSourceListener;
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils.DoubleBufferedLocationFactory;
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils.LocationIterator;
 import com.google.android.apps.mytracks.content.TrackDataListener.ProviderState;
 import com.google.android.apps.mytracks.content.TrackDataListeners.ListenerRegistration;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.MyTracksProviderUtils;
+import com.hu.iJogging.content.MyTracksProviderUtils.DoubleBufferedLocationFactory;
+import com.hu.iJogging.content.MyTracksProviderUtils.LocationIterator;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.content.Context;
 import android.content.SharedPreferences;

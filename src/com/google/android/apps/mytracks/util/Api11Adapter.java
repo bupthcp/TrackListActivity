@@ -17,7 +17,7 @@
 package com.google.android.apps.mytracks.util;
 
 import com.google.android.apps.mytracks.ContextualActionModeCallback;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

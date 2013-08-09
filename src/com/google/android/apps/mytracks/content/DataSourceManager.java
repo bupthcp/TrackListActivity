@@ -3,6 +3,9 @@ package com.google.android.apps.mytracks.content;
 import static com.google.android.apps.mytracks.Constants.TAG;
 
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
+import com.hu.iJogging.content.TrackPointsColumns;
+import com.hu.iJogging.content.TracksColumns;
+import com.hu.iJogging.content.WaypointsColumns;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

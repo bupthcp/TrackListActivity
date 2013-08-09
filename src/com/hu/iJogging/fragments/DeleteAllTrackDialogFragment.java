@@ -16,9 +16,9 @@
 
 package com.hu.iJogging.fragments;
 
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
 import com.google.android.apps.mytracks.util.DialogUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.MyTracksProviderUtils;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

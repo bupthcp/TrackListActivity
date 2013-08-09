@@ -18,6 +18,11 @@ package com.google.android.apps.mytracks.content;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
+import com.hu.iJogging.content.MyTracksProviderUtils;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.TracksColumns;
+import com.hu.iJogging.content.Waypoint;
+import com.hu.iJogging.content.WaypointsColumns;
 
 import android.database.Cursor;
 import android.location.Location;

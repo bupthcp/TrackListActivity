@@ -18,7 +18,7 @@ package com.google.android.apps.mytracks.services;
 import static com.google.android.apps.mytracks.Constants.TAG;
 
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
-import com.google.android.maps.mytracks.BuildConfig;
+import com.hu.iJogging.BuildConfig;
 
 import android.content.ComponentName;
 import android.content.Context;

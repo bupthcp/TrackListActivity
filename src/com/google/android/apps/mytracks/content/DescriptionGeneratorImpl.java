@@ -20,8 +20,11 @@ import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ChartURLGenerator;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
-import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.DescriptionGenerator;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.content.Context;
 import android.util.Pair;

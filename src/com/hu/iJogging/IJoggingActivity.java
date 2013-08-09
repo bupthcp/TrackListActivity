@@ -10,7 +10,6 @@ import com.google.android.apps.mytracks.util.AnalyticsUtils;
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
-import com.google.android.maps.mytracks.R;
 import com.hu.iJogging.fragments.DeleteAllTrackDialogFragment;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
 import com.hu.iJogging.fragments.TrackListFragment;

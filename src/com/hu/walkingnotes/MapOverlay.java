@@ -8,8 +8,8 @@ import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.mapapi.map.Symbol;
 import com.baidu.mapapi.search.MKRoute;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.google.android.apps.mytracks.content.Waypoint;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.Waypoint;
 
 import android.app.Activity;
 import android.content.Context;

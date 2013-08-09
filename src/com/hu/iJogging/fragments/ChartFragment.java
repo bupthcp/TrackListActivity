@@ -2,22 +2,19 @@ package com.hu.iJogging.fragments;
 
 import com.google.android.apps.mytracks.ChartView;
 import com.google.android.apps.mytracks.Constants;
-import com.google.android.apps.mytracks.content.MyTracksLocation;
-import com.google.android.apps.mytracks.content.Sensor;
-import com.google.android.apps.mytracks.content.Sensor.SensorDataSet;
-import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.stats.DoubleBuffer;
 import com.google.android.apps.mytracks.stats.TripStatisticsBuilder;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
-import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;
 import com.hu.iJogging.IJoggingApplication;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -451,25 +448,25 @@ public class ChartFragment extends Fragment implements TrackDataListener {
     }
     pace = speed == 0 ? 0.0 : 60.0 / speed;
 
-    if (location instanceof MyTracksLocation
-        && ((MyTracksLocation) location).getSensorDataSet() != null) {
-      SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
-      if (sensorDataSet.hasHeartRate()
-          && sensorDataSet.getHeartRate().getState() == Sensor.SensorState.SENDING
-          && sensorDataSet.getHeartRate().hasValue()) {
-        heartRate = sensorDataSet.getHeartRate().getValue();
-      }
-      if (sensorDataSet.hasCadence()
-          && sensorDataSet.getCadence().getState() == Sensor.SensorState.SENDING
-          && sensorDataSet.getCadence().hasValue()) {
-        cadence = sensorDataSet.getCadence().getValue();
-      }
-      if (sensorDataSet.hasPower()
-          && sensorDataSet.getPower().getState() == Sensor.SensorState.SENDING
-          && sensorDataSet.getPower().hasValue()) {
-        power = sensorDataSet.getPower().getValue();
-      }
-    }
+//    if (location instanceof MyTracksLocation
+//        && ((MyTracksLocation) location).getSensorDataSet() != null) {
+//      SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
+//      if (sensorDataSet.hasHeartRate()
+//          && sensorDataSet.getHeartRate().getState() == Sensor.SensorState.SENDING
+//          && sensorDataSet.getHeartRate().hasValue()) {
+//        heartRate = sensorDataSet.getHeartRate().getValue();
+//      }
+//      if (sensorDataSet.hasCadence()
+//          && sensorDataSet.getCadence().getState() == Sensor.SensorState.SENDING
+//          && sensorDataSet.getCadence().hasValue()) {
+//        cadence = sensorDataSet.getCadence().getValue();
+//      }
+//      if (sensorDataSet.hasPower()
+//          && sensorDataSet.getPower().getState() == Sensor.SensorState.SENDING
+//          && sensorDataSet.getPower().hasValue()) {
+//        power = sensorDataSet.getPower().getValue();
+//      }
+//    }
 
     if (data != null) {
       data[0] = timeOrDistance;

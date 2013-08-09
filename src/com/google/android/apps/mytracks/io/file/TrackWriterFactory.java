@@ -18,8 +18,8 @@ package com.google.android.apps.mytracks.io.file;
 
 import static com.google.android.apps.mytracks.Constants.TAG;
 
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
-import com.google.android.apps.mytracks.content.Track;
+import com.hu.iJogging.content.MyTracksProviderUtils;
+import com.hu.iJogging.content.Track;
 
 import android.content.Context;
 import android.os.Parcel;

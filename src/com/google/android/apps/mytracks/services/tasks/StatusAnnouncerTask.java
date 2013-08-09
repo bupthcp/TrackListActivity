@@ -24,8 +24,8 @@ import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
-import com.google.android.maps.mytracks.R;
 import com.google.common.annotations.VisibleForTesting;
+import com.hu.iJogging.R;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;

@@ -15,7 +15,7 @@
  */
 package com.google.android.apps.mytracks.util;
 
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
 
 import android.content.Context;
 import android.text.TextUtils;

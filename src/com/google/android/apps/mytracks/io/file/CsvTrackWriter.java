@@ -15,15 +15,12 @@
  */
 package com.google.android.apps.mytracks.io.file;
 
-import com.google.android.apps.mytracks.content.MyTracksLocation;
-import com.google.android.apps.mytracks.content.Sensor;
-import com.google.android.apps.mytracks.content.Sensor.SensorData;
-import com.google.android.apps.mytracks.content.Sensor.SensorDataSet;
-import com.google.android.apps.mytracks.content.Track;
-import com.google.android.apps.mytracks.content.Waypoint;
 import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
 import com.google.android.apps.mytracks.util.StringUtils;
-import com.google.android.maps.mytracks.R;
+import com.hu.iJogging.R;
+import com.hu.iJogging.content.MyTracksLocation;
+import com.hu.iJogging.content.Track;
+import com.hu.iJogging.content.Waypoint;
 
 import android.content.Context;
 import android.location.Location;
@@ -173,34 +170,34 @@ public class CsvTrackWriter implements TrackFormatWriter {
     String heartRate = null;
     String batteryLevel = null;
     if (location instanceof MyTracksLocation) {
-      SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
-
-      if (sensorDataSet != null) {
-        if (sensorDataSet.hasPower()) {
-          SensorData sensorData = sensorDataSet.getPower();
-          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
-            power = Double.toString(sensorData.getValue());
-          }
-        }
-        if (sensorDataSet.hasCadence()) {
-          SensorData sensorData = sensorDataSet.getCadence();
-          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
-            cadence = Double.toString(sensorData.getValue());
-          }
-        }
-        if (sensorDataSet.hasHeartRate()) {
-          SensorData sensorData = sensorDataSet.getHeartRate();
-          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
-            heartRate = Double.toString(sensorData.getValue());
-          }
-        }
-        if (sensorDataSet.hasBatteryLevel()) {
-          SensorData sensorData = sensorDataSet.getBatteryLevel();
-          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
-            batteryLevel = Double.toString(sensorData.getValue());
-          }
-        }
-      }
+//      SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
+//
+//      if (sensorDataSet != null) {
+//        if (sensorDataSet.hasPower()) {
+//          SensorData sensorData = sensorDataSet.getPower();
+//          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
+//            power = Double.toString(sensorData.getValue());
+//          }
+//        }
+//        if (sensorDataSet.hasCadence()) {
+//          SensorData sensorData = sensorDataSet.getCadence();
+//          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
+//            cadence = Double.toString(sensorData.getValue());
+//          }
+//        }
+//        if (sensorDataSet.hasHeartRate()) {
+//          SensorData sensorData = sensorDataSet.getHeartRate();
+//          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
+//            heartRate = Double.toString(sensorData.getValue());
+//          }
+//        }
+//        if (sensorDataSet.hasBatteryLevel()) {
+//          SensorData sensorData = sensorDataSet.getBatteryLevel();
+//          if (sensorData.hasValue() && sensorData.getState() == Sensor.SensorState.SENDING) {
+//            batteryLevel = Double.toString(sensorData.getValue());
+//          }
+//        }
+//      }
     }
     pointIndex++;
     writeCommaSeparatedLine(Integer.toString(segmentIndex),

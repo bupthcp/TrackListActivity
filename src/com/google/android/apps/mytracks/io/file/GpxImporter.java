@@ -16,11 +16,11 @@
 package com.google.android.apps.mytracks.io.file;
 
 import com.google.android.apps.mytracks.Constants;
-import com.google.android.apps.mytracks.content.MyTracksProviderUtils;
-import com.google.android.apps.mytracks.content.Track;
 import com.google.android.apps.mytracks.stats.TripStatisticsBuilder;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
+import com.hu.iJogging.content.MyTracksProviderUtils;
+import com.hu.iJogging.content.Track;
 
 import android.location.Location;
 import android.location.LocationManager;
