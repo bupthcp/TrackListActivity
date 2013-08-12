@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
   <!-- The style for the about value -->
   <style name="AboutValue" parent="@style/TextMedium">
     <item name="android:paddingLeft">48dp</item>
@@ -256,7 +256,8 @@ limitations under the License.
         <item name="popupMenuStyle">@style/Endo.PopupMenu</item>
         <item name="displayOptions">disableHome</item>
     </style>
-    <style name="Endo.DropDownListView" parent="@style/Widget.AppCompat.ListView.DropDown">
+    <style name="Endo.DropDownListView" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:divider">@drawable/abc_list_divider_holo_light</item>
         <item name="android:background">@color/white</item>
         <item name="android:listSelector">@drawable/ab_endo__list_selectable_background</item>
         <item name="background">@android:color/white</item>

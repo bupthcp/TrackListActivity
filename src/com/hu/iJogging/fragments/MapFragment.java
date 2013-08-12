@@ -2,6 +2,7 @@ package com.hu.iJogging.fragments;
 
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MKOfflineMap;
+import com.baidu.mapapi.map.MKOfflineMapListener;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
@@ -126,14 +127,14 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapView.setOnTouchListener(this);
     mapView.setBuiltInZoomControls(false);
     
-//    mOffline = new MKOfflineMap();    
-//    mOffline.init(mapView.getController(), new MKOfflineMapListener(){
-//      @Override
-//      public void onGetOfflineMapState(int arg0, int arg1) {
-//        // TODO Auto-generated method stub
-//        
-//      }});
-//    mOffline.scan();
+    mOffline = new MKOfflineMap();    
+    mOffline.init(mapView.getController(), new MKOfflineMapListener(){
+      @Override
+      public void onGetOfflineMapState(int arg0, int arg1) {
+        // TODO Auto-generated method stub
+        
+      }});
+    mOffline.scan();
     
     myLocationImageButton = (ImageButton) mapViewContainer.findViewById(R.id.map_my_location);
     myLocationImageButton.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +215,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onDestroyView() {
     super.onDestroyView();
+    mOffline.destroy();
     mapView.destroy();
     ViewGroup parentViewGroup = (ViewGroup) mapViewContainer.getParent();
     if (parentViewGroup != null) {
