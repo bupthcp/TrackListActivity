@@ -574,18 +574,18 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       return;
     }
 
-    final Location locationTmp = new Location(currentLocation);
-    LocationUtils.setGeoInLocation(locationTmp);
-    
-    LocationData locData = new LocationData();
-    locData.latitude = locationTmp.getLatitude();
-    locData.longitude = locationTmp.getLongitude();
-    myLocationOverlay.setData(locData);
-    mapView.refresh();
+    Runnable updateRunnable = new Runnable() {
+      public void run() {
+        final Location locationTmp = new Location(currentLocation);
+        LocationUtils.setGeoInLocation(locationTmp);
 
-    if (locationTmp != null && keepMyLocationVisible && !isVisible(locationTmp)) {
-      Runnable animateRunnable = new Runnable(){
-        public void run(){
+        LocationData locData = new LocationData();
+        locData.latitude = locationTmp.getLatitude();
+        locData.longitude = locationTmp.getLongitude();
+        myLocationOverlay.setData(locData);
+        mapView.refresh();
+
+        if (locationTmp != null && keepMyLocationVisible && !isVisible(locationTmp)) {
           GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
           MapController mapController = mapView.getController();
           mapController.animateTo(geoPoint);
@@ -597,9 +597,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
             }
           }
         }
-      };
-      mapFragmentHandler.post(animateRunnable);
-    }
+      }
+    };
+    mapFragmentHandler.post(updateRunnable);
   }
 
   /**
