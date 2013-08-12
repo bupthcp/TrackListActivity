@@ -32,7 +32,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,8 +96,6 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       isViewHistory = true;
     }
     mActivity = activity;
-    activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
-    activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
   }
 
   @Override
@@ -153,15 +150,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         if (paramMotionEvent.getAction() == MotionEvent.ACTION_DOWN) {
 //           backStack();
           if(isViewHistory){
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.remove(MapFragment.this);
-            ft.commit();
-            ((ViewHistoryActivity)mActivity).switchToTrainingDetailContainer();
+            ((ViewHistoryActivity)mActivity).switchToTrainingDetailContainerFragment();
           }else{
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.remove(MapFragment.this);
-            ft.commit();
-            ((IJoggingActivity)mActivity).switchToTrainingDetailContainer();            
+            ((IJoggingActivity)mActivity).switchToTrainingDetailContainerFragment();  
           }
         }
         return true;

@@ -40,16 +40,8 @@ public class ViewHistoryActivity extends ActionBarActivity{
 //    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, null);
     trackDataHub = ((IJoggingApplication) getApplication()).getTrackDataHub();
 
-//    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
-//    ft.add(R.id.fragment_container, trainingDetailContainerFragment);
-//    ft.commit();
-    mContainerPagerAdapter = new ContainerPagerAdapter(this, getSupportFragmentManager());
-    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
-    mViewPager.setVisibility(View.VISIBLE);
-    findViewById(R.id.fragment_container).setVisibility(View.GONE);
-    mViewPager.setAdapter(mContainerPagerAdapter);
     setupActionBar();
+    switchToTrainingDetailContainerFragment();
   }
   
   public void setupActionBar(){
@@ -139,13 +131,6 @@ public class ViewHistoryActivity extends ActionBarActivity{
     }
   }
   
-  public void switchToTrainingDetailContainer() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
-    mViewPager.setVisibility(View.VISIBLE);
-    findViewById(R.id.fragment_container).setVisibility(View.GONE);
-  }
   
   public void switchToTrainingDetailContainerFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -160,8 +145,6 @@ public class ViewHistoryActivity extends ActionBarActivity{
    * Exists and returns to {@link TrackListActivity}.
    */
   private void exit() {
-//    Intent newIntent = IntentUtils.newIntent(this, TrackListActivity.class);
-//    startActivity(newIntent);
     finish();
   }
 }

@@ -471,21 +471,12 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   private void startMapFragment() {
     Fragment mapFragment = new MapFragment();
     FragmentTransaction ft = getFragmentManager().beginTransaction();
-    ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,
-        R.anim.enter_workout_map, R.anim.exit_workout_map);
-    ft.add(R.id.fragment_container, mapFragment, MapFragment.MAP_FRAGMENT_TAG);
+//    ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,
+//        R.anim.enter_workout_map, R.anim.exit_workout_map);
+    ft.replace(R.id.fragment_container, mapFragment);
     ft.commit();
   }
-  
-  private void startSelectSportsFragment(){
-    SelectSportsFragment selectSportsFragment = new SelectSportsFragment();
-    FragmentTransaction ft = getFragmentManager().beginTransaction();
-    ft.setCustomAnimations(R.anim.enter_bottom, R.anim.exit_bottom,R.anim.enter_bottom, R.anim.exit_bottom);
-    ft.replace(R.id.fragment_container, selectSportsFragment);
-    ft.addToBackStack(null);
-    ft.commit();
-  }
-  
+
   private void startSelectSportsActivity(){
     Intent startSelectiSportsIntent = new Intent(getActivity(),SelectSportsActivity.class);
     getActivity().startActivityForResult(startSelectiSportsIntent, IJoggingActivity.SELECT_SPORT_REQUEST_CODE);

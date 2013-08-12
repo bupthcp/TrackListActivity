@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrackCaller{
@@ -81,16 +80,10 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     
     trackDataHub = app.getTrackDataHub();
     setupActionBar();
-    if (null != mActionBar) {
-      mActionBar.setSelectedNavigationItem(0);
-    }
     
     this.setContentView(R.layout.i_jogging_main);
     FragmentManager.enableDebugLogging(false);
-    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
-    mViewPager.setVisibility(View.VISIBLE);
-    findViewById(R.id.fragment_container).setVisibility(View.GONE);
-    mViewPager.setAdapter(mContainerPagerAdapter);
+    switchToTrainingDetailContainerFragment();
     mBMapMan=new BMapManager(getApplication());  
     mBMapMan.init(IJoggingApplication.mStrKey, null); 
   }
@@ -104,22 +97,11 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
 
   public void switchToTrackListFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
-    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     FragmentTransaction ft = fragmentManager.beginTransaction();
     TrackListFragment trackListFragment = new TrackListFragment();
     ft.replace(R.id.fragment_container, trackListFragment);
     ft.commit();
   }
-  
-  
-  public void switchToTrainingDetailContainer() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    mViewPager = (ViewPager)findViewById(R.id.training_detail_container);
-    mViewPager.setVisibility(View.VISIBLE);
-    findViewById(R.id.fragment_container).setVisibility(View.GONE);
-  }
-
   
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -186,15 +168,8 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     return super.onPrepareOptionsMenu(menu);
   }
 
-  // switch系列的方法用于在全局切换fragment，所以在切换前必须调用popBackStack
-  // 将backstack中的所有fragment清理掉，否则，在切换过程中会出现重叠显示的问题
-  // 这个方法也必须在commit之前调用，如果在commit之后调用，backstack会发生变化
-  // 就没有办法清理干净了，会出现重叠显示的效果。
   public void switchToTrainingDetailContainerFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
-    // 这个语句的效果是将backstack内的所有tag不是null的entry全部清理，其实就是
-    // 将所有的entry全部清理出去
-    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     FragmentTransaction ft = fragmentManager.beginTransaction();
     TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
     ft.replace(R.id.fragment_container, trainingDetailContainerFragment);

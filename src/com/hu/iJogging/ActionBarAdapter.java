@@ -3,9 +3,6 @@ package com.hu.iJogging;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -289,13 +286,11 @@ public class ActionBarAdapter implements SpinnerAdapter {
   private void switchFragment(int position){
     switch (position) {
       case 1:
-        removeFragment();
-        ((IJoggingActivity)mContext).switchToTrainingDetailContainer();
+        ((IJoggingActivity)mContext).switchToTrainingDetailContainerFragment();
         break;
       case 2:
         break;
       case 3:
-        removeFragment();
         ((IJoggingActivity)mContext).switchToTrackListFragment();
         break;
       case 4:
@@ -308,37 +303,7 @@ public class ActionBarAdapter implements SpinnerAdapter {
         break;
     }
   }
-  
-  //当通过ActionBar进行fragment的切换时，就没有办法在fragment内部进行前一个fragment的删除工作了
-  //只能在点击ActionBar完成之后，根据当前所使用的fragment container的res id进行fragment的删除
-  private void removeFragment(){
-    FragmentManager fragmentManager = ((IJoggingActivity)mContext).getSupportFragmentManager();
-    FragmentTransaction ft = fragmentManager.beginTransaction();
-    Fragment fragment;
-    switch(mCurrentSpinner){
-      case 1:
-        //当页面处于新训练时，界面是由viewpager进行管理的。经过试验，发现viewpager会自己管理fragment的
-        //管理，并不需要我们进行手动的remove操作
-        break;
-      case 2:
-        break;
-      case 3:
-        fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-        ft.remove(fragment);
-        break;
-      case 4:
-        break;
-      case 5:
-        break;
-      case 6:
-        break;
-      default:
-        break;
-    }
-    ft.commit();
-  }
 
-  
   // 这个回调函数在布局完成之后才会调用，即getView以及getDropDownView都完成后，才调用
   // mActionBar.setSelectedNavigationItem 这个方法会出发重新布局，所以也会出发这个回调函数
   public class OnNaviListener implements ActionBar.OnNavigationListener {
