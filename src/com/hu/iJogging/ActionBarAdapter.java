@@ -3,6 +3,7 @@ package com.hu.iJogging;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -313,6 +314,12 @@ public class ActionBarAdapter implements SpinnerAdapter {
       if (itemPosition == 0) return false;
       switchFragment(itemPosition);
       mCurrentSpinner = itemPosition;
+      //在4.0以上版本中，如果不调用invalidateOptionsMenu，则在不同的fragment之间切换
+      //不会触发onPrepareOptionsMenu，所以需要手动调用invalidateOptionsMenu
+      //在2.3版本中，没有invalidateOptionsMenu这个方法，但是却没有4.0的这个bug
+      if (Build.VERSION.SDK_INT >= 11) {
+        ((IJoggingActivity)mContext).invalidateOptionsMenu();
+      }
       return true;
     }
   }
