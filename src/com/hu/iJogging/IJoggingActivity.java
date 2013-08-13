@@ -60,7 +60,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     this.mActionBar.setDisplayShowCustomEnabled(false);
     mAdapter = new ActionBarAdapter(this);
     mActionBar.setListNavigationCallbacks(mAdapter, mAdapter.new OnNaviListener());
-//    mActionBar.setSelectedNavigationItem(1);
   }
   
   private final Runnable downloadOfflineMapBindChangedCallback = new Runnable() {

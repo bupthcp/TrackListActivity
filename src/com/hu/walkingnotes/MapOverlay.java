@@ -17,8 +17,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 
-import java.util.ArrayList;
-
 public class MapOverlay extends GraphicsOverlay{
   
   private final Drawable waypointMarker;
@@ -27,8 +25,8 @@ public class MapOverlay extends GraphicsOverlay{
   private boolean showEndMarker = true;
   private Location myLocation;
   private MKRoute route = new MKRoute();
-  private ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
   private MapView mMapView;
+  private GeoPoint lastPoint = null;
   
   private final int markerWidth, markerHeight;
 
@@ -55,14 +53,13 @@ public class MapOverlay extends GraphicsOverlay{
   public void addLocation(Location l) {
     GeoPoint point = new GeoPoint((int) (l.getLatitude() * 1E6),
         (int) (l.getLongitude() * 1E6));
-    points.add(point);
-    if(points.size()>2){
+    if(lastPoint != null){
     //构建线
       Geometry lineGeometry = new Geometry();
       //设定折线点坐标
       GeoPoint[] linePoints = new GeoPoint[2];
-      linePoints[0] = points.get(points.size()-2);
-      linePoints[1] = points.get(points.size()-1);
+      linePoints[0] = lastPoint;
+      linePoints[1] = point;
       lineGeometry.setPolyLine(linePoints);
       //设定样式
       Symbol lineSymbol = new Symbol();
@@ -75,26 +72,24 @@ public class MapOverlay extends GraphicsOverlay{
       //生成Graphic对象
       Graphic lineGraphic = new Graphic(lineGeometry, lineSymbol);
       setData(lineGraphic);
-      
-     //构建点
-      Geometry pointGeometry = new Geometry();
-      //设置坐标
-      pointGeometry.setPoint(point, 2);
-      //设定样式
-      Symbol pointSymbol = new Symbol();
-      Symbol.Color pointColor = pointSymbol.new Color();
-      pointColor.red = 255;
-      pointColor.green = 0;
-      pointColor.blue = 0;
-      pointColor.alpha = 255;
-      pointSymbol.setPointSymbol(pointColor);
-      //生成Graphic对象
-      Graphic pointGraphic = new Graphic(pointGeometry, pointSymbol);
-      setData(pointGraphic);
-      
-//      mMapView.refresh();
     }
-    
+      
+    //构建点
+    Geometry pointGeometry = new Geometry();
+    //设置坐标
+    pointGeometry.setPoint(point, 2);
+    //设定样式
+    Symbol pointSymbol = new Symbol();
+    Symbol.Color pointColor = pointSymbol.new Color();
+    pointColor.red = 255;
+    pointColor.green = 0;
+    pointColor.blue = 0;
+    pointColor.alpha = 255;
+    pointSymbol.setPointSymbol(pointColor);
+    //生成Graphic对象
+    Graphic pointGraphic = new Graphic(pointGeometry, pointSymbol);
+    setData(pointGraphic);
+    lastPoint = point;
   }
   
   public void addSegmentSplit() {
