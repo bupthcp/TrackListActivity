@@ -368,11 +368,18 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   }
 
   @Override
-  public void onCurrentHeadingChanged(double heading) {
-    if (mapOverlay.setHeading((float) heading)) {
-//      mapView.postInvalidate();
-      mapView.refresh();
-    }
+  public void onCurrentHeadingChanged(final double heading) {
+    getActivity().runOnUiThread(new Runnable(){
+      @Override
+      public void run() {
+        if (mapOverlay.setHeading((float) heading)) {
+//        mapView.postInvalidate();
+        mapView.refresh();
+      }
+      }
+      
+    });
+
   }
 
   @Override
@@ -406,15 +413,21 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void clearTrackPoints() {
-    mapOverlay.clearPoints();
+    getActivity().runOnUiThread(new Runnable(){
+      @Override
+      public void run() {
+        mapOverlay.clearPoints();
+      }
+    });
+
   }
 
   @Override
-  public void onNewTrackPoint(Location location) {
-    if (LocationUtils.isValidLocation(location)) {
-      LocationUtils.setGeoInLocation(location);
-      mapOverlay.addLocation(location);
-    }
+  public void onNewTrackPoint(final Location location) {
+      if (LocationUtils.isValidLocation(location)) {
+        LocationUtils.setGeoInLocation(location);
+        mapOverlay.addLocation(location);
+      }
   }
 
   @Override
@@ -429,8 +442,12 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onNewTrackPointsDone() {
-//    mapView.postInvalidate();
-    mapView.refresh();
+    getActivity().runOnUiThread(new Runnable(){
+      @Override
+      public void run() {
+        mapView.refresh();
+      }
+    });
   }
 
   @Override
@@ -451,8 +468,12 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onNewWaypointsDone() {
-//    mapView.postInvalidate();
-    mapView.refresh();
+    getActivity().runOnUiThread(new Runnable(){
+      @Override
+      public void run() {
+        mapView.refresh();
+      }
+    });
   }
 
   @Override
