@@ -5,7 +5,6 @@ import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MKOfflineMapListener;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.content.TrackDataHub;
@@ -24,6 +23,7 @@ import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.MyTracksProviderUtils.Factory;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.walkingnotes.MyLocationMapOverlay;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -82,7 +82,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private View mapViewContainer;
   private MapView mapView;
   private com.hu.walkingnotes.MapOverlay mapOverlay;
-  private com.baidu.mapapi.map.MyLocationOverlay myLocationOverlay;
+  private MyLocationMapOverlay myLocationOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
   private MKOfflineMap mOffline = null;
@@ -112,13 +112,14 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
     
     mapOverlay = new com.hu.walkingnotes.MapOverlay(getActivity(),mapView);
-    myLocationOverlay = new MyLocationOverlay(mapView);
+    myLocationOverlay = new MyLocationMapOverlay(getActivity(),mapView);
     
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
     overlays.add(mapOverlay);
     overlays.add(myLocationOverlay);
     myLocationOverlay.enableCompass();
+    myLocationOverlay.setMarker(null);
     
     mapView.requestFocus();
     mapView.setOnTouchListener(this);
@@ -372,8 +373,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     getActivity().runOnUiThread(new Runnable(){
       @Override
       public void run() {
-        if (mapOverlay.setHeading((float) heading)) {
-//        mapView.postInvalidate();
+        if (myLocationOverlay.setHeading((float) heading)) {
+        myLocationOverlay.setMarker(null);
         mapView.refresh();
       }
       }
