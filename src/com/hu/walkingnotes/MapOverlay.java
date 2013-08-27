@@ -16,8 +16,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.util.Log;
 
 public class MapOverlay extends GraphicsOverlay{
+  
+  private final static String TAG = MapOverlay.class.getSimpleName();
   
   private final Drawable waypointMarker;
   private final Context context;
@@ -53,6 +56,7 @@ public class MapOverlay extends GraphicsOverlay{
   public void addLocation(Location l) {
     GeoPoint point = new GeoPoint((int) (l.getLatitude() * 1E6),
         (int) (l.getLongitude() * 1E6));
+//    Log.d(TAG,"location is: " +l.toString());
     if(lastPoint != null){
     //构建线
       Geometry lineGeometry = new Geometry();
@@ -71,6 +75,7 @@ public class MapOverlay extends GraphicsOverlay{
       lineSymbol.setLineSymbol(lineColor, 4);
       //生成Graphic对象
       Graphic lineGraphic = new Graphic(lineGeometry, lineSymbol);
+//      Log.d(TAG,"lineGraphic is: " +lineGraphic.toString());
       setData(lineGraphic);
     }
       
@@ -88,6 +93,7 @@ public class MapOverlay extends GraphicsOverlay{
     pointSymbol.setPointSymbol(pointColor);
     //生成Graphic对象
     Graphic pointGraphic = new Graphic(pointGeometry, pointSymbol);
+//    Log.d(TAG,"pointGraphic is: " +pointGraphic.toString());
     setData(pointGraphic);
     lastPoint = point;
   }
@@ -104,6 +110,7 @@ public class MapOverlay extends GraphicsOverlay{
   }
   
   public void clearPoints() {
+    Log.d(TAG,"clearPoints");
     removeAll();
   }
   

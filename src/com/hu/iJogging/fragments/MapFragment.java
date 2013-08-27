@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -402,7 +403,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
           }
           mapOverlay.setShowEndMarker(!isRecording);
         }
-        mapView.invalidate();
+        mapView.refresh();
       }
     });
   }
@@ -414,13 +415,21 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void clearTrackPoints() {
-    getActivity().runOnUiThread(new Runnable(){
-      @Override
-      public void run() {
-        mapOverlay.clearPoints();
-      }
-    });
-
+    //clear points操作的发起都是在ListenerThread上进行的
+    //我们可以查看loadNewDataForListener的操作顺序，如果是
+    //reloadAll的话，会先调用clearTrackPoints，然后再进行
+    //数据的加载，这是一个串行的过程。我之前犯的错误就是将
+    //clearTrackPoints的动作又转交给了UiThread去进行，所以
+    //造成了clearTrackPoints不是在数据加载之前执行完毕，而是
+    //在数据加载的过程中执行，这样的话，就会造成一部分路径不
+    //不会显示出来
+//    getActivity().runOnUiThread(new Runnable(){
+//      @Override
+//      public void run() {
+//        mapOverlay.clearPoints();
+//      }
+//    });
+    mapOverlay.clearPoints();
   }
 
   @Override
@@ -446,6 +455,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     getActivity().runOnUiThread(new Runnable(){
       @Override
       public void run() {
+        Log.d(MAP_FRAGMENT_TAG,"onNewTrackPointsDone");
         mapView.refresh();
       }
     });

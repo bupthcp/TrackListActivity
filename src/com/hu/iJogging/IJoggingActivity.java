@@ -12,6 +12,7 @@ import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
 import com.hu.iJogging.fragments.DeleteAllTrackDialogFragment;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment.DeleteOneTrackCaller;
+import com.hu.iJogging.fragments.MapFragment;
 import com.hu.iJogging.fragments.TrackListFragment;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
@@ -35,6 +36,9 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
 
   private ActionBar mActionBar;
   private ActionBarAdapter mAdapter = null;
+  
+  private TrainingDetailContainerFragment trainingDetailContainerFragment;
+  private MapFragment mapFragment;
 
   public String currentSport = null;
   public long recordingTrackId = -1L;
@@ -170,8 +174,16 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   public void switchToTrainingDetailContainerFragment() {
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction ft = fragmentManager.beginTransaction();
-    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+    trainingDetailContainerFragment = new TrainingDetailContainerFragment();
     ft.replace(R.id.fragment_container, trainingDetailContainerFragment);
+    ft.commit();
+  }
+  
+  public void switchToMapFragment(){
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction ft = fragmentManager.beginTransaction();
+    mapFragment = new MapFragment();
+    ft.replace(R.id.fragment_container, mapFragment);
     ft.commit();
   }
 

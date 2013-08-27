@@ -4,6 +4,7 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.iJogging.fragments.MapFragment;
 import com.hu.iJogging.fragments.TrainingDetailContainerFragment;
 
 import android.content.Intent;
@@ -25,6 +26,9 @@ public class ViewHistoryActivity extends ActionBarActivity{
  
   private TrackDataHub trackDataHub;
 //  private TrackRecordingServiceConnection trackRecordingServiceConnection;
+  private TrainingDetailContainerFragment trainingDetailContainerFragment;
+  private MapFragment mapFragment;
+  
   public long trackId;
   public long markerId;
   
@@ -136,8 +140,16 @@ public class ViewHistoryActivity extends ActionBarActivity{
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     FragmentTransaction ft = fragmentManager.beginTransaction();
-    TrainingDetailContainerFragment trainingDetailContainerFragment = new TrainingDetailContainerFragment();
+    trainingDetailContainerFragment = new TrainingDetailContainerFragment();
     ft.replace(R.id.fragment_container, trainingDetailContainerFragment);
+    ft.commit();
+  }
+  
+  public void switchToMapFragment(){
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction ft = fragmentManager.beginTransaction();
+    mapFragment = new MapFragment();
+    ft.replace(R.id.fragment_container, mapFragment);
     ft.commit();
   }
   

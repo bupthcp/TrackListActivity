@@ -28,7 +28,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -469,12 +468,13 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
   
   private void startMapFragment() {
-    Fragment mapFragment = new MapFragment();
-    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    if(isViewHistory){
+      ((ViewHistoryActivity)mActivity).switchToMapFragment();
+    }else{
+      ((IJoggingActivity)mActivity).switchToMapFragment();
+    }
 //    ft.setCustomAnimations(R.anim.enter_workout_map, R.anim.exit_workout_map,
 //        R.anim.enter_workout_map, R.anim.exit_workout_map);
-    ft.replace(R.id.fragment_container, mapFragment);
-    ft.commit();
   }
 
   private void startSelectSportsActivity(){
