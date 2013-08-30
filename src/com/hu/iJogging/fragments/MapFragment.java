@@ -452,6 +452,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onNewTrackPointsDone() {
+    mapOverlay.update();
     getActivity().runOnUiThread(new Runnable(){
       @Override
       public void run() {
