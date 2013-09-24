@@ -4,7 +4,6 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataListener;
 import com.google.android.apps.mytracks.content.TrackDataType;
 import com.google.android.apps.mytracks.stats.TripStatistics;
-import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.IJoggingApplication;
@@ -66,7 +65,8 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   
   private TrackDataHub trackDataHub;
   
-  private UiUpdateThread uiUpdateThread = null;
+  private static final int ONE_SECOND = 1000;
+  private Handler handler;
 
   // The start time of the current track.
   private long startTime = -1L;
@@ -77,8 +77,11 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   // A runnable to update the total time field.
   private final Runnable updateTotalTime = new Runnable() {
     public void run() {
-      if (isRecording()) {
-        setTotalTime(System.currentTimeMillis() - startTime);
+      if (isResumed() && isRecording()) {
+        if (!isRecording()) {
+          setTotalTime(System.currentTimeMillis() - startTime);
+        }
+        handler.postDelayed(this, ONE_SECOND);
       }
     }
   };
@@ -133,15 +136,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     //然后再到Fragment的onResume，所以，需要在这里再对SportMainButton进行一次设置
     if(!isViewHistory){
       ((SportMainButton)btnSport).setSport(((IJoggingActivity)mActivity).currentSport);
-      if (uiUpdateThread != null) {
-        uiUpdateThread.resume();
-      }
-      if (uiUpdateThread == null ) {
-        uiUpdateThread = new UiUpdateThread();
-        uiUpdateThread.start();
-      } else if (uiUpdateThread != null ) {
-        uiUpdateThread.resume();
-      }
     }else{
       //将btnSport设置为从历史记录中读取出来的数据
       //并且不可点击切换
@@ -157,10 +151,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     super.onPause();
     if(!isViewHistory){
       pauseTrackDataHub();
-      if (uiUpdateThread != null) {
-        uiUpdateThread.interrupt();
-        uiUpdateThread=null;
-      }
+      handler.removeCallbacks(updateTotalTime);
     }
   }
   
@@ -175,6 +166,12 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     if (parentViewGroup != null) {
       parentViewGroup.removeView(mMeasureView);
     }
+  }
+  
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    handler = new Handler();
   }
 
   private View getMeasureView(ViewGroup container) {
@@ -372,27 +369,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   private synchronized void pauseTrackDataHub() {
     trackDataHub.unregisterTrackDataListener(this);
   }
-  
-  /**
-   * A thread that updates the total time field every second.
-   */
-  private class UiUpdateThread extends Thread {
-    @Override
-    public void run() {
-      Log.d(TAG, "UI update thread started");
-      while (PreferencesUtils.getLong(getActivity(), R.string.recording_track_id_key)
-          != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
-        getActivity().runOnUiThread(updateTotalTime);
-        try {
-          Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-          Log.d(TAG, "UI update thread caught exception", e);
-          break;
-        }
-      }
-      Log.d(TAG, "UI update thread finished");
-    }
-  }
 
   /**
    * Returns true if recording. Needs to be synchronized because trackDataHub
@@ -518,12 +494,9 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   @Override
   public void onSelectedTrackChanged(Track track) {
     if (isResumed()) {
-      if (uiUpdateThread == null ) {
-        uiUpdateThread = new UiUpdateThread();
-        uiUpdateThread.start();
-      } else if (uiUpdateThread != null ) {
-        uiUpdateThread.interrupt();
-        uiUpdateThread=null;
+      handler.removeCallbacks(updateTotalTime);
+      if (isRecording()) {
+        handler.post(updateTotalTime);
       }
     }
   }
