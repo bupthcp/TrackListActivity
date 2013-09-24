@@ -2,6 +2,7 @@ package com.hu.iJogging.fragments;
 
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
+import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.R;
@@ -43,8 +44,8 @@ public class TrackListFragment extends Fragment{
   private View mFragmentView;
   private ResourceCursorAdapter resourceCursorAdapter;
   private IJoggingActivity mActivity;
-
-  // True to start a new recording.
+  
+  private boolean recordingTrackPaused = PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT;
   
   
   private static final String[] PROJECTION = new String[] {
@@ -55,7 +56,8 @@ public class TrackListFragment extends Fragment{
     TracksColumns.STARTTIME,
     TracksColumns.TOTALDISTANCE,
     TracksColumns.TOTALTIME,
-    TracksColumns.ICON};
+    TracksColumns.ICON,
+    TracksColumns.SHAREDOWNER};
   
 
   
@@ -107,6 +109,7 @@ public class TrackListFragment extends Fragment{
         int totalDistanceIndex = cursor.getColumnIndexOrThrow(TracksColumns.TOTALDISTANCE);
         int totalTimeIndex = cursor.getColumnIndexOrThrow(TracksColumns.TOTALTIME);
         int iconIndex = cursor.getColumnIndex(TracksColumns.ICON);
+        int sharedOwnerIndex = cursor.getColumnIndex(TracksColumns.SHAREDOWNER);
         
         boolean isRecording = cursor.getLong(idIndex) == (((IJoggingActivity)getActivity()).recordingTrackId);
         String name = cursor.getString(nameIndex);
@@ -121,16 +124,10 @@ public class TrackListFragment extends Fragment{
             getActivity(), cursor.getDouble(totalDistanceIndex), metricUnits);
         long startTime = cursor.getLong(startTimeIndex);
         String description = cursor.getString(descriptionIndex);
-        ListItemUtils.setListItem(getActivity(),
-            view,
-            name,
-            iconId,
-            iconContentDescription,
-            category,
-            totalTime,
-            totalDistance,
-            startTime,
-            description);
+        String sharedOwner = cursor.getString(sharedOwnerIndex);
+        ListItemUtils.setListItem(getActivity(), view, isRecording, recordingTrackPaused,
+            iconId, R.string.icon_track, name, category, totalTime, totalDistance, startTime,
+            description, sharedOwner);
       }
     };
     listView.setAdapter(resourceCursorAdapter);

@@ -19,6 +19,7 @@ package com.google.android.apps.mytracks.util;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
+import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.WaypointCreationRequest;
 
@@ -26,6 +27,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
@@ -64,39 +66,47 @@ public class TrackRecordingServiceConnectionUtils {
   }
 
   /**
-   * Returns true if recording. Checks with the track recording service if
-   * available. If not, checks with the shared preferences.
+   * Resumes the recording track.
    * 
-   * @param context the current context
    * @param trackRecordingServiceConnection the track recording service
-   *          connection
    */
-  public static boolean isRecording(
-      Context context, TrackRecordingServiceConnection trackRecordingServiceConnection) {
-    ITrackRecordingService trackRecordingService = trackRecordingServiceConnection
-        .getServiceIfBound();
-    if (trackRecordingService != null) {
-      try {
-        return trackRecordingService.isRecording();
-      } catch (RemoteException e) {
-        Log.e(TAG, "Failed to check if service is recording", e);
-      } catch (IllegalStateException e) {
-        Log.e(TAG, "Failed to check if service is recording", e);
+  public static void resumeTrack(TrackRecordingServiceConnection trackRecordingServiceConnection) {
+    try {
+      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
+      if (service != null) {
+        service.resumeCurrentTrack();
       }
+    } catch (RemoteException e) {
+      Log.e(TAG, "Unable to resume track.", e);
     }
-    return PreferencesUtils.getLong(context, R.string.recording_track_id_key)
-        != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
   }
 
   /**
-   * Stops the track recording service connection.
+   * Pauses the recording track.
+   * 
+   * @param trackRecordingServiceConnection the track recording service
+   *          connection
+   */
+  public static void pauseTrack(TrackRecordingServiceConnection trackRecordingServiceConnection) {
+    try {
+      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
+      if (service != null) {
+        service.pauseCurrentTrack();
+      }
+    } catch (RemoteException e) {
+      Log.e(TAG, "Unable to resume track.", e);
+    }
+  }
+
+  /**
+   * Stops the recording.
    * 
    * @param context the context
    * @param trackRecordingServiceConnection the track recording service
    *          connection
    * @param showEditor true to show the editor
    */
-  public static void stop(Context context,
+  public static void stopRecording(Context context,
       TrackRecordingServiceConnection trackRecordingServiceConnection, boolean showEditor) {
     ITrackRecordingService trackRecordingService = trackRecordingServiceConnection
         .getServiceIfBound();
@@ -110,6 +120,12 @@ public class TrackRecordingServiceConnectionUtils {
           long recordingTrackId = PreferencesUtils.getLong(
               context, R.string.recording_track_id_key);
           trackRecordingService.endCurrentTrack();
+          if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
+            Intent intent = IntentUtils.newIntent(context, IJoggingActivity.class)
+                .putExtra(IJoggingActivity.EXTRA_TRACK_ID, recordingTrackId)
+                .putExtra(IJoggingActivity.EXTRA_NEW_TRACK, true);
+            context.startActivity(intent);
+          }
         } else {
           trackRecordingService.endCurrentTrack();
         }
@@ -117,10 +133,9 @@ public class TrackRecordingServiceConnectionUtils {
         Log.e(TAG, "Unable to stop recording.", e);
       }
     } else {
-      PreferencesUtils.setLong(
-          context, R.string.recording_track_id_key, PreferencesUtils.RECORDING_TRACK_ID_DEFAULT);
+      resetRecordingState(context);
     }
-    trackRecordingServiceConnection.stop();
+    trackRecordingServiceConnection.unbindAndStop();
   }
 
   /**
@@ -130,12 +145,25 @@ public class TrackRecordingServiceConnectionUtils {
    * @param trackRecordingServiceConnection the track recording service
    *          connection
    */
-  public static void resume(
+  public static void startConnection(
       Context context, TrackRecordingServiceConnection trackRecordingServiceConnection) {
-    trackRecordingServiceConnection.bindIfRunning();
+    trackRecordingServiceConnection.bindIfStarted();
     if (!isRecordingServiceRunning(context)) {
+      resetRecordingState(context);
+    }
+  }
+
+  private static void resetRecordingState(Context context) {
+    long recordingTrackId = PreferencesUtils.getLong(context, R.string.recording_track_id_key);
+    if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
       PreferencesUtils.setLong(
           context, R.string.recording_track_id_key, PreferencesUtils.RECORDING_TRACK_ID_DEFAULT);
+    }
+    boolean recordingTrackPaused = PreferencesUtils.getBoolean(context,
+        R.string.recording_track_paused_key, PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT);
+    if (!recordingTrackPaused) {
+      PreferencesUtils.setBoolean(context, R.string.recording_track_paused_key,
+          PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT);
     }
   }
 
@@ -162,5 +190,30 @@ public class TrackRecordingServiceConnectionUtils {
       }
     }
     Toast.makeText(context, R.string.marker_add_error, Toast.LENGTH_LONG).show();
+  }
+  
+  /**
+   * Returns true if recording. Checks with the track recording service if
+   * available. If not, checks with the shared preferences.
+   * 
+   * @param context the current context
+   * @param trackRecordingServiceConnection the track recording service
+   *          connection
+   */
+  public static boolean isRecording(
+      Context context, TrackRecordingServiceConnection trackRecordingServiceConnection) {
+    ITrackRecordingService trackRecordingService = trackRecordingServiceConnection
+        .getServiceIfBound();
+    if (trackRecordingService != null) {
+      try {
+        return trackRecordingService.isRecording();
+      } catch (RemoteException e) {
+        Log.e(TAG, "Failed to check if service is recording", e);
+      } catch (IllegalStateException e) {
+        Log.e(TAG, "Failed to check if service is recording", e);
+      }
+    }
+    return PreferencesUtils.getLong(context, R.string.recording_track_id_key)
+        != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
   }
 }

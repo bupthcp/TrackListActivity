@@ -16,16 +16,14 @@
 package com.google.android.apps.mytracks.util;
 
 import com.google.android.apps.mytracks.ContextualActionModeCallback;
-import com.google.android.apps.mytracks.services.tasks.PeriodicTask;
 import com.google.api.client.http.HttpTransport;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -39,16 +37,6 @@ import java.util.List;
  * @author Bartlomiej Niechwiej
  */
 public interface ApiAdapter {
-
-  /**
-   * Gets a status announcer task.
-   * <p>
-   * Due to changes in API level 8.
-   * 
-   * @param context the context
-   */
-  public PeriodicTask getStatusAnnouncerTask(Context context);
-
 
   /**
    * Applies all the changes done to a given preferences editor. Changes may or
@@ -176,20 +164,30 @@ public interface ApiAdapter {
   public void invalidMenu(Activity activity);
 
   /**
-   * Diables hardware-accelerated rendering for a view.
-   * <p>
-   * Due to chagnes in API level 11.
-   * 
-   * @param view the view
-   */
-  public void disableHardwareAccelerated(View view);
-
-  /**
    * Handles the search key press. Returns true if handled.
    * <p>
    * Due to changes in API level 14.
    * 
    * @param menu the search menu
    */
-  public boolean handleSearchKey(MenuItem menu);  
+  public boolean handleSearchKey(MenuItem menu);
+  
+  /**
+   * Gets the app widget size.
+   * <p>
+   * Due to changes in API level 16.
+   * 
+   * @param appWidgetManager the app widget manager
+   * @param appWidgetId the app widget id
+   */
+  public int getAppWidgetSize(AppWidgetManager appWidgetManager, int appWidgetId);
+  
+  /**
+   * Sets the app widget size.
+   * 
+   * @param appWidgetManager the app widget manager.
+   * @param appWidgetId the app widgit id
+   * @param size the size
+   */
+  public void setAppWidgetSize(AppWidgetManager appWidgetManager, int appWidgetId, int size);
 }

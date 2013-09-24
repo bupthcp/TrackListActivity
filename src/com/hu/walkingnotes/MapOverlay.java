@@ -28,6 +28,12 @@ public class MapOverlay extends GraphicsOverlay{
   
   private final static String TAG = MapOverlay.class.getSimpleName();
   
+  public static final float WAYPOINT_X_ANCHOR = 13f / 48f;
+
+  private static final float WAYPOINT_Y_ANCHOR = 43f / 48f;
+  private static final float MARKER_X_ANCHOR = 50f / 96f;
+  private static final float MARKER_Y_ANCHOR = 90f / 96f;
+  
   private final Drawable waypointMarker;
   private final Context context;
   private boolean trackDrawingEnabled;

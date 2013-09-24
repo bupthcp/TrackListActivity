@@ -19,9 +19,12 @@ package com.google.android.apps.mytracks.util;
 import com.hu.iJogging.R;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 /**
  * Utilities to display a list item.
@@ -37,48 +40,151 @@ public class ListItemUtils {
    * 
    * @param context the context
    * @param view the list item view
+   * @param isRecording true if recording
+   * @param isPaused true if paused
    * @param name the name value
    * @param iconId the icon id
-   * @param iconContentDescription the icon content description
+   * @param iconContentDescriptionId the icon content description id
    * @param category the category value
    * @param totalTime the total time value
    * @param totalDistance the total distance value
    * @param startTime the start time value
    * @param description the description value
    */
-  public static void setListItem(Context context, View view,
-      String name,
-      int iconId,
-      String iconContentDescription,
-      String category,
-      String totalTime,
-      String totalDistance,
-      long startTime,
-      String description) {
+  public static void setListItem(Context context, View view, boolean isRecording, boolean isPaused,
+      int iconId, int iconContentDescriptionId, String name, String category, String totalTime,
+      String totalDistance, long startTime, String description, String sharedOwner) {
+
+    if (isRecording) {
+      iconId = isPaused ? R.drawable.track_paused : R.drawable.track_recording;
+      iconContentDescriptionId = isPaused ? R.string.icon_pause_recording
+          : R.string.icon_record_track;
+    }
+
     ImageView iconImageView = (ImageView) view.findViewById(R.id.list_item_icon);
     iconImageView.setImageResource(iconId);
-    iconImageView.setContentDescription(iconContentDescription);
-    
+    iconImageView.setContentDescription(context.getString(iconContentDescriptionId));
+
     TextView nameTextView = (TextView) view.findViewById(R.id.list_item_name);
     nameTextView.setText(name);
 
-    TextView categoryTextView = (TextView) view.findViewById(R.id.list_item_category);
-    setTextView(categoryTextView, category);
+    TextView timeDistanceTextView = (TextView) view.findViewById(R.id.list_item_time_distance);
+    setTextView(timeDistanceTextView,
+        getTimeDistance(isRecording, sharedOwner, totalTime, totalDistance), 0);
 
-    TextView totalTimeTextView = (TextView) view.findViewById(R.id.list_item_total_time);
-    setTextView(totalTimeTextView, totalTime);
+    String[] startTimeDisplay = getStartTime(isRecording, context, startTime);
+    TextView dateTextView = (TextView) view.findViewById(R.id.list_item_date);
+    setTextView(dateTextView, startTimeDisplay[0], 0);
 
-    TextView totalDistanceTextView = (TextView) view.findViewById(R.id.list_item_total_distance);
-    setTextView(totalDistanceTextView, totalDistance);
+    TextView timeTextView = (TextView) view.findViewById(R.id.list_item_time);
+    setTextView(timeTextView, startTimeDisplay[1], 0);
 
-    String startTimeDisplay = startTime == 0L
-        || StringUtils.formatDateTime(context, startTime).equals(name) ? null
-        : StringUtils.formatRelativeDateTime(context, startTime);
-    TextView startTimeTextView = (TextView) view.findViewById(R.id.list_item_start_time);
-    setTextView(startTimeTextView, startTimeDisplay);
+    TextView recordingTextView = (TextView) view.findViewById(R.id.list_item_recording);
+    String value = isRecording ? context.getString(
+        isPaused ? R.string.generic_paused : R.string.generic_recording)
+        : null;
+    int color = isRecording ? context.getResources()
+        .getColor(isPaused ? android.R.color.white : R.color.red)
+        : 0;
+    setTextView(recordingTextView, value, color);
 
     TextView descriptionTextView = (TextView) view.findViewById(R.id.list_item_description);
-    setTextView(descriptionTextView, description);
+    setTextView(descriptionTextView, getDescription(isRecording, category, description), 0);
+  }
+
+  /**
+   * Gets the time/distance text.
+   * 
+   * @param isRecording true if recording
+   * @param sharedOwner the shared owner
+   * @param totalTime the total time
+   * @param totalDistance the total distance
+   */
+  private static String getTimeDistance(
+      boolean isRecording, String sharedOwner, String totalTime, String totalDistance) {
+    if (isRecording) {
+      return null;
+    }
+    StringBuffer buffer = new StringBuffer();
+    if (sharedOwner != null && sharedOwner.length() != 0) {
+      buffer.append(sharedOwner);      
+    }
+    if (totalTime != null && totalTime.length() != 0) {
+      if (buffer.length() != 0) {
+        buffer.append(" \u2027 ");
+      }
+      buffer.append(totalTime);
+    }    
+    if (totalDistance != null && totalDistance.length() != 0) {
+      if (buffer.length() != 0) {
+        buffer.append(" ");
+      }
+      buffer.append(" / " + totalDistance);
+    }
+    return buffer.toString();
+  }
+
+  /**
+   * Gets the description text.
+   * 
+   * @param isRecording true if recording
+   * @param category the category
+   * @param description the description
+   */
+  private static String getDescription(boolean isRecording, String category, String description) {
+    if (isRecording) {
+      return null;
+    }
+    if (category == null || category.length() == 0) {
+      return description;
+    }
+
+    StringBuffer buffer = new StringBuffer();
+
+    buffer.append("[" + category + "]");
+    if (description != null && description.length() != 0) {
+      buffer.append(" " + description);
+    }
+    return buffer.toString();
+  }
+
+  /**
+   * Gets the start time text.
+   * 
+   * @param isRecording true if recording
+   * @param context the context
+   * @param startTime the start time
+   * @return array of two strings.
+   */
+  private static String[] getStartTime(boolean isRecording, Context context, long startTime) {
+    if (isRecording || startTime == 0L) {
+      return new String[] { null, null };
+    }
+    if (DateUtils.isToday(startTime)) {
+      return new String[] { DateUtils.getRelativeTimeSpanString(
+          startTime, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS,
+          DateUtils.FORMAT_ABBREV_RELATIVE).toString(), null };
+    }
+    int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL;
+    if (!isThisYear(startTime)) {
+      flags |= DateUtils.FORMAT_NUMERIC_DATE;
+    }
+    return new String[] { DateUtils.formatDateTime(context, startTime, flags),
+        DateUtils.formatDateTime(
+            context, startTime, DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_ABBREV_TIME) };
+  }
+
+  /**
+   * True if the time is this year.
+   * 
+   * @param time the time
+   */
+  private static boolean isThisYear(long time) {
+    Calendar now = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();
+    now.setTimeInMillis(System.currentTimeMillis());
+    calendar.setTimeInMillis(time);
+    return now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR);
   }
 
   /**
@@ -87,12 +193,15 @@ public class ListItemUtils {
    * @param textView the text view
    * @param value the value for the text view
    */
-  private static void setTextView(TextView textView, String value) {
+  private static void setTextView(TextView textView, String value, int color) {
     if (value == null || value.length() == 0) {
       textView.setVisibility(View.GONE);
     } else {
       textView.setVisibility(View.VISIBLE);
       textView.setText(value);
+      if (color != 0) {
+        textView.setTextColor(color);
+      }
     }
   }
 }

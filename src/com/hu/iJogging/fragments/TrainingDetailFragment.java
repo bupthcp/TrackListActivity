@@ -1,8 +1,8 @@
 package com.hu.iJogging.fragments;
 
 import com.google.android.apps.mytracks.content.TrackDataHub;
-import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
+import com.google.android.apps.mytracks.content.TrackDataType;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
@@ -136,12 +136,12 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
       if (uiUpdateThread != null) {
         uiUpdateThread.resume();
       }
-//      if (uiUpdateThread == null ) {
-//        uiUpdateThread = new UiUpdateThread();
-//        uiUpdateThread.start();
-//      } else if (uiUpdateThread != null ) {
-//        uiUpdateThread.resume();
-//      }
+      if (uiUpdateThread == null ) {
+        uiUpdateThread = new UiUpdateThread();
+        uiUpdateThread.start();
+      } else if (uiUpdateThread != null ) {
+        uiUpdateThread.resume();
+      }
     }else{
       //将btnSport设置为从历史记录中读取出来的数据
       //并且不可点击切换
@@ -359,10 +359,10 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
    */
   private synchronized void resumeTrackDataHub() {
     trackDataHub.registerTrackDataListener(this, EnumSet.of(
-        ListenerDataType.SELECTED_TRACK_CHANGED,
-        ListenerDataType.TRACK_UPDATES,
-        ListenerDataType.LOCATION_UPDATES,
-        ListenerDataType.DISPLAY_PREFERENCES));
+        TrackDataType.SELECTED_TRACK,
+        TrackDataType.TRACKS_TABLE,
+        TrackDataType.LOCATION,
+        TrackDataType.PREFERENCE));
   }
 
   /**
@@ -399,7 +399,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
    * can be accessed by multiple threads.
    */
   private synchronized boolean isRecording() {
-    return trackDataHub != null && trackDataHub.isRecordingSelected();
+    return trackDataHub != null && trackDataHub.isSelectedTrackRecording();
   }
   
   private void setTotalTime(long totalTime){
@@ -453,16 +453,17 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   private void setTripStatisticsValues(TripStatistics tripStatistics){
  // Set total distance
     double totalDistance = tripStatistics == null ? 0 : tripStatistics.getTotalDistance();
-    boolean useTotalTime = PreferencesUtils.getBoolean(
-        getActivity(), R.string.stats_use_total_time_key, PreferencesUtils.STATS_USE_TOTAL_TIME_DEFAULT);
+//    boolean useTotalTime = PreferencesUtils.getBoolean(
+//        getActivity(), R.string.stats_use_total_time_key, PreferencesUtils.STATS_USE_TOTAL_TIME_DEFAULT);
     setTotalDistance(totalDistance);
     
     double averageSpeed;
     if (tripStatistics == null) {
       averageSpeed = 0;
     } else {
-      averageSpeed = useTotalTime ? tripStatistics.getAverageSpeed()
-          : tripStatistics.getAverageMovingSpeed();
+      averageSpeed = tripStatistics.getAverageMovingSpeed();
+//      averageSpeed = useTotalTime ? tripStatistics.getAverageSpeed()
+//          : tripStatistics.getAverageMovingSpeed();
     }
     setAvgSpeed(averageSpeed);
   }
@@ -482,21 +483,21 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     getActivity().startActivityForResult(startSelectiSportsIntent, IJoggingActivity.SELECT_SPORT_REQUEST_CODE);
   }
 
-  @Override
-  public void onProviderStateChange(ProviderState state) {
-    if (isResumed() && (state == ProviderState.DISABLED || state == ProviderState.NO_FIX)) {
-      getActivity().runOnUiThread(new Runnable() {
-          @Override
-        public void run() {
-          lastLocation = null;
-          setLocationValues(lastLocation);
-        }
-      });
-    }
-  }
+//  @Override
+//  public void onProviderStateChange(ProviderState state) {
+//    if (isResumed() && (state == ProviderState.DISABLED || state == ProviderState.NO_FIX)) {
+//      getActivity().runOnUiThread(new Runnable() {
+//          @Override
+//        public void run() {
+//          lastLocation = null;
+//          setLocationValues(lastLocation);
+//        }
+//      });
+//    }
+//  }
 
   @Override
-  public void onCurrentLocationChanged(final Location loc) {
+  public void onLocationChanged(final Location loc) {
     if (isResumed() && isRecording()) {
       getActivity().runOnUiThread(new Runnable() {
         @Override
@@ -509,18 +510,18 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   }
 
   @Override
-  public void onCurrentHeadingChanged(double heading) {
+  public void onHeadingChanged(double heading) {
     // TODO Auto-generated method stub
     
   }
 
   @Override
-  public void onSelectedTrackChanged(Track track, boolean isRecording) {
+  public void onSelectedTrackChanged(Track track) {
     if (isResumed()) {
-      if (uiUpdateThread == null && isRecording) {
+      if (uiUpdateThread == null ) {
         uiUpdateThread = new UiUpdateThread();
         uiUpdateThread.start();
-      } else if (uiUpdateThread != null && !isRecording) {
+      } else if (uiUpdateThread != null ) {
         uiUpdateThread.interrupt();
         uiUpdateThread=null;
       }
@@ -558,11 +559,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     
   }
 
-  @Override
-  public void onNewTrackPoint(Location loc) {
-    // TODO Auto-generated method stub
-    
-  }
 
   @Override
   public void onSampledOutTrackPoint(Location loc) {
@@ -570,11 +566,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     
   }
 
-  @Override
-  public void onSegmentSplit() {
-    // TODO Auto-generated method stub
-    
-  }
 
   @Override
   public void onNewTrackPointsDone() {
@@ -600,11 +591,6 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
     
   }
 
-  @Override
-  public boolean onUnitsChanged(boolean metric) {
-    // TODO Auto-generated method stub
-    return false;
-  }
 
   @Override
   public boolean onReportSpeedChanged(boolean reportSpeed) {
@@ -617,6 +603,36 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
       });
     }
     return true;
+  }
+
+  @Override
+  public void onLocationStateChanged(LocationState locationState) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onSampledInTrackPoint(Location location) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onSegmentSplit(Location location) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public boolean onMetricUnitsChanged(boolean metricUnits) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean onMinRecordingDistanceChanged(int minRecordingDistance) {
+    // TODO Auto-generated method stub
+    return false;
   }
   
 }

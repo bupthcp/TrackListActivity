@@ -22,6 +22,8 @@ import com.google.android.apps.mytracks.util.UnitConversions;
 import com.google.common.annotations.VisibleForTesting;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.iJogging.content.Waypoint.WaypointType;
+import com.hu.walkingnotes.MapOverlay;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -78,9 +80,6 @@ public class ChartView extends View {
   private static final int BORDER = 8;
   private static final int SPACER = 4;
   private static final int Y_AXIS_OFFSET = 16;
-
-  // Marker pin x position / marker icon width
-  private static final double MARKER_PIN_X_POSITION_PERCENTAGE = 13 / 48.0;
 
   private final ChartValueSeries[] series = new ChartValueSeries[NUM_SERIES];
   private final ArrayList<double[]> chartData = new ArrayList<double[]>();
@@ -275,7 +274,7 @@ public class ChartView extends View {
         double[] dataPoint = dataPoints.get(i);
         xExtremityMonitor.update(dataPoint[0]);
         for (int j = 0; j < series.length; j++) {
-          if (!Double.isNaN(dataPoint[j])) {
+          if (!Double.isNaN(dataPoint[j + 1])) {
             series[j].update(dataPoint[j + 1]);
           }
         }
@@ -310,14 +309,18 @@ public class ChartView extends View {
    * @param waypoint the waypoint
    */
   public void addWaypoint(Waypoint waypoint) {
-    waypoints.add(waypoint);
+    synchronized (waypoints) {
+      waypoints.add(waypoint);
+    }
   }
 
   /**
    * Clears the waypoints.
    */
   public void clearWaypoints() {
-    waypoints.clear();
+    synchronized (waypoints) {
+      waypoints.clear();
+    }
   }
 
   /**
@@ -446,14 +449,22 @@ public class ChartView extends View {
         if (Math.abs(event.getY() - topBorder - spacer - markerHeight / 2) < markerHeight) {
           int minDistance = Integer.MAX_VALUE;
           Waypoint nearestWaypoint = null;
-          for (int i = 0; i < waypoints.size(); i++) {
-            Waypoint waypoint = waypoints.get(i);
-            int distance = Math.abs(
-                getX(getWaypointXValue(waypoint)) - (int) event.getX() - getScrollX());
-            if (distance < minDistance) {
-              minDistance = distance;
-              nearestWaypoint = waypoint;
+          synchronized (waypoints) {
+            for (int i = 0; i < waypoints.size(); i++) {
+              Waypoint waypoint = waypoints.get(i);
+              int distance = Math.abs(
+                  getX(getWaypointXValue(waypoint)) - (int) event.getX() - getScrollX());
+              if (distance < minDistance) {
+                minDistance = distance;
+                nearestWaypoint = waypoint;
+              }
             }
+          }
+          if (nearestWaypoint != null && minDistance < markerWidth) {
+//            Intent intent = IntentUtils.newIntent(getContext(), MarkerDetailActivity.class)
+//                .putExtra(MarkerDetailActivity.EXTRA_MARKER_ID, nearestWaypoint.getId());
+//            getContext().startActivity(intent);
+            return true;
           }
         }
 
@@ -538,27 +549,29 @@ public class ChartView extends View {
    * @param canvas the canvas
    */
   private void drawWaypoints(Canvas canvas) {
-    for (int i = 0; i < waypoints.size(); i++) {
-      final Waypoint waypoint = waypoints.get(i);
-      if (waypoint.getLocation() == null) {
-        continue;
+    synchronized (waypoints) {
+      for (int i = 0; i < waypoints.size(); i++) {
+        final Waypoint waypoint = waypoints.get(i);
+        if (waypoint.getLocation() == null) {
+          continue;
+        }
+        double xValue = getWaypointXValue(waypoint);
+        if (xValue > maxX) {
+          continue;
+        }
+        canvas.save();
+        float x = getX(getWaypointXValue(waypoint));
+        canvas.drawLine(
+            x, topBorder + spacer + markerHeight / 2, x, topBorder + effectiveHeight, markerPaint);
+        canvas.translate(
+            x - (float) (markerWidth * MapOverlay.WAYPOINT_X_ANCHOR), topBorder + spacer);
+        if (waypoints.get(i).getType() == WaypointType.STATISTICS) {
+          statisticsMarker.draw(canvas);
+        } else {
+          waypointMarker.draw(canvas);
+        }
+        canvas.restore();
       }
-      double xValue = getWaypointXValue(waypoint);
-      if (xValue > maxX) {
-        continue;
-      }
-      canvas.save();
-      float x = getX(getWaypointXValue(waypoint));
-      canvas.drawLine(
-          x, topBorder + spacer + markerHeight / 2, x, topBorder + effectiveHeight, markerPaint);
-      canvas.translate(
-          x - (float) (markerWidth * MARKER_PIN_X_POSITION_PERCENTAGE), topBorder + spacer);
-      if (waypoints.get(i).getType() == Waypoint.TYPE_STATISTICS) {
-        statisticsMarker.draw(canvas);
-      } else {
-        waypointMarker.draw(canvas);
-      }
-      canvas.restore();
     }
   }
 

@@ -1,18 +1,36 @@
+/*
+ * Copyright 2009 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.hu.iJogging.fragments;
 
 import com.google.android.apps.mytracks.ChartView;
-import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.TrackDataHub;
-import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
-import com.google.android.apps.mytracks.stats.DoubleBuffer;
-import com.google.android.apps.mytracks.stats.TripStatisticsBuilder;
+import com.google.android.apps.mytracks.content.TrackDataType;
+import com.google.android.apps.mytracks.stats.TripStatistics;
+import com.google.android.apps.mytracks.stats.TripStatisticsUpdater;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
 import com.google.common.annotations.VisibleForTesting;
 import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.R;
+import com.hu.iJogging.content.MyTracksLocation;
+import com.hu.iJogging.content.Sensor;
+import com.hu.iJogging.content.Sensor.SensorDataSet;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
 
@@ -28,49 +46,50 @@ import android.widget.ZoomControls;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
+/**
+ * A fragment to display track chart to the user.
+ * 
+ * @author Sandor Dornbush
+ * @author Rodrigo Damazio
+ */
 public class ChartFragment extends Fragment implements TrackDataListener {
 
-  public static final String CHART_FRAGMENT_TAG = "ChartFragment";
+  public static final String CHART_FRAGMENT_TAG = "chartFragment";
 
-  // Android reports 128 when the speed is invalid
-  private static final int INVALID_SPEED = 128;
-  private final DoubleBuffer elevationBuffer = new DoubleBuffer(
-      Constants.ELEVATION_SMOOTHING_FACTOR);
-  private final DoubleBuffer speedBuffer = new DoubleBuffer(Constants.SPEED_SMOOTHING_FACTOR);
   private final ArrayList<double[]> pendingPoints = new ArrayList<double[]>();
 
   private TrackDataHub trackDataHub;
 
   // Stats gathered from the received data
-  private double totalDistance = 0.0;
-  private long startTime = -1L;
-  private Location lastLocation = null;
-  private double trackMaxSpeed = 0.0;
+  private TripStatisticsUpdater tripStatisticsUpdater;
+  private long startTime;
+
+  private boolean metricUnits = PreferencesUtils.METRIC_UNITS_DEFAULT;
+  private boolean reportSpeed = PreferencesUtils.REPORT_SPEED_DEFAULT;
+  private int minRecordingDistance = PreferencesUtils.MIN_RECORDING_DISTANCE_DEFAULT;
 
   // Modes of operation
-  private boolean metricUnits = true;
-  private boolean reportSpeed = true;
-
   private boolean chartByDistance = true;
   private boolean[] chartShow = new boolean[] { true, true, true, true, true, true };
 
   // UI elements
   private ChartView chartView;
   private ZoomControls zoomControls;
-  private View mFragmentView;
 
   /**
    * A runnable that will enable/disable zoom controls and orange pointer as
    * appropriate and redraw.
    */
   private final Runnable updateChart = new Runnable() {
-    @Override
+      @Override
     public void run() {
-      if (trackDataHub == null) { return; }
+      if (!isResumed() || trackDataHub == null) {
+        return;
+      }
 
       zoomControls.setIsZoomInEnabled(chartView.canZoomIn());
       zoomControls.setIsZoomOutEnabled(chartView.canZoomOut());
-      chartView.setShowPointer(isRecording());
+      chartView.setShowPointer(isSelectedTrackRecording());
       chartView.invalidate();
     }
   };
@@ -87,31 +106,34 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   };
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    mFragmentView = inflater.inflate(R.layout.chart, container, false);
-    zoomControls = (ZoomControls) mFragmentView.findViewById(R.id.chart_zoom_controls);
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.chart, container, false);
+    zoomControls = (ZoomControls) view.findViewById(R.id.chart_zoom_controls);
     zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
-      @Override
+        @Override
       public void onClick(View v) {
         zoomIn();
       }
     });
     zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
-      @Override
+        @Override
       public void onClick(View v) {
         zoomOut();
       }
     });
-    return mFragmentView;
+    return view;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public void onStart() {
     super.onStart();
-    ViewGroup layout = (ViewGroup) mFragmentView.findViewById(R.id.chart_view_layout);
-    LayoutParams layoutParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    layout.addView(chartView, layoutParams);
+    ViewGroup layout = (ViewGroup) getActivity().findViewById(R.id.chart_view_layout);
+    if(layout != null){
+      LayoutParams layoutParams = new LayoutParams(
+          LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+      layout.addView(chartView, layoutParams);
+    }
   }
 
   @Override
@@ -131,72 +153,63 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   @Override
   public void onStop() {
     super.onStop();
-    ViewGroup layout = (ViewGroup) mFragmentView.findViewById(R.id.chart_view_layout);
-    layout.removeView(chartView);
-  }
-  
-  
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    ViewGroup parentViewGroup = (ViewGroup) mFragmentView.getParent();
-    if (parentViewGroup != null) {
-      parentViewGroup.removeView(mFragmentView);
+    ViewGroup layout = (ViewGroup) getActivity().findViewById(R.id.chart_view_layout);
+    if(layout != null){
+      layout.removeView(chartView);
     }
   }
 
   @Override
-  public void onProviderStateChange(ProviderState state) {
+  public void onLocationStateChanged(LocationState state) {
     // We don't care.
   }
 
   @Override
-  public void onCurrentLocationChanged(Location loc) {
+  public void onLocationChanged(Location loc) {
     // We don't care.
   }
 
   @Override
-  public void onCurrentHeadingChanged(double heading) {
+  public void onHeadingChanged(double heading) {
     // We don't care.
   }
 
   @Override
-  public void onSelectedTrackChanged(Track track, boolean isRecording) {
+  public void onSelectedTrackChanged(Track track) {
     // We don't care.
   }
 
   @Override
   public void onTrackUpdated(Track track) {
-    if (track == null || track.getTripStatistics() == null) {
-      trackMaxSpeed = 0.0;
-      return;
+    if (isResumed()) {
+      if (track == null || track.getTripStatistics() == null) {
+        startTime = -1L;
+        return;
+      }
+      startTime = track.getTripStatistics().getStartTime();
     }
-    trackMaxSpeed = track.getTripStatistics().getMaxSpeed();
   }
 
   @Override
   public void clearTrackPoints() {
-    totalDistance = 0.0;
-    startTime = -1L;
-    lastLocation = null;
-
-    elevationBuffer.reset();
-    speedBuffer.reset();
-    pendingPoints.clear();
-
-    chartView.reset();
-
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        chartView.resetScroll();
-      }
-    });
+    if (isResumed()) {
+      tripStatisticsUpdater = startTime != -1L ? new TripStatisticsUpdater(startTime) : null;
+      pendingPoints.clear();
+      chartView.reset();
+      getActivity().runOnUiThread(new Runnable() {
+          @Override
+        public void run() {
+          if (isResumed()) {
+            chartView.resetScroll();
+          }
+        }
+      });
+    }
   }
 
   @Override
-  public void onNewTrackPoint(Location location) {
-    if (LocationUtils.isValidLocation(location)) {
+  public void onSampledInTrackPoint(Location location) {
+    if (isResumed()) {
       double[] data = new double[ChartView.NUM_SERIES + 1];
       fillDataPoint(location, data);
       pendingPoints.add(data);
@@ -205,71 +218,104 @@ public class ChartFragment extends Fragment implements TrackDataListener {
 
   @Override
   public void onSampledOutTrackPoint(Location location) {
-    if (LocationUtils.isValidLocation(location)) {
-      // Still account for the point in the smoothing buffers.
+    if (isResumed()) {
       fillDataPoint(location, null);
     }
   }
 
   @Override
-  public void onSegmentSplit() {
-    // Do nothing.
+  public void onSegmentSplit(Location location) {
+    if (isResumed()) {
+      fillDataPoint(location, null);
+    }
   }
 
   @Override
   public void onNewTrackPointsDone() {
-    chartView.addDataPoints(pendingPoints);
-    pendingPoints.clear();
-    getActivity().runOnUiThread(updateChart);
+    if (isResumed()) {
+      chartView.addDataPoints(pendingPoints);
+      pendingPoints.clear();
+      getActivity().runOnUiThread(updateChart);
+    }
   }
 
   @Override
   public void clearWaypoints() {
-    chartView.clearWaypoints();
+    if (isResumed()) {
+      chartView.clearWaypoints();
+    }
   }
 
   @Override
   public void onNewWaypoint(Waypoint waypoint) {
-    if (waypoint != null && LocationUtils.isValidLocation(waypoint.getLocation())) {
+    if (isResumed() && waypoint != null && LocationUtils.isValidLocation(waypoint.getLocation())) {
       chartView.addWaypoint(waypoint);
     }
   }
 
   @Override
   public void onNewWaypointsDone() {
-    getActivity().runOnUiThread(updateChart);
+    if (isResumed()) {
+      getActivity().runOnUiThread(updateChart);
+    }
   }
 
   @Override
-  public boolean onUnitsChanged(boolean metric) {
-    if (metricUnits == metric) { return false; }
-    metricUnits = metric;
-    chartView.setMetricUnits(metricUnits);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        chartView.requestLayout();
+  public boolean onMetricUnitsChanged(boolean metric) {
+    if (isResumed()) {
+      if (metricUnits == metric) {
+        return false;
       }
-    });
-    return true;
+      metricUnits = metric;
+      chartView.setMetricUnits(metricUnits);
+      getActivity().runOnUiThread(new Runnable() {
+          @Override
+        public void run() {
+          if (isResumed()) {
+            chartView.requestLayout();
+          }
+        }
+      });
+      return true;
+    }
+    return false;
   }
 
   @Override
   public boolean onReportSpeedChanged(boolean speed) {
-    if (reportSpeed == speed) { return false; }
-    reportSpeed = speed;
-    chartView.setReportSpeed(reportSpeed);
-    boolean chartShowSpeed = PreferencesUtils.getBoolean(getActivity(),
-        R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
-    setSeriesEnabled(ChartView.SPEED_SERIES, chartShowSpeed && reportSpeed);
-    setSeriesEnabled(ChartView.PACE_SERIES, chartShowSpeed && !reportSpeed);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        chartView.requestLayout();
+    if (isResumed()) {
+      if (reportSpeed == speed) {
+        return false;
       }
-    });
-    return true;
+      reportSpeed = speed;
+      chartView.setReportSpeed(reportSpeed);
+      boolean chartShowSpeed = PreferencesUtils.getBoolean(
+          getActivity(), R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
+      setSeriesEnabled(ChartView.SPEED_SERIES, chartShowSpeed && reportSpeed);
+      setSeriesEnabled(ChartView.PACE_SERIES, chartShowSpeed && !reportSpeed);
+      getActivity().runOnUiThread(new Runnable() {
+          @Override
+        public void run() {
+          if (isResumed()) {
+            chartView.requestLayout();
+          }
+        }
+      });
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean onMinRecordingDistanceChanged(int value) {
+    if (isResumed()) {
+      if (minRecordingDistance == value) {
+        return false;
+      }
+      minRecordingDistance = value;
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -289,16 +335,16 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       needUpdate = true;
     }
 
-    boolean chartShowSpeed = PreferencesUtils.getBoolean(getActivity(),
-        R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
+    boolean chartShowSpeed = PreferencesUtils.getBoolean(
+        getActivity(), R.string.chart_show_speed_key, PreferencesUtils.CHART_SHOW_SPEED_DEFAULT);
     if (setSeriesEnabled(ChartView.SPEED_SERIES, chartShowSpeed && reportSpeed)) {
       needUpdate = true;
     }
     if (setSeriesEnabled(ChartView.PACE_SERIES, chartShowSpeed && !reportSpeed)) {
       needUpdate = true;
     }
-    if (setSeriesEnabled(ChartView.POWER_SERIES, PreferencesUtils.getBoolean(getActivity(),
-        R.string.chart_show_power_key, PreferencesUtils.CHART_SHOW_POWER_DEFAULT))) {
+    if (setSeriesEnabled(ChartView.POWER_SERIES, PreferencesUtils.getBoolean(
+        getActivity(), R.string.chart_show_power_key, PreferencesUtils.CHART_SHOW_POWER_DEFAULT))) {
       needUpdate = true;
     }
     if (setSeriesEnabled(ChartView.CADENCE_SERIES, PreferencesUtils.getBoolean(getActivity(),
@@ -337,10 +383,9 @@ public class ChartFragment extends Fragment implements TrackDataListener {
    */
   private synchronized void resumeTrackDataHub() {
     trackDataHub = ((IJoggingApplication) getActivity().getApplication()).getTrackDataHub();
-    trackDataHub.registerTrackDataListener(this, EnumSet.of(
-        ListenerDataType.SELECTED_TRACK_CHANGED, ListenerDataType.TRACK_UPDATES,
-        ListenerDataType.WAYPOINT_UPDATES, ListenerDataType.POINT_UPDATES,
-        ListenerDataType.SAMPLED_OUT_POINT_UPDATES, ListenerDataType.DISPLAY_PREFERENCES));
+    trackDataHub.registerTrackDataListener(this, EnumSet.of(TrackDataType.TRACKS_TABLE,
+        TrackDataType.WAYPOINTS_TABLE, TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
+        TrackDataType.SAMPLED_OUT_TRACK_POINTS_TABLE, TrackDataType.PREFERENCE));
   }
 
   /**
@@ -353,11 +398,11 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   }
 
   /**
-   * Returns true if recording. Needs to be synchronized because trackDataHub
-   * can be accessed by multiple threads.
+   * Returns true if the selected track is recording. Needs to be synchronized
+   * because trackDataHub can be accessed by multiple threads.
    */
-  private synchronized boolean isRecording() {
-    return trackDataHub != null && trackDataHub.isRecordingSelected();
+  private synchronized boolean isSelectedTrackRecording() {
+    return trackDataHub != null && trackDataHub.isSelectedTrackRecording();
   }
 
   /**
@@ -411,62 +456,49 @@ public class ChartFragment extends Fragment implements TrackDataListener {
     double cadence = Double.NaN;
     double power = Double.NaN;
 
-    // TODO: Use TripStatisticsBuilder
-    if (chartByDistance) {
-      if (lastLocation != null) {
-        double distance = lastLocation.distanceTo(location) * UnitConversions.M_TO_KM;
-        if (metricUnits) {
-          totalDistance += distance;
-        } else {
-          totalDistance += distance * UnitConversions.KM_TO_MI;
+    if (tripStatisticsUpdater != null) {
+      tripStatisticsUpdater.addLocation(location, minRecordingDistance);
+      TripStatistics tripStatistics = tripStatisticsUpdater.getTripStatistics();
+      if (chartByDistance) {
+        double distance = tripStatistics.getTotalDistance() * UnitConversions.M_TO_KM;
+        if (!metricUnits) {
+          distance *= UnitConversions.KM_TO_MI;
         }
+        timeOrDistance = distance;
+      } else {
+        timeOrDistance = tripStatistics.getTotalTime();
       }
-      timeOrDistance = totalDistance;
-    } else {
-      if (startTime == -1L) {
-        startTime = location.getTime();
+
+      elevation = tripStatisticsUpdater.getSmoothedElevation();
+      if (!metricUnits) {
+        elevation *= UnitConversions.M_TO_FT;
       }
-      timeOrDistance = location.getTime() - startTime;
-    }
 
-    elevationBuffer.setNext(metricUnits ? location.getAltitude() : location.getAltitude()
-        * UnitConversions.M_TO_FT);
-    elevation = elevationBuffer.getAverage();
-
-    if (lastLocation == null) {
-      if (Math.abs(location.getSpeed() - INVALID_SPEED) > 1) {
-        speedBuffer.setNext(location.getSpeed());
+      speed = tripStatisticsUpdater.getSmoothedSpeed() * UnitConversions.MS_TO_KMH;
+      if (!metricUnits) {
+        speed *= UnitConversions.KM_TO_MI;
       }
-    } else if (TripStatisticsBuilder.isValidSpeed(location.getTime(), location.getSpeed(),
-        lastLocation.getTime(), lastLocation.getSpeed(), speedBuffer)
-        && (location.getSpeed() <= trackMaxSpeed)) {
-      speedBuffer.setNext(location.getSpeed());
+      pace = speed == 0 ? 0.0 : 60.0 / speed;
     }
-    speed = speedBuffer.getAverage() * UnitConversions.MS_TO_KMH;
-    if (!metricUnits) {
-      speed *= UnitConversions.KM_TO_MI;
+    if (location instanceof MyTracksLocation
+        && ((MyTracksLocation) location).getSensorDataSet() != null) {
+      SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
+      if (sensorDataSet.hasHeartRate()
+          && sensorDataSet.getHeartRate().getState() == Sensor.SensorState.SENDING
+          && sensorDataSet.getHeartRate().hasValue()) {
+        heartRate = sensorDataSet.getHeartRate().getValue();
+      }
+      if (sensorDataSet.hasCadence()
+          && sensorDataSet.getCadence().getState() == Sensor.SensorState.SENDING
+          && sensorDataSet.getCadence().hasValue()) {
+        cadence = sensorDataSet.getCadence().getValue();
+      }
+      if (sensorDataSet.hasPower()
+          && sensorDataSet.getPower().getState() == Sensor.SensorState.SENDING
+          && sensorDataSet.getPower().hasValue()) {
+        power = sensorDataSet.getPower().getValue();
+      }
     }
-    pace = speed == 0 ? 0.0 : 60.0 / speed;
-
-//    if (location instanceof MyTracksLocation
-//        && ((MyTracksLocation) location).getSensorDataSet() != null) {
-//      SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
-//      if (sensorDataSet.hasHeartRate()
-//          && sensorDataSet.getHeartRate().getState() == Sensor.SensorState.SENDING
-//          && sensorDataSet.getHeartRate().hasValue()) {
-//        heartRate = sensorDataSet.getHeartRate().getValue();
-//      }
-//      if (sensorDataSet.hasCadence()
-//          && sensorDataSet.getCadence().getState() == Sensor.SensorState.SENDING
-//          && sensorDataSet.getCadence().hasValue()) {
-//        cadence = sensorDataSet.getCadence().getValue();
-//      }
-//      if (sensorDataSet.hasPower()
-//          && sensorDataSet.getPower().getState() == Sensor.SensorState.SENDING
-//          && sensorDataSet.getPower().hasValue()) {
-//        power = sensorDataSet.getPower().getValue();
-//      }
-//    }
 
     if (data != null) {
       data[0] = timeOrDistance;
@@ -477,7 +509,6 @@ public class ChartFragment extends Fragment implements TrackDataListener {
       data[5] = cadence;
       data[6] = power;
     }
-    lastLocation = location;
   }
 
   @VisibleForTesting
@@ -486,13 +517,13 @@ public class ChartFragment extends Fragment implements TrackDataListener {
   }
 
   @VisibleForTesting
-  void setChartView(ChartView view) {
-    chartView = view;
+  void setTripStatisticsUpdater(long time) {
+    tripStatisticsUpdater = new TripStatisticsUpdater(time);
   }
 
   @VisibleForTesting
-  void setTrackMaxSpeed(double value) {
-    trackMaxSpeed = value;
+  void setChartView(ChartView view) {
+    chartView = view;
   }
 
   @VisibleForTesting

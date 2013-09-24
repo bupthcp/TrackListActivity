@@ -15,10 +15,10 @@
  */
 package com.google.android.apps.mytracks.io.file;
 
-import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.google.android.apps.mytracks.util.SystemUtils;
 import com.hu.iJogging.R;
+import com.hu.iJogging.content.MyTracksLocation;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
 
@@ -166,6 +166,7 @@ public class TcxTrackWriter implements TrackFormatWriter {
   public void writeEndTrack(Location lastPoint) {
     if (printWriter != null) {
       printWriter.println("</Lap>");
+      printWriter.println("<Notes>" + StringUtils.formatCData(track.getDescription()) + "</Notes>");
       printWriter.println("<Creator xsi:type=\"Device_t\">");
       printWriter.println("<Name>" 
           + StringUtils.formatCData(context.getString(R.string.send_google_by_my_tracks, "", "")) 
@@ -205,7 +206,7 @@ public class TcxTrackWriter implements TrackFormatWriter {
       printWriter.println("</Position>");
       printWriter.println("<AltitudeMeters>" + location.getAltitude() + "</AltitudeMeters>");
 
-//      if (location instanceof MyTracksLocation) {
+      if (location instanceof MyTracksLocation) {
 //        SensorDataSet sensorDataSet = ((MyTracksLocation) location).getSensorDataSet();
 //        if (sensorDataSet != null) {
 //          boolean heartRateAvailable = sensorDataSet.hasHeartRate()
@@ -252,7 +253,7 @@ public class TcxTrackWriter implements TrackFormatWriter {
 //            printWriter.println("</Extensions>");
 //          }
 //        }
-//      }
+      }
       printWriter.println("</Trackpoint>");
     }
   }

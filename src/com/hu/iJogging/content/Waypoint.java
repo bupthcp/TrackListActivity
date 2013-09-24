@@ -30,25 +30,43 @@ import android.os.Parcelable;
  */
 public final class Waypoint implements Parcelable {
 
-  public static final int TYPE_WAYPOINT = 0;
-  public static final int TYPE_STATISTICS = 1;
+  public static enum WaypointType {
+    WAYPOINT, STATISTICS;
+  }
 
-  private long id = -1;
+  private long id = -1L;
   private String name = "";
   private String description = "";
   private String category = "";
   private String icon = "";
-  private long trackId = -1;
-  private int type = 0;
+  private long trackId = -1L;
+  private WaypointType type = WaypointType.WAYPOINT;
   private double length = 0.0;
   private long duration = 0;
-  private long startId = -1;
-  private long stopId = -1;
+  private long startId = -1L;
+  private long stopId = -1L;
   private Location location = null;
   private TripStatistics tripStatistics = null;
 
   public Waypoint() {}
   
+  public Waypoint(String name, String description, String category, String icon, long trackId,
+      WaypointType type, double length, long duration, long startId, long stopId, Location location,
+      TripStatistics tripStatistics) {
+    this.name = name;
+    this.description = description;
+    this.category = category;
+    this.icon = icon;
+    this.trackId = trackId;
+    this.type = type;
+    this.length = length;
+    this.duration = duration;
+    this.startId = startId;
+    this.stopId = stopId;
+    this.location = location;
+    this.tripStatistics = tripStatistics;
+  }
+
   private Waypoint(Parcel source) {
     id = source.readLong();
     name = source.readString();
@@ -56,7 +74,7 @@ public final class Waypoint implements Parcelable {
     category = source.readString();
     icon = source.readString();
     trackId = source.readLong();
-    type = source.readInt();
+    type = WaypointType.values()[source.readInt()];
     length = source.readDouble();
     duration = source.readLong();
     startId = source.readLong();
@@ -86,7 +104,7 @@ public final class Waypoint implements Parcelable {
     dest.writeString(category);
     dest.writeString(icon);
     dest.writeLong(trackId);
-    dest.writeInt(type);
+    dest.writeInt(type.ordinal());
     dest.writeDouble(length);
     dest.writeLong(duration);
     dest.writeLong(startId);
@@ -161,11 +179,11 @@ public final class Waypoint implements Parcelable {
     this.trackId = trackId;
   }
 
-  public int getType() {
+  public WaypointType getType() {
     return type;
   }
 
-  public void setType(int type) {
+  public void setType(WaypointType type) {
     this.type = type;
   }
 

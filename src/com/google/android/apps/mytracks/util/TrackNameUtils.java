@@ -27,6 +27,7 @@ import android.location.Location;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Utilities for track name.
@@ -52,7 +53,7 @@ public class TrackNameUtils {
   public static String getTrackName(
       Context context, long trackId, long startTime, Location location) {
     String trackName = PreferencesUtils.getString(context, R.string.track_name_key,
-        context.getString(R.string.settings_recording_track_name_location_value));
+        PreferencesUtils.TRACK_NAME_DEFAULT);
 
     if (trackName.equals(
         context.getString(R.string.settings_recording_track_name_date_local_value))) {
@@ -65,7 +66,7 @@ public class TrackNameUtils {
       if (startTime == -1L) {
         return null;
        }
-      SimpleDateFormat dateFormat = new SimpleDateFormat(ISO_8601_FORMAT);
+      SimpleDateFormat dateFormat = new SimpleDateFormat(ISO_8601_FORMAT, Locale.US);
       return dateFormat.format(startTime);
     } else if (trackName.equals(
         context.getString(R.string.settings_recording_track_name_number_value))) {

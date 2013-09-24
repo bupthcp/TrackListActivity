@@ -3,7 +3,7 @@ package com.hu.iJogging;
 import com.baidu.mapapi.BMapManager;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.io.file.SaveActivity;
-import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
+import com.google.android.apps.mytracks.io.file.TrackFileFormat;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.AnalyticsUtils;
@@ -43,6 +43,7 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   public String currentSport = null;
   public long recordingTrackId = -1L;
   public static final String EXTRA_TRACK_ID = "track_id";
+  public static final String EXTRA_NEW_TRACK = "new_track";
   
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private boolean startNewRecording = false;
@@ -191,8 +192,8 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   protected void onResume() {
     super.onResume();
     if(recordingTrackId!=-1L){
-      trackDataHub.loadTrack(recordingTrackId);
       trackDataHub.start();
+      trackDataHub.loadTrack(recordingTrackId);
     }
   }
   
@@ -243,8 +244,8 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
       }
       try {
         recordingTrackId = service.startNewTrack();
-        trackDataHub.loadTrack(recordingTrackId);
         trackDataHub.start();
+        trackDataHub.loadTrack(recordingTrackId);
         startNewRecording = false;
         Toast.makeText(IJoggingActivity.this, R.string.track_list_record_success,
             Toast.LENGTH_SHORT).show();
@@ -276,7 +277,7 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   }
   
   public void stopRecording(){
-    TrackRecordingServiceConnectionUtils.stop(this, trackRecordingServiceConnection, false);
+    TrackRecordingServiceConnectionUtils.stopRecording(this, trackRecordingServiceConnection, false);
     recordingTrackId = -1L;
   }
   

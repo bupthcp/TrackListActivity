@@ -59,28 +59,33 @@ public class Api11Adapter extends Api10Adapter {
       final ContextualActionModeCallback contextualActionModeCallback) {
     listView.setOnItemLongClickListener(new OnItemLongClickListener() {
       ActionMode actionMode;
-      @Override
+
+        @Override
       public boolean onItemLongClick(
           AdapterView<?> parent, View view, final int position, final long id) {
         if (actionMode != null) {
           return false;
         }
         actionMode = activity.startActionMode(new ActionMode.Callback() {
-          @Override
+            @Override
           public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.list_context_menu, menu);
             return true;
           }
-          @Override
+
+            @Override
           public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            // Return false to indicate no change.
-            return false;
+            contextualActionModeCallback.onPrepare(menu, position, id);
+            // Return true to indicate change
+            return true;
           }
-          @Override
+
+            @Override
           public void onDestroyActionMode(ActionMode mode) {
             actionMode = null;
           }
-          @Override
+
+            @Override
           public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             mode.finish();
             return contextualActionModeCallback.onClick(item.getItemId(), position, id);
@@ -118,10 +123,5 @@ public class Api11Adapter extends Api10Adapter {
   @Override
   public void invalidMenu(Activity activity) {
     activity.invalidateOptionsMenu();
-  }
-  
-  @Override
-  public void disableHardwareAccelerated(View view) {
-    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
   }
 }

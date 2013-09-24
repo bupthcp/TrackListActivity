@@ -24,7 +24,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.DescriptionGenerator;
 import com.hu.iJogging.content.Track;
-import com.hu.iJogging.content.Waypoint;
 
 import android.content.Context;
 import android.util.Pair;
@@ -79,8 +78,8 @@ public class DescriptionGeneratorImpl implements DescriptionGenerator {
   }
 
   @Override
-  public String generateWaypointDescription(Waypoint waypoint) {
-    return generateTripStatisticsDescription(waypoint.getTripStatistics(), false);
+  public String generateWaypointDescription(TripStatistics tripStatistics) {
+    return generateTripStatisticsDescription(tripStatistics, false);
   }
 
   /**

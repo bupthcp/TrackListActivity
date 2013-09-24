@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Google Inc.
+ * Copyright 2012 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,25 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.android.apps.mytracks.services.tasks;
 
-import com.google.android.apps.mytracks.util.ApiAdapterFactory;
+package com.google.android.apps.mytracks.services.tasks;
 
 import android.content.Context;
 
 /**
- * Factory which wraps construction and setup of text-to-speech announcements in
- * an API-level-safe way.
- *
- * @author Rodrigo Damazio
+ * A {@link PeriodicTaskFactory} for {@link SplitPeriodicTask}.
+ * 
+ * @author Jimmy Shih
  */
-public class StatusAnnouncerFactory implements PeriodicTaskFactory {
-
-  public StatusAnnouncerFactory() {
-  }
+public class SplitPeriodicTaskFactory implements PeriodicTaskFactory {
 
   @Override
   public PeriodicTask create(Context context) {
-    return ApiAdapterFactory.getApiAdapter().getStatusAnnouncerTask(context);
+    return new SplitPeriodicTask();
   }
 }

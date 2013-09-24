@@ -15,6 +15,8 @@
  */
 package com.hu.iJogging.content;
 
+import com.hu.iJogging.content.Sensor.SensorDataSet;
+
 import android.location.Location;
 
 /**
@@ -24,25 +26,29 @@ import android.location.Location;
  */
 public class MyTracksLocation extends Location {
 
-//  private SensorDataSet sensorDataSet = null;
+  private SensorDataSet sensorDataSet = null;
 
   /**
    * The id of this location from the provider.
    */
   private int id = -1;
 
+  public MyTracksLocation(Location location, Sensor.SensorDataSet sd) {
+    super(location);
+    this.sensorDataSet = sd;
+  }
 
   public MyTracksLocation(String provider) {
     super(provider);
   }
 
-//  public SensorDataSet getSensorDataSet() {
-//    return sensorDataSet;
-//  }
-//
-//  public void setSensorDataSet(SensorDataSet sensorDataSet) {
-//    this.sensorDataSet = sensorDataSet;
-//  }
+  public SensorDataSet getSensorDataSet() {
+    return sensorDataSet;
+  }
+
+  public void setSensorDataSet(SensorDataSet sensorDataSet) {
+    this.sensorDataSet = sensorDataSet;
+  }
 
   public int getId() {
     return id;
@@ -54,7 +60,7 @@ public class MyTracksLocation extends Location {
   
   public void reset() {
     super.reset();
-//    sensorDataSet = null;
+    sensorDataSet = null;
     id = -1;
   }
 }

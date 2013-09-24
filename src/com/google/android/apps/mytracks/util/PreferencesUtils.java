@@ -18,6 +18,7 @@ package com.google.android.apps.mytracks.util;
 
 import com.google.android.apps.mytracks.Constants;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -34,15 +35,14 @@ public class PreferencesUtils {
    * files.
    */
   public static final boolean ALLOW_ACCESS_DEFAULT = false;
-  public static final int ANNOUNCEMENT_FREQUENCY_DEFAULT = 0;
   public static final int AUTO_RESUME_TRACK_CURRENT_RETRY_DEFAULT = 0;
 
+  // Values for auto_resume_track_timeout_key
   public static final int AUTO_RESUME_TRACK_TIMEOUT_ALWAYS = -1;
   public static final int AUTO_RESUME_TRACK_TIMEOUT_DEFAULT = 10;
   public static final int AUTO_RESUME_TRACK_TIMEOUT_NEVER = 0;
 
   public static final String BLUETOOTH_SENSOR_DEFAULT = "";
-
   public static final boolean CHART_BY_DISTANCE_DEFAULT = true;
   public static final boolean CHART_SHOW_CADENCE_DEFAULT = true;
   public static final boolean CHART_SHOW_ELEVATION_DEFAULT = true;
@@ -50,40 +50,65 @@ public class PreferencesUtils {
   public static final boolean CHART_SHOW_POWER_DEFAULT = true;
   public static final boolean CHART_SHOW_SPEED_DEFAULT = true;
 
+  public static final boolean CONFIRM_PLAY_EARTH_DEFAULT = true;
+  public static final boolean CONFIRM_SHARE_DRIVE_DEFAULT = true;
+  public static final boolean CONFIRM_SHARE_MAPS_DEFAULT = true;
+
   public static final String DEFAULT_ACTIVITY_DEFAULT = "";
   public static final boolean DEFAULT_MAP_PUBLIC_DEFAULT = false;
+  public static final boolean DEFAULT_TABLE_PUBLIC_DEFAULT = false;
+  public static final String DRIVE_DELETED_LIST_DEFAULT = "";
+  public static final long DRIVE_LARGEST_CHANGE_ID_DEFAULT = -1L;
+  public static final boolean DRIVE_SYNC_DEFAULT = false;
+
+  // Value for split_frequency_key and voice_frequency_key
   public static final int FREQUENCY_OFF = 0;
+
   public static final String GOOGLE_ACCOUNT_DEFAULT = "";
+
+  public static final int MAP_TYPE_DEFAUlT = 1;
+
   public static final int MAX_RECORDING_DISTANCE_DEFAULT = 200;
   public static final boolean METRIC_UNITS_DEFAULT = true;
   public static final int MIN_RECORDING_DISTANCE_DEFAULT = 5;
 
+  // Values for min_recording_interval_key
   public static final int MIN_RECORDING_INTERVAL_ADAPT_ACCURACY = -1;
   public static final int MIN_RECORDING_INTERVAL_ADAPT_BATTERY_LIFE = -2;
   public static final int MIN_RECORDING_INTERVAL_DEFAULT = 0;
 
+  // Values for min_required_accuracy
   public static final int MIN_REQUIRED_ACCURACY_DEFAULT = 200;
   public static final int MIN_REQUIRED_ACCURACY_EXCELLENT = 10;
   public static final int MIN_REQUIRED_ACCURACY_POOR = 5000;
 
   public static final boolean PICK_EXISTING_MAP_DEFAULT = false;
   public static final long RECORDING_TRACK_ID_DEFAULT = -1L;
+  public static final boolean RECORDING_TRACK_PAUSED_DEFAULT = true;
   public static final boolean REPORT_SPEED_DEFAULT = true;
   public static final long SELECTED_TRACK_ID_DEFAULT = -1L;
-  public static final boolean SEND_TO_DOCS_DEFAULT = true;
-  public static final boolean SEND_TO_FUSION_TABLES_DEFAULT = true;
-  public static final boolean SEND_TO_MAPS_DEFAULT = true;
-  public static final boolean SHOW_CONFIRM_SHARING_DIALOG_DEFAULT = true;
-  public static final int SPLIT_FREQUENCY_DEFAULT = 0;
 
+  public static final boolean SEND_TO_DRIVE_DEFAULT = false;
+  public static final boolean SEND_TO_FUSION_TABLES_DEFAULT = false;
+  public static final boolean SEND_TO_MAPS_DEFAULT = false;
+  public static final boolean SEND_TO_SPREADSHEETS_DEFAULT = false;
+
+  public static final String SENSOR_TYPE_DEFAULT = "NONE";
+  public static final int SPLIT_FREQUENCY_DEFAULT = 0;
   public static final boolean STATS_SHOW_COORDINATE_DEFAULT = false;
   public static final boolean STATS_SHOW_ELEVATION_DEFAULT = false;
   public static final boolean STATS_SHOW_GRADE_DEFAULT = false;
-  public static final boolean STATS_USE_TOTAL_TIME_DEFAULT = true;
-
+  public static final boolean STATS_SHOW_MOVING_TIME_DEFAULT = false;
+  public static final String TRACK_COLOR_MODE_DEFAULT = "SINGLE";
   public static final int TRACK_COLOR_MODE_MEDIUM_DEFAULT = 15;
   public static final int TRACK_COLOR_MODE_PERCENTAGE_DEFAULT = 25;
   public static final int TRACK_COLOR_MODE_SLOW_DEFAULT = 9;
+  public static final String TRACK_NAME_DEFAULT = "LOCATION";
+  public static final int TRACK_WIDGET_ITEM1_DEFAULT = 3; // moving time
+  public static final int TRACK_WIDGET_ITEM2_DEFAULT = 0; // distance
+  public static final int TRACK_WIDGET_ITEM3_DEFAULT = 1; // total time
+  public static final int TRACK_WIDGET_ITEM4_DEFAULT = 2; // average speed
+  public static final int VOICE_FREQUENCY_DEFAULT = 0;
 
   private PreferencesUtils() {}
 
@@ -117,6 +142,7 @@ public class PreferencesUtils {
    * @param keyId the key id
    * @param value the value
    */
+  @SuppressLint("CommitPrefEdits")
   public static void setBoolean(Context context, int keyId, boolean value) {
     SharedPreferences sharedPreferences = context.getSharedPreferences(
         Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
@@ -145,6 +171,7 @@ public class PreferencesUtils {
    * @param keyId the key id
    * @param value the value
    */
+  @SuppressLint("CommitPrefEdits")
   public static void setInt(Context context, int keyId, int value) {
     SharedPreferences sharedPreferences = context.getSharedPreferences(
         Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
@@ -172,6 +199,7 @@ public class PreferencesUtils {
    * @param keyId the key id
    * @param value the value
    */
+  @SuppressLint("CommitPrefEdits")
   public static void setLong(Context context, int keyId, long value) {
     SharedPreferences sharedPreferences = context.getSharedPreferences(
         Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
@@ -179,7 +207,7 @@ public class PreferencesUtils {
     editor.putLong(getKey(context, keyId), value);
     ApiAdapterFactory.getApiAdapter().applyPreferenceChanges(editor);
   }
-  
+
   /**
    * Gets a string preference value.
    * 
@@ -192,7 +220,7 @@ public class PreferencesUtils {
         Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
     return sharedPreferences.getString(getKey(context, keyId), defaultValue);
   }
-  
+
   /**
    * Sets a string preference value.
    * 
@@ -200,6 +228,7 @@ public class PreferencesUtils {
    * @param keyId the key id
    * @param value the value
    */
+  @SuppressLint("CommitPrefEdits")
   public static void setString(Context context, int keyId, String value) {
     SharedPreferences sharedPreferences = context.getSharedPreferences(
         Constants.SETTINGS_NAME, Context.MODE_PRIVATE);

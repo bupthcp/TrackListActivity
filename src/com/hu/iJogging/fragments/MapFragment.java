@@ -8,8 +8,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.content.TrackDataHub;
-import com.google.android.apps.mytracks.content.TrackDataHub.ListenerDataType;
 import com.google.android.apps.mytracks.content.TrackDataListener;
+import com.google.android.apps.mytracks.content.TrackDataType;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
@@ -43,7 +43,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -315,62 +314,62 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     }
   }
 
+//  @Override
+//  public void onProviderStateChange(ProviderState state) {
+//    final int messageId;
+//    final boolean isGpsDisabled;
+//    //如果是查看界面，则不需要显示gps的警告信息
+//    if(isViewHistory)
+//      return;
+//    switch (state) {
+//      case DISABLED:
+//        messageId = R.string.gps_need_to_enable;
+//        isGpsDisabled = true;
+//        break;
+//      case NO_FIX:
+//      case BAD_FIX:
+//        messageId = R.string.gps_wait_for_signal;
+//        isGpsDisabled = false;
+//        break;
+//      case GOOD_FIX:
+//        messageId = -1;
+//        isGpsDisabled = false;
+//        break;
+//      default:
+//        throw new IllegalArgumentException("Unexpected state: " + state);
+//    }
+
+//    getActivity().runOnUiThread(new Runnable() {
+//      @Override
+//      public void run() {
+//        if (messageId != -1) {
+//          messageTextView.setText(messageId);
+//          messageTextView.setVisibility(View.VISIBLE);
+//          myLocationImageButton.setVisibility(View.VISIBLE);
+//
+//          if (isGpsDisabled) {
+//            Toast.makeText(getActivity(), R.string.gps_not_found, Toast.LENGTH_LONG).show();
+//
+//            // Click to show the location source settings
+//            messageTextView.setOnClickListener(MapFragment.this);
+//          } else {
+//            messageTextView.setOnClickListener(null);
+//          }
+//        } else {
+//          messageTextView.setVisibility(View.GONE);
+//        }
+//      }
+//    });
+//  }
+
   @Override
-  public void onProviderStateChange(ProviderState state) {
-    final int messageId;
-    final boolean isGpsDisabled;
-    //如果是查看界面，则不需要显示gps的警告信息
-    if(isViewHistory)
-      return;
-    switch (state) {
-      case DISABLED:
-        messageId = R.string.gps_need_to_enable;
-        isGpsDisabled = true;
-        break;
-      case NO_FIX:
-      case BAD_FIX:
-        messageId = R.string.gps_wait_for_signal;
-        isGpsDisabled = false;
-        break;
-      case GOOD_FIX:
-        messageId = -1;
-        isGpsDisabled = false;
-        break;
-      default:
-        throw new IllegalArgumentException("Unexpected state: " + state);
-    }
-
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        if (messageId != -1) {
-          messageTextView.setText(messageId);
-          messageTextView.setVisibility(View.VISIBLE);
-          myLocationImageButton.setVisibility(View.VISIBLE);
-
-          if (isGpsDisabled) {
-            Toast.makeText(getActivity(), R.string.gps_not_found, Toast.LENGTH_LONG).show();
-
-            // Click to show the location source settings
-            messageTextView.setOnClickListener(MapFragment.this);
-          } else {
-            messageTextView.setOnClickListener(null);
-          }
-        } else {
-          messageTextView.setVisibility(View.GONE);
-        }
-      }
-    });
-  }
-
-  @Override
-  public void onCurrentLocationChanged(Location location) {
+  public void onLocationChanged(Location location) {
     currentLocation = location;
     updateCurrentLocation();
   }
 
   @Override
-  public void onCurrentHeadingChanged(final double heading) {
+  public void onHeadingChanged(final double heading) {
     getActivity().runOnUiThread(new Runnable(){
       @Override
       public void run() {
@@ -385,7 +384,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   }
 
   @Override
-  public void onSelectedTrackChanged(final Track track, final boolean isRecording) {
+  public void onSelectedTrackChanged(final Track track) {
     getActivity().runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -401,7 +400,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
             currentSelectedTrackId = track.getId();
             updateMap(track);
           }
-          mapOverlay.setShowEndMarker(!isRecording);
+//          mapOverlay.setShowEndMarker(!isRecording);
         }
         mapView.refresh();
       }
@@ -433,7 +432,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   }
 
   @Override
-  public void onNewTrackPoint(final Location location) {
+  public void onSampledInTrackPoint(final Location location) {
       if (LocationUtils.isValidLocation(location)) {
         LocationUtils.setGeoInLocation(location);
         mapOverlay.addLocation(location);
@@ -445,10 +444,6 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     // We don't care.
   }
 
-  @Override
-  public void onSegmentSplit() {
-    mapOverlay.addSegmentSplit();
-  }
 
   @Override
   public void onNewTrackPointsDone() {
@@ -460,6 +455,30 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         mapView.refresh();
       }
     });
+  }
+  
+  @Override
+  public void onLocationStateChanged(LocationState locationState) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void onSegmentSplit(Location location) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public boolean onMetricUnitsChanged(boolean metricUnits) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean onMinRecordingDistanceChanged(int minRecordingDistance) {
+    // TODO Auto-generated method stub
+    return false;
   }
 
   @Override
@@ -488,11 +507,6 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     });
   }
 
-  @Override
-  public boolean onUnitsChanged(boolean metric) {
-    // We don't care.
-    return false;
-  }
 
   @Override
   public boolean onReportSpeedChanged(boolean reportSpeed) {
@@ -510,17 +524,17 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     //也就不会触发gps
     if(isViewHistory){
       trackDataHub.registerTrackDataListener(this, EnumSet.of(
-          ListenerDataType.SELECTED_TRACK_CHANGED,
-          ListenerDataType.WAYPOINT_UPDATES,
-          ListenerDataType.POINT_UPDATES,
-          ListenerDataType.COMPASS_UPDATES));
+          TrackDataType.SELECTED_TRACK,
+          TrackDataType.WAYPOINTS_TABLE,
+          TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
+          TrackDataType.HEADING));
     }else{
       trackDataHub.registerTrackDataListener(this, EnumSet.of(
-          ListenerDataType.SELECTED_TRACK_CHANGED,
-          ListenerDataType.WAYPOINT_UPDATES,
-          ListenerDataType.POINT_UPDATES,
-          ListenerDataType.LOCATION_UPDATES,
-          ListenerDataType.COMPASS_UPDATES));
+          TrackDataType.SELECTED_TRACK,
+          TrackDataType.WAYPOINTS_TABLE,
+          TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
+          TrackDataType.LOCATION,
+          TrackDataType.HEADING));
     }
   }
   
@@ -679,4 +693,5 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private void backStack(){
     getFragmentManager().popBackStack();
   }
+
 }

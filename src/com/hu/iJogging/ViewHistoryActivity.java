@@ -86,8 +86,9 @@ public class ViewHistoryActivity extends ActionBarActivity{
   @Override
   protected void onResume() {
     super.onResume();
-    trackDataHub.loadTrack(trackId);
+    
     trackDataHub.start();
+    trackDataHub.loadTrack(trackId);
 //    TrackRecordingServiceConnectionUtils.resume(this, trackRecordingServiceConnection);
 //    setTitle(trackId == PreferencesUtils.getLong(this, R.string.recording_track_id_key));
   }

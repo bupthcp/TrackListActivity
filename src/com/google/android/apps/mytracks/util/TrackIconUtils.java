@@ -19,12 +19,15 @@ package com.google.android.apps.mytracks.util;
 import com.hu.iJogging.R;
 
 import android.content.Context;
+import android.util.Pair;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Utilities for track icon.
- *
+ * 
  * @author Jimmy Shih
  */
 public class TrackIconUtils {
@@ -40,75 +43,82 @@ public class TrackIconUtils {
 
   private TrackIconUtils() {}
 
-  private static HashMap<String, Integer> map = new HashMap<String, Integer>();
+  private static LinkedHashMap<String, Pair<Integer, Integer>>
+      map = new LinkedHashMap<String, Pair<Integer, Integer>>();
 
   static {
-    map.put(AIRPLANE, R.drawable.track_airplane);
-    map.put(BIKE, R.drawable.lvt_sport1);
-    map.put(BOAT, R.drawable.lvt_sport11);
-    map.put(DRIVE, R.drawable.track_drive);
-    map.put(RUN, R.drawable.lvt_sport0);
-    map.put(SKI, R.drawable.lvt_sport7);
-    map.put(SNOW_BOARDING, R.drawable.lvt_sport8);
-    map.put(WALK, R.drawable.lvt_sport18);
+    map.put(AIRPLANE,
+        new Pair<Integer, Integer>(R.string.activity_type_airplane, R.drawable.track_airplane));
+    map.put(BIKE, new Pair<Integer, Integer>(R.string.activity_type_biking, R.drawable.track_bike));
+    map.put(BOAT, new Pair<Integer, Integer>(R.string.activity_type_boat, R.drawable.track_boat));
+    map.put(
+        DRIVE, new Pair<Integer, Integer>(R.string.activity_type_driving, R.drawable.track_drive));
+    map.put(RUN, new Pair<Integer, Integer>(R.string.activity_type_running, R.drawable.track_run));
+    map.put(SKI, new Pair<Integer, Integer>(R.string.activity_type_skiing, R.drawable.track_ski));
+    map.put(SNOW_BOARDING, new Pair<Integer, Integer>(
+        R.string.activity_type_snow_boarding, R.drawable.track_snow_boarding));
+    map.put(
+        WALK, new Pair<Integer, Integer>(R.string.activity_type_walking, R.drawable.track_walk));
   }
 
-  private static int[] airplane = new int[] {
-      R.string.activity_type_airplane,
-      R.string.activity_type_commercial_airplane,
-      R.string.activity_type_rc_airplane
-  };
-  private static int[] bike = new int[] {
-      R.string.activity_type_biking,
-      R.string.activity_type_cycling,
-      R.string.activity_type_dirt_bike,
-      R.string.activity_type_motor_bike,
-      R.string.activity_type_mountain_biking,
-      R.string.activity_type_road_biking,
-      R.string.activity_type_track_cycling };
-  private static int[] boat = new int[] {
-      R.string.activity_type_boat,
-      R.string.activity_type_ferry,
-      R.string.activity_type_motor_boating,
-      R.string.activity_type_rc_boat
-  };
-  private static int[] drive = new int[] {
-      R.string.activity_type_atv,
-      R.string.activity_type_driving,
-      R.string.activity_type_driving_bus,
+  private static int[] airplane = new int[] { R.string.activity_type_airplane,
+      R.string.activity_type_commercial_airplane, R.string.activity_type_rc_airplane };
+  private static int[] bike = new int[] { R.string.activity_type_biking,
+      R.string.activity_type_cycling, R.string.activity_type_dirt_bike,
+      R.string.activity_type_motor_bike, R.string.activity_type_mountain_biking,
+      R.string.activity_type_road_biking, R.string.activity_type_track_cycling };
+  private static int[] boat = new int[] { R.string.activity_type_boat, R.string.activity_type_ferry,
+      R.string.activity_type_motor_boating, R.string.activity_type_rc_boat };
+  private static int[] drive = new int[] { R.string.activity_type_atv,
+      R.string.activity_type_driving, R.string.activity_type_driving_bus,
       R.string.activity_type_driving_car };
-  private static int[] run = new int[] {
-      R.string.activity_type_running,
-      R.string.activity_type_street_running,
-      R.string.activity_type_track_running,
+  private static int[] run = new int[] { R.string.activity_type_running,
+      R.string.activity_type_street_running, R.string.activity_type_track_running,
       R.string.activity_type_trail_running };
   private static int[] ski = new int[] {
-      R.string.activity_type_cross_country_skiing,
-      R.string.activity_type_skiing };
-  private static int[] snowBoarding = new int[] {
-      R.string.activity_type_snow_boarding
-  };
-  private static int[] walk = new int[] {
-      R.string.activity_type_hiking,
-      R.string.activity_type_off_trail_hiking,
-      R.string.activity_type_speed_walking,
-      R.string.activity_type_trail_hiking,
-      R.string.activity_type_walking };
+      R.string.activity_type_cross_country_skiing, R.string.activity_type_skiing };
+  private static int[] snowBoarding = new int[] { R.string.activity_type_snow_boarding };
+  private static int[] walk = new int[] { R.string.activity_type_hiking,
+      R.string.activity_type_off_trail_hiking, R.string.activity_type_speed_walking,
+      R.string.activity_type_trail_hiking, R.string.activity_type_walking };
 
   /**
    * Gets the icon drawable.
    * 
    * @param iconValue the icon value
    */
-  //如果没有开始记录，是条空的记录的话，则设置为WALK
   public static int getIconDrawable(String iconValue) {
     if (iconValue == null || iconValue.equals("")) {
-      return R.drawable.lvt_sport18;
+      return R.drawable.track_walk;
     }
-    Integer drawable = map.get(iconValue);
-    return drawable == null ? R.drawable.lvt_sport18 : drawable;
+    Pair<Integer, Integer> pair = map.get(iconValue);
+    return pair == null ? R.drawable.track_walk : pair.second;
   }
-  
+
+  /**
+   * Gets the icon activity type.
+   * 
+   * @param iconValue the icon value
+   */
+  public static int getIconActivityType(String iconValue) {
+    if (iconValue == null || iconValue.equals("")) {
+      return R.string.activity_type_walking;
+    }
+    Pair<Integer, Integer> pair = map.get(iconValue);
+    return pair == null ? R.string.activity_type_walking : pair.first;
+  }
+
+  /**
+   * Gets all icon values.
+   */
+  public static List<String> getAllIconValues() {
+    List<String> values = new ArrayList<String>();
+    for (String value : map.keySet()) {
+      values.add(value);
+    }
+    return values;
+  }
+
   /**
    * Gets the icon value.
    * 
@@ -118,13 +128,13 @@ public class TrackIconUtils {
   public static String getIconValue(Context context, String activityType) {
     if (inList(context, activityType, airplane)) {
       return AIRPLANE;
-    }    
+    }
     if (inList(context, activityType, bike)) {
       return BIKE;
     }
     if (inList(context, activityType, boat)) {
       return BOAT;
-    }    
+    }
     if (inList(context, activityType, drive)) {
       return DRIVE;
     }

@@ -14,57 +14,73 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:gravity="center_vertical"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_height="wrap_content"
-  android:layout_width="fill_parent"
+  android:layout_width="match_parent"
   android:minHeight="?android:attr/listPreferredItemHeight"
-  android:orientation="horizontal"
-  android:padding="8dp" >
-  <ImageView
-    android:contentDescription="@string/icon_track"
-    android:id="@+id/list_item_icon"
+  android:paddingBottom="12dp"
+  android:paddingRight="12dp"
+  android:paddingTop="8dp"
+  android:shrinkColumns="1"
+  android:stretchColumns="1" >
+  <TableRow
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content" />
-  <LinearLayout
+    android:layout_width="match_parent" >
+    <ImageView
+      android:contentDescription="@string/icon_track"
+      android:id="@+id/list_item_icon"
+      android:layout_gravity="center_vertical"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_width="wrap_content" />
+    <TableLayout
+      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:shrinkColumns="0"
+      android:stretchColumns="0" >
+      <TableRow>
+        <TextView
+          android:id="@+id/list_item_name"
+          android:layout_gravity="bottom"
+          android:layout_width="fill_parent"
+          android:singleLine="true"
+          style="@style/TextLarge" />
+        <TextView
+          android:id="@+id/list_item_date"
+          style="@style/ListItemDate" />
+      </TableRow>
+      <TableRow>
+        <TextView
+          android:id="@+id/list_item_time_distance"
+          android:layout_gravity="bottom"
+          android:layout_width="fill_parent"
+          android:singleLine="true"
+          android:textColor="@android:color/primary_text_dark"
+          style="@style/TextSmall" />
+        <TextView
+          android:id="@+id/list_item_time"
+          style="@style/ListItemDate" />
+      </TableRow>
+    </TableLayout>
+  </TableRow>
+  <TableRow
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_width="fill_parent"
-    android:orientation="vertical" >
-    <LinearLayout
-      android:layout_height="wrap_content"
-      android:layout_width="fill_parent"
-      android:orientation="horizontal" >
-      <TextView
-        android:id="@+id/list_item_name"
-        android:singleLine="true"
-        style="@style/TextLarge" />
-      <TextView
-        android:id="@+id/list_item_category"
-        android:layout_marginLeft="8dp"
-        android:singleLine="true"
-        style="@style/TextSmall" />
-    </LinearLayout>
-    <LinearLayout
-      android:layout_height="wrap_content"
-      android:layout_width="fill_parent"
-      android:orientation="horizontal" >
-      <TextView
-        android:id="@+id/list_item_total_time"
-        android:layout_marginRight="8dp"
-        style="@style/ListItemStats" />
-      <TextView
-        android:id="@+id/list_item_total_distance"
-        android:layout_marginRight="8dp"
-        style="@style/ListItemStats" />
-      <TextView
-        android:id="@+id/list_item_start_time"
-        style="@style/ListItemStats" />
-    </LinearLayout>
+    android:layout_width="match_parent" >
+    <TextView
+      android:id="@+id/list_item_recording"
+      android:layout_column="1"
+      android:singleLine="true"
+      style="@style/TextSmall" />
+  </TableRow>
+  <TableRow
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" >
     <TextView
       android:id="@+id/list_item_description"
+      android:layout_column="1"
       android:singleLine="false"
       android:textColor="@android:color/secondary_text_dark"
       style="@style/TextSmall" />
-  </LinearLayout>
-</LinearLayout>
+  </TableRow>
+</TableLayout>

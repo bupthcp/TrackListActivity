@@ -16,30 +16,26 @@
 
 package com.hu.iJogging;
 
+import com.google.android.apps.mytracks.io.file.AbstractImporter;
 import com.google.android.apps.mytracks.io.file.GpxImporter;
-import com.google.android.apps.mytracks.util.FileUtils;
+import com.google.android.apps.mytracks.io.file.KmlImporter;
+import com.google.android.apps.mytracks.io.file.TrackFileFormat;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.SystemUtils;
-import com.hu.iJogging.content.MyTracksProviderUtils;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 /**
- * AsyncTask to import GPX files from the SD card.
- *
+ * AsyncTask to import files from the external storage.
+ * 
  * @author Jimmy Shih
  */
 public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
@@ -48,20 +44,18 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 
   private ImportActivity importActivity;
   private final boolean importAll;
+  private final TrackFileFormat trackFileFormat;
   private final String path;
-  private final MyTracksProviderUtils myTracksProviderUtils;
+  private final Context context;
   private WakeLock wakeLock;
-
-  // true if the AsyncTask result is success
-  private boolean success;
 
   // true if the AsyncTask has completed
   private boolean completed;
 
-  // number of files successfully imported
+  // the number of files successfully imported
   private int successCount;
 
-  // number of files to import
+  // the number of files to import
   private int totalCount;
 
   // the last successfully imported track id
@@ -69,25 +63,28 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 
   /**
    * Creates an AsyncTask.
-   *
+   * 
    * @param importActivity the activity currently associated with this AsyncTask
    * @param importAll true to import all GPX files
+   * @param trackFileFormat the track file format
    * @param path path to import GPX files
    */
-  public ImportAsyncTask(ImportActivity importActivity, boolean importAll, String path) {
+  public ImportAsyncTask(ImportActivity importActivity, boolean importAll,
+      TrackFileFormat trackFileFormat, String path) {
     this.importActivity = importActivity;
     this.importAll = importAll;
+    this.trackFileFormat = trackFileFormat;
     this.path = path;
+    context = importActivity.getApplicationContext();
 
-    myTracksProviderUtils = MyTracksProviderUtils.Factory.get(importActivity);
-
-    // Get the wake lock if not recording
+    // Get the wake lock if not recording or paused
     if (PreferencesUtils.getLong(importActivity, R.string.recording_track_id_key)
-        == PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
+        == PreferencesUtils.RECORDING_TRACK_ID_DEFAULT || PreferencesUtils.getBoolean(
+        importActivity, R.string.recording_track_paused_key,
+        PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT)) {
       wakeLock = SystemUtils.acquireWakeLock(importActivity, wakeLock);
     }
 
-    success = false;
     completed = false;
     successCount = 0;
     totalCount = 0;
@@ -96,13 +93,13 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 
   /**
    * Sets the current {@link ImportActivity} associated with this AyncTask.
-   *
+   * 
    * @param importActivity the current {@link ImportActivity}, can be null
    */
   public void setActivity(ImportActivity importActivity) {
     this.importActivity = importActivity;
     if (completed && importActivity != null) {
-      importActivity.onAsyncTaskCompleted(success, successCount, totalCount, trackId);
+      importActivity.onAsyncTaskCompleted(successCount, totalCount, trackId);
     }
   }
 
@@ -116,10 +113,6 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
   @Override
   protected Boolean doInBackground(Void... params) {
     try {
-      if (!FileUtils.isSdCardAvailable()) {
-        return false;
-      }
-
       List<File> files = getFiles();
       totalCount = files.size();
       if (totalCount == 0) {
@@ -131,8 +124,7 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
           // If cancelled, return true to show the number of files imported
           return true;
         }
-        File file = files.get(i);
-        if (importFile(file)) {
+        if (importFile(files.get(i))) {
           successCount++;
         }
         publishProgress(i + 1, totalCount);
@@ -155,43 +147,36 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
 
   @Override
   protected void onPostExecute(Boolean result) {
-    success = result;
     completed = true;
     if (importActivity != null) {
-      importActivity.onAsyncTaskCompleted(success, successCount, totalCount, trackId);
+      importActivity.onAsyncTaskCompleted(successCount, totalCount, trackId);
     }
   }
 
   /**
-   * Imports a GPX file.
-   *
+   * Imports a file.
+   * 
    * @param file the file
    */
   private boolean importFile(final File file) {
     try {
-      long trackIds[] = GpxImporter.importGPXFile(new FileInputStream(file), myTracksProviderUtils);
+      AbstractImporter importer = trackFileFormat == TrackFileFormat.KML ? new KmlImporter(
+          context, -1L)
+          : new GpxImporter(context, -1L);
+      long trackIds[] = importer.importFile(new FileInputStream(file));
       int length = trackIds.length;
       if (length > 0) {
         trackId = trackIds[length - 1];
       }
       return true;
-    } catch (FileNotFoundException e) {
-      Log.d(TAG, "file: " + file.getAbsolutePath(), e);
-      return false;
-    } catch (ParserConfigurationException e) {
-      Log.d(TAG, "file: " + file.getAbsolutePath(), e);
-      return false;
-    } catch (SAXException e) {
-      Log.d(TAG, "file: " + file.getAbsolutePath(), e);
-      return false;
-    } catch (IOException e) {
+    } catch (Exception e) {
       Log.d(TAG, "file: " + file.getAbsolutePath(), e);
       return false;
     }
   }
 
   /**
-   * Gets a list of GPX files. If importAll is true, returns a list of GPX files
+   * Gets a list of files. If importAll is true, returns a list of the files
    * under the path directory. If importAll is false, returns a list containing
    * just the path file.
    */
@@ -202,7 +187,8 @@ public class ImportAsyncTask extends AsyncTask<Void, Integer, Boolean> {
       File[] candidates = file.listFiles();
       if (candidates != null) {
         for (File candidate : candidates) {
-          if (!candidate.isDirectory() && candidate.getName().endsWith(".gpx")) {
+          if (!candidate.isDirectory() && candidate.getName()
+              .endsWith(trackFileFormat == TrackFileFormat.KML ? ".kml" : ".gpx")) {
             files.add(candidate);
           }
         }

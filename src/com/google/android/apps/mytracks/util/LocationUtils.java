@@ -18,36 +18,33 @@ package com.google.android.apps.mytracks.util;
 import com.baidu.mapapi.utils.CoordinateConvert;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.Constants;
-import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.hu.iJogging.content.Track;
 
 import android.location.Location;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
-
-
 
 /**
  * Utility class for decimating tracks at a given level of precision.
- *
+ * 
  * @author Leif Hendrik Wilden
  */
 public class LocationUtils {
-  
+
+  private LocationUtils() {}
+
   /**
    * Computes the distance on the two sphere between the point c0 and the line
    * segment c1 to c2.
-   *
+   * 
    * @param c0 the first coordinate
    * @param c1 the beginning of the line segment
    * @param c2 the end of the lone segment
    * @return the distance in m (assuming spherical earth)
    */
-  public static double distance(
-      final Location c0, final Location c1, final Location c2) {
+  private static double distance(final Location c0, final Location c1, final Location c2) {
     if (c1.equals(c2)) {
       return c2.distanceTo(c0);
     }
@@ -61,9 +58,8 @@ public class LocationUtils {
 
     double s2s1lat = s2lat - s1lat;
     double s2s1lng = s2lng - s1lng;
-    final double u =
-        ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * s2s1lng)
-            / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
+    final double u = ((s0lat - s1lat) * s2s1lat + (s0lng - s1lng) * s2s1lng)
+        / (s2s1lat * s2s1lat + s2s1lng * s2s1lng);
     if (u <= 0) {
       return c0.distanceTo(c1);
     }
@@ -82,13 +78,13 @@ public class LocationUtils {
   /**
    * Decimates the given locations for a given zoom level. This uses a
    * Douglas-Peucker decimation algorithm.
-   *
+   * 
    * @param tolerance in meters
    * @param locations input
    * @param decimated output
    */
-  public static void decimate(double tolerance, ArrayList<Location> locations,
-      ArrayList<Location> decimated) {
+  private static void decimate(
+      double tolerance, ArrayList<Location> locations, ArrayList<Location> decimated) {
     final int n = locations.size();
     if (n < 1) {
       return;
@@ -104,16 +100,14 @@ public class LocationUtils {
     int[] current;
 
     if (n > 2) {
-      int[] stackVal = new int[] {0, (n - 1)};
+      int[] stackVal = new int[] { 0, (n - 1) };
       stack.push(stackVal);
       while (stack.size() > 0) {
         current = stack.pop();
         maxDist = 0;
         for (idx = current[0] + 1; idx < current[1]; ++idx) {
           dist = LocationUtils.distance(
-              locations.get(idx),
-              locations.get(current[0]),
-              locations.get(current[1]));
+              locations.get(idx), locations.get(current[0]), locations.get(current[1]));
           if (dist > maxDist) {
             maxDist = dist;
             maxIdx = idx;
@@ -121,9 +115,9 @@ public class LocationUtils {
         }
         if (maxDist > tolerance) {
           dists[maxIdx] = maxDist;
-          int[] stackValCurMax = {current[0], maxIdx};
+          int[] stackValCurMax = { current[0], maxIdx };
           stack.push(stackValCurMax);
-          int[] stackValMaxCur = {maxIdx, current[1]};
+          int[] stackValMaxCur = { maxIdx, current[1] };
           stack.push(stackValMaxCur);
         }
       }
@@ -139,13 +133,12 @@ public class LocationUtils {
       }
       idx++;
     }
-    Log.d(Constants.TAG, "Decimating " + n + " points to " + i
-        + " w/ tolerance = " + tolerance);
+    Log.d(Constants.TAG, "Decimating " + n + " points to " + i + " w/ tolerance = " + tolerance);
   }
 
   /**
    * Decimates the given track for the given precision.
-   *
+   * 
    * @param track a track
    * @param precision desired precision in meters
    */
@@ -154,57 +147,7 @@ public class LocationUtils {
     decimate(precision, track.getLocations(), decimated);
     track.setLocations(decimated);
   }
-
-  /**
-   * Limits number of points by dropping any points beyond the given number of
-   * points. Note: That'll actually discard points.
-   *
-   * @param track a track
-   * @param numberOfPoints maximum number of points
-   */
-  public static void cut(Track track, int numberOfPoints) {
-    ArrayList<Location> locations = track.getLocations();
-    while (locations.size() > numberOfPoints) {
-      locations.remove(locations.size() - 1);
-    }
-  }
-
-  /**
-   * Splits a track in multiple tracks where each piece has less or equal than
-   * maxPoints.
-   *
-   * @param track the track to split
-   * @param maxPoints maximum number of points for each piece
-   * @return a list of one or more track pieces
-   */
-  public static ArrayList<Track> split(Track track, int maxPoints) {
-    ArrayList<Track> result = new ArrayList<Track>();
-    final int nTotal = track.getLocations().size();
-    int n = 0;
-    Track piece = null;
-    do {
-      piece = new Track();
-      TripStatistics pieceStats = piece.getTripStatistics();
-      piece.setId(track.getId());
-      piece.setName(track.getName());
-      piece.setDescription(track.getDescription());
-      piece.setCategory(track.getCategory());
-      List<Location> pieceLocations = piece.getLocations();
-      for (int i = n; i < nTotal && pieceLocations.size() < maxPoints; i++) {
-        piece.addLocation(track.getLocations().get(i));
-      }
-      int nPointsPiece = pieceLocations.size();
-      if (nPointsPiece >= 2) {
-        pieceStats.setStartTime(pieceLocations.get(0).getTime());
-        pieceStats.setStopTime(pieceLocations.get(nPointsPiece - 1).getTime());
-        result.add(piece);
-      }
-      n += (pieceLocations.size() - 1);
-    } while (n < nTotal && piece.getLocations().size() > 1);
-
-    return result;
-  }
-
+  
   /**
    * Test if a given GeoPoint is valid, i.e. within physical bounds.
    *
@@ -218,10 +161,10 @@ public class LocationUtils {
 
   /**
    * Checks if a given location is a valid (i.e. physically possible) location
-   * on Earth. Note: The special separator locations (which have latitude =
-   * 100) will not qualify as valid. Neither will locations with lat=0 and lng=0
-   * as these are most likely "bad" measurements which often cause trouble.
-   *
+   * on Earth. Note: The special separator locations (which have latitude = 100)
+   * will not qualify as valid. Neither will locations with lat=0 and lng=0 as
+   * these are most likely "bad" measurements which often cause trouble.
+   * 
    * @param location the location to test
    * @return true if the location is a valid location.
    */
@@ -274,9 +217,4 @@ public class LocationUtils {
     return p2;
   }
 
-  /**
-   * This is a utility class w/ only static members.
-   */
-  private LocationUtils() {
-  }
 }

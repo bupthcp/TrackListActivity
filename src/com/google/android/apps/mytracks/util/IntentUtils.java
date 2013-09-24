@@ -17,7 +17,7 @@
 package com.google.android.apps.mytracks.util;
 
 import com.google.android.apps.mytracks.content.DescriptionGeneratorImpl;
-import com.google.android.apps.mytracks.io.file.TrackWriterFactory.TrackFileFormat;
+import com.google.android.apps.mytracks.io.file.TrackFileFormat;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.Track;
