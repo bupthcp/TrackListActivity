@@ -45,7 +45,7 @@ public class MapOverlay extends GraphicsOverlay{
   
   private final int markerWidth, markerHeight;
   private final BlockingQueue<GeoPoint> pendingLocations;
-  private GeoPoint[] locations = new GeoPoint[1];
+  private GeoPoint[] locations = new GeoPoint[0];
 
   public MapOverlay(Activity activity, MapView mapView) {
     super(mapView);
@@ -178,7 +178,20 @@ public class MapOverlay extends GraphicsOverlay{
   }
   
   public void update(){
+    //解决了每次锁屏-解锁之后，会出现轨迹首尾相连，并且轨迹变粗的现象
+    //(实际上就是每次解锁都会再画一条轨迹)
+    //锁屏-解锁操作不会导致MapOverlay对象被销毁，所以pendingLocations
+    //里面的内容还是存在的，解锁后,MapFragment会向MapOverlay中添加新一次
+    //的查询结果，所以在地图上看起来就是首尾相连，轨迹变粗，实际上就是将
+    //轨迹画了两遍乃至更多遍
+    //解决的方法也很简单，就是在toArray之后，clear一下pendingLocations就可以
+    //了。
+    //原版的MyTracks方法用的是pendingLocations.drainTo，这个方法在导出队列
+    //中的数据时，就会清空队列，所以原版没有问题。
       locations = pendingLocations.toArray(locations);
+//      printLocation(locations);
+      pendingLocations.clear();
+      
       Geometry lineGeometry = new Geometry();
       lineGeometry.setPolyLine(locations);
       Symbol lineSymbol = new Symbol();
@@ -190,6 +203,15 @@ public class MapOverlay extends GraphicsOverlay{
       lineSymbol.setLineSymbol(lineColor, 4);
       Graphic lineGraphic = new Graphic(lineGeometry, lineSymbol);
       setData(lineGraphic);
+  }
+  
+  void printLocation(GeoPoint[] points){
+    for(int i=0;i<points.length;i++){
+      GeoPoint point = points[i];
+      int lati = point.getLatitudeE6();
+      int longti = point.getLongitudeE6();
+      Log.d(TAG,"locations updated:"+Integer.toString(lati)+" "+Integer.toString(longti));
+    }
   }
   
   public void addWaypoint(Waypoint wpt) {

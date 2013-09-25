@@ -370,41 +370,44 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onHeadingChanged(final double heading) {
-    getActivity().runOnUiThread(new Runnable(){
-      @Override
-      public void run() {
-        if (myLocationOverlay.setHeading((float) heading)) {
-        myLocationOverlay.setMarker(null);
-        mapView.refresh();
-      }
-      }
-      
-    });
+    if(isResumed()){
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          if (myLocationOverlay.setHeading((float) heading)) {
+            myLocationOverlay.setMarker(null);
+            mapView.refresh();
+          }
+        }
 
+      });
+    }
   }
 
   @Override
   public void onSelectedTrackChanged(final Track track) {
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        boolean hasTrack = track != null;
-        mapOverlay.setTrackDrawingEnabled(hasTrack);
-  
-        if (hasTrack) { 
-          synchronized (this) {
-            /*
-             * Synchronize to prevent race condition in changing markerTrackId
-             * and markerId variables.
-             */
-            currentSelectedTrackId = track.getId();
-            updateMap(track);
+    if(isResumed()){
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          boolean hasTrack = track != null;
+          mapOverlay.setTrackDrawingEnabled(hasTrack);
+
+          if (hasTrack) {
+            synchronized (this) {
+              /*
+               * Synchronize to prevent race condition in changing markerTrackId
+               * and markerId variables.
+               */
+              currentSelectedTrackId = track.getId();
+              updateMap(track);
+            }
+            // mapOverlay.setShowEndMarker(!isRecording);
           }
-//          mapOverlay.setShowEndMarker(!isRecording);
+          mapView.refresh();
         }
-        mapView.refresh();
-      }
-    });
+      });
+    }
   }
 
   @Override
@@ -433,10 +436,12 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onSampledInTrackPoint(final Location location) {
+    if(isResumed()){
       if (LocationUtils.isValidLocation(location)) {
         LocationUtils.setGeoInLocation(location);
         mapOverlay.addLocation(location);
       }
+    }
   }
 
   @Override
@@ -447,14 +452,16 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onNewTrackPointsDone() {
-    mapOverlay.update();
-    getActivity().runOnUiThread(new Runnable(){
-      @Override
-      public void run() {
-        Log.d(MAP_FRAGMENT_TAG,"onNewTrackPointsDone");
-        mapView.refresh();
-      }
-    });
+    if(isResumed()){
+      mapOverlay.update();
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          Log.d(MAP_FRAGMENT_TAG, "onNewTrackPointsDone");
+          mapView.refresh();
+        }
+      });
+    }
   }
   
   @Override
