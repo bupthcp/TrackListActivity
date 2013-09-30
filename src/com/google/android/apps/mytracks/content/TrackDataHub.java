@@ -664,6 +664,16 @@ public class TrackDataHub implements DataSourceListener {
 
       localNumLoadedPoints++;
       localLastSeenLocationId = locationId;
+//      if(localNumLoadedPoints%10 == 0){
+//        try {
+//          Thread.sleep(10);
+//        } catch (InterruptedException e) {
+//          e.printStackTrace();
+//        }
+//        for (TrackDataListener listener : sampledInListeners) {
+//          listener.onNewTrackPointsDone();
+//        }
+//      }
     }
     iterator.close();
 

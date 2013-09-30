@@ -15,14 +15,15 @@ import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
 import com.hu.iJogging.IJoggingActivity;
-import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.R;
+import com.hu.iJogging.TrackActivity;
 import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.LocationUtility;
 import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.MyTracksProviderUtils.Factory;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.iJogging.maps.PolyLine;
 import com.hu.walkingnotes.MyLocationMapOverlay;
 
 import android.app.Activity;
@@ -44,6 +45,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -86,6 +88,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
   private MKOfflineMap mOffline = null;
+  
+  //Current paths
+   private ArrayList<PolyLine> paths = new ArrayList<PolyLine>();
+  private boolean reloadPaths = true;
   
   @Override
   public void onAttach(Activity activity) {
@@ -391,7 +397,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         @Override
         public void run() {
           boolean hasTrack = track != null;
-          mapOverlay.setTrackDrawingEnabled(hasTrack);
+//          mapOverlay.setTrackDrawingEnabled(hasTrack);
 
           if (hasTrack) {
             synchronized (this) {
@@ -432,6 +438,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 //      }
 //    });
     mapOverlay.clearPoints();
+    reloadPaths = true;
   }
 
   @Override
@@ -440,6 +447,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       if (LocationUtils.isValidLocation(location)) {
         LocationUtils.setGeoInLocation(location);
         mapOverlay.addLocation(location);
+        Log.d(MAP_FRAGMENT_TAG, "onSampledInTrackPoint");
       }
     }
   }
@@ -453,12 +461,13 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onNewTrackPointsDone() {
     if(isResumed()){
-      mapOverlay.update();
       getActivity().runOnUiThread(new Runnable() {
         @Override
         public void run() {
+          mapOverlay.update(paths,reloadPaths);
           Log.d(MAP_FRAGMENT_TAG, "onNewTrackPointsDone");
           mapView.refresh();
+          reloadPaths = false;
         }
       });
     }
@@ -526,7 +535,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((IJoggingApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub = ((TrackActivity) getActivity()).getTrackDataHub();
     //如果是查看界面，不需要启动gps信息，所以就不用注册location相关的listener了，
     //也就不会触发gps
     if(isViewHistory){

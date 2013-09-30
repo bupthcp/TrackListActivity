@@ -13,18 +13,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.TextView;
 
-public class ViewHistoryActivity extends ActionBarActivity{
+public class ViewHistoryActivity extends TrackActivity{
   public static final String EXTRA_TRACK_ID = "track_id";
   public static final String EXTRA_MARKER_ID = "marker_id";
 
   private static final String TAG = ViewHistoryActivity.class.getSimpleName();
   private static final String CURRENT_TAG_KEY = "tab";
- 
-  private TrackDataHub trackDataHub;
+
 //  private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private TrainingDetailContainerFragment trainingDetailContainerFragment;
   private MapFragment mapFragment;
@@ -42,7 +40,7 @@ public class ViewHistoryActivity extends ActionBarActivity{
     ApiAdapterFactory.getApiAdapter().hideTitle(this);
     setContentView(R.layout.i_jogging_main);
 //    trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, null);
-    trackDataHub = ((IJoggingApplication) getApplication()).getTrackDataHub();
+    trackDataHub = TrackDataHub.newInstance(this);
 
     setupActionBar();
     switchToTrainingDetailContainerFragment();

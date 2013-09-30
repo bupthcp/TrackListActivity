@@ -24,14 +24,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrackCaller{
+public class IJoggingActivity extends TrackActivity implements DeleteOneTrackCaller{
   private static final String TAG = IJoggingActivity.class.getSimpleName();
 
   private ActionBar mActionBar;
@@ -47,7 +46,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private boolean startNewRecording = false;
-  private TrackDataHub trackDataHub;
   public static final String EXTRA_STR_CURRENT_SPORT = "currentSport";
   public static final int SELECT_SPORT_REQUEST_CODE = 0;
   
@@ -82,7 +80,7 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(this, bindChangedCallback);
     mContainerPagerAdapter = new ContainerPagerAdapter(IJoggingActivity.this, getSupportFragmentManager());
     
-    trackDataHub = app.getTrackDataHub();
+    trackDataHub = TrackDataHub.newInstance(this);
     setupActionBar();
     
     this.setContentView(R.layout.i_jogging_main);
@@ -97,6 +95,7 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
     setIntent(intent);
     recordingTrackId = intent.getLongExtra(EXTRA_TRACK_ID, -1L);
   }
+  
 
 
   public void switchToTrackListFragment() {
@@ -192,7 +191,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   protected void onResume() {
     super.onResume();
     if(recordingTrackId!=-1L){
-      trackDataHub.start();
       trackDataHub.loadTrack(recordingTrackId);
     }
   }
@@ -206,6 +204,7 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
   @Override
   protected void onStart() {
     super.onStart();
+    trackDataHub.start();
   }
   
   @Override
@@ -244,7 +243,6 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
       }
       try {
         recordingTrackId = service.startNewTrack();
-        trackDataHub.start();
         trackDataHub.loadTrack(recordingTrackId);
         startNewRecording = false;
         Toast.makeText(IJoggingActivity.this, R.string.track_list_record_success,
@@ -269,7 +267,7 @@ public class IJoggingActivity extends ActionBarActivity implements DeleteOneTrac
      * will have no effect. But when the binding occurs, the callback will get
      * invoked.
      */
-    bindChangedCallback.run();
+//    bindChangedCallback.run();
   }
   
   public Boolean isRecording(){

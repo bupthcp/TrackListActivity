@@ -26,8 +26,8 @@ import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
 import com.google.common.annotations.VisibleForTesting;
-import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.R;
+import com.hu.iJogging.TrackActivity;
 import com.hu.iJogging.content.MyTracksLocation;
 import com.hu.iJogging.content.Sensor;
 import com.hu.iJogging.content.Sensor.SensorDataSet;
@@ -382,7 +382,7 @@ public class ChartFragment extends Fragment implements TrackDataListener {
    * be accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((IJoggingApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub = ((TrackActivity) getActivity()).getTrackDataHub();
     trackDataHub.registerTrackDataListener(this, EnumSet.of(TrackDataType.TRACKS_TABLE,
         TrackDataType.WAYPOINTS_TABLE, TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
         TrackDataType.SAMPLED_OUT_TRACK_POINTS_TABLE, TrackDataType.PREFERENCE));

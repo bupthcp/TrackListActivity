@@ -6,9 +6,9 @@ import com.google.android.apps.mytracks.content.TrackDataType;
 import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.hu.iJogging.IJoggingActivity;
-import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.R;
 import com.hu.iJogging.SelectSportsActivity;
+import com.hu.iJogging.TrackActivity;
 import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.MainZoneLayout;
 import com.hu.iJogging.common.MotivationMainButton;
@@ -117,7 +117,7 @@ public class TrainingDetailFragment extends Fragment implements TrackDataListene
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    trackDataHub = ((IJoggingApplication) getActivity().getApplication()).getTrackDataHub();
+    trackDataHub = ((TrackActivity) getActivity()).getTrackDataHub();
   }
 
   @Override
