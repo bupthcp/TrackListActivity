@@ -664,9 +664,12 @@ public class TrackDataHub implements DataSourceListener {
 
       localNumLoadedPoints++;
       localLastSeenLocationId = locationId;
+      //这段被注释的测试代码是为了模拟在真实的gps环境下，来一个gps点，就会调用一次
+      //onNewTrackPointsDone的场景。当然这里选用了每十个点调用一次onNewTrackPointsDone
+      //的方式
 //      if(localNumLoadedPoints%10 == 0){
 //        try {
-//          Thread.sleep(10);
+//          Thread.sleep(100);
 //        } catch (InterruptedException e) {
 //          e.printStackTrace();
 //        }

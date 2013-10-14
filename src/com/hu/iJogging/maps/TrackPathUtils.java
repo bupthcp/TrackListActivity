@@ -53,23 +53,21 @@ public class TrackPathUtils {
       ArrayList<GeoPoint> pathPoints = new ArrayList<GeoPoint>();
       pathPoints.addAll(lastPolyline.getPoints());
       pathPoints.addAll(points);
+      Log.d(TAG, "polyline pathlastPolylinePoints:"+lastPolyline.getPoints().size());
       
-      int lastColor = lastPolyline.getColor();
-      paths.remove(lastPolyline);
       mapOverlay.removeGraphic(lastPolyline.getLineGraphic().getID());
-      PolyLine polyLine = new PolyLine();
-      polyLine.setPolyLineParam(lastColor, 4);
-      polyLine.setPoints(pathPoints);
-      paths.add(polyLine);
-      mapOverlay.setData(polyLine.getLineGraphic());
+      lastPolyline.setPoints(pathPoints);
+      mapOverlay.setData(lastPolyline.getLineGraphic());
       
       Log.d(TAG, "polyline pathPoints:"+pathPoints.size());
+      Log.d(TAG, String.format("polyline pathcolor:%x", lastPolyline.getColor()));
     } else {
       PolyLine polyLine = new PolyLine();
       polyLine.setPolyLineParam(color, 4);
       polyLine.setPoints(points);
       paths.add(polyLine);
       Log.d(TAG, "polyline points:"+points.size());
+      Log.d(TAG, String.format("polyline color:%x", color));
       mapOverlay.setData(polyLine.getLineGraphic());
     }
     points.clear();

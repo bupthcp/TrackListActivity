@@ -10,7 +10,7 @@ import android.graphics.Color;
 import java.util.ArrayList;
 
 public class PolyLine {
-  private ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
+  private ArrayList<GeoPoint> points;
   private int color;
   private Geometry lineGeometry;
   private Symbol lineSymbol;
@@ -21,6 +21,7 @@ public class PolyLine {
     lineGeometry = new Geometry();
     lineSymbol = new Symbol();
     lineColor = lineSymbol.new Color();
+    points = new ArrayList<GeoPoint>();
   }
   
   public void setPolyLineParam(int colorParam, int widthParam){
@@ -34,10 +35,9 @@ public class PolyLine {
   
   public void setPoints(ArrayList<GeoPoint> pointsParam){
     lineGeometry.setPolyLine(pointsParam.toArray(new GeoPoint[0]));
-    points = pointsParam;
-    if(lineGraphic == null){
-      lineGraphic = new Graphic(lineGeometry, lineSymbol);
-    }
+    points.clear();
+    points.addAll(pointsParam);
+    lineGraphic = new Graphic(lineGeometry, lineSymbol);
   }
   
   public ArrayList<GeoPoint> getPoints(){

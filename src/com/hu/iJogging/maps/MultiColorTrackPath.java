@@ -76,7 +76,7 @@ public class MultiColorTrackPath implements TrackPath {
         lastGeoPoint = null;
         continue;
       }
-      GeoPoint latLng = cachedLocation.getGeoPoint();
+      GeoPoint geoPoint = cachedLocation.getGeoPoint();
       int color = getColor(cachedLocation.getSpeed());
       
       // Either update point or draw a line from the last point
@@ -87,17 +87,17 @@ public class MultiColorTrackPath implements TrackPath {
         newSegment = false;
       }
       if (lastSegmentColor == color) {
-        lastSegmentPoints.add(latLng);
+        lastSegmentPoints.add(geoPoint);
       } else {
         TrackPathUtils.addPath(mapOverlay, paths, lastSegmentPoints, lastSegmentColor, useLastPolyline);
         useLastPolyline = false;
         if (lastGeoPoint != null) {
           lastSegmentPoints.add(lastGeoPoint);
         }
-        lastSegmentPoints.add(latLng);
+        lastSegmentPoints.add(geoPoint);
         lastSegmentColor = color;
       }
-      lastGeoPoint = latLng;
+      lastGeoPoint = geoPoint;
     }
     TrackPathUtils.addPath(mapOverlay, paths, lastSegmentPoints, lastSegmentColor, useLastPolyline);
   }

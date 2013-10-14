@@ -44,8 +44,8 @@ public class MapOverlay extends GraphicsOverlay{
               || key.equals(PreferencesUtils.getKey(context, R.string.track_color_mode_key))) {
             trackColorMode = PreferencesUtils.getString(
                 context, R.string.track_color_mode_key, PreferencesUtils.TRACK_COLOR_MODE_DEFAULT);
-//            trackPath = TrackPathFactory.getTrackPath(context,"DYNAMIC");
-            trackPath = TrackPathFactory.getTrackPath(context, trackColorMode);
+            trackPath = TrackPathFactory.getTrackPath(context,"DYNAMIC");
+//            trackPath = TrackPathFactory.getTrackPath(context, trackColorMode);
           }
         }
       };
