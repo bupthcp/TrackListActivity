@@ -202,7 +202,7 @@ public class MapOverlay extends GraphicsOverlay{
       // (for dynamic coloring)
       if (trackPath.updateState() || reload) {
 //        googleMap.clear();
-//        this.removeAll();
+        this.removeAll();
         paths.clear();
         trackPath.updatePath(this, paths, 0, locations);
 //        updateStartAndEndMarkers(googleMap);

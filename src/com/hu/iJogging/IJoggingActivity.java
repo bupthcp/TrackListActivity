@@ -190,6 +190,7 @@ public class IJoggingActivity extends TrackActivity implements DeleteOneTrackCal
   @Override
   protected void onResume() {
     super.onResume();
+    trackDataHub.start();
     if(recordingTrackId!=-1L){
       trackDataHub.loadTrack(recordingTrackId);
     }
@@ -204,7 +205,6 @@ public class IJoggingActivity extends TrackActivity implements DeleteOneTrackCal
   @Override
   protected void onStart() {
     super.onStart();
-    trackDataHub.start();
   }
   
   @Override
