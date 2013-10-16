@@ -3140,6 +3140,7 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="strRiding">Riding</string>
     <string name="strSwimming">Swimming</string>
     <string name="strSelectSport">Select Sport</string>
+    <string name="appName">IJogging</string>
     
   <string name="actionbarListItemNewNote">New Note</string>
   <string name="actionbarListItemNotes">Notes</string>

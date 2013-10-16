@@ -133,7 +133,7 @@ limitations under the License.
   <application
     android:icon="@drawable/ic_launcher"
     android:hardwareAccelerated="true"
-    android:label="@string/my_tracks_app_name"
+    android:label="@string/appName"
     android:name="com.hu.iJogging.IJoggingApplication"
     android:theme="@style/Theme.EndoActionBarModeList" >
 
@@ -161,6 +161,7 @@ limitations under the License.
     <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.OfflineSearchResultActivity"/>
     <activity android:name="com.hu.iJogging.AllOfflineMapActivity"/>
+    <activity android:name="com.google.android.apps.mytracks.io.file.SaveActivity" />
     <activity
       android:name="com.hu.iJogging.ImportActivity" >
       <intent-filter>

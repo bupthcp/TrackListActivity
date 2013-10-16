@@ -11,7 +11,7 @@ import android.content.Intent;
 public class IJoggingApplication extends Application{
   private TrackDataHub trackDataHub;
   
-  public static final String mStrKey = "9D523C2DF19F58B614526AD0B1270698A9B8234C";
+  public static final String mStrKey = "0Fd301589935a490ad5748edbda82c08";
   
   @Override
   //建议在您app的退出之前调用mapadpi的destroy()函数，避免重复初始化带来的时间消耗

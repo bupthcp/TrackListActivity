@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class TrackPathUtils {
   
   private static final String TAG = TrackPathUtils.class.getSimpleName();
+  private static final int TRACK_WIDTH = 4;
 
   private TrackPathUtils() {}
 
@@ -63,7 +64,7 @@ public class TrackPathUtils {
       Log.d(TAG, String.format("polyline pathcolor:%x", lastPolyline.getColor()));
     } else {
       PolyLine polyLine = new PolyLine();
-      polyLine.setPolyLineParam(color, 4);
+      polyLine.setPolyLineParam(color, TRACK_WIDTH);
       polyLine.setPoints(points);
       paths.add(polyLine);
       Log.d(TAG, "polyline points:"+points.size());
