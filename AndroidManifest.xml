@@ -44,6 +44,7 @@ limitations under the License.
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
   <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+  <uses-permission android:name="android.permission.NFC"/>
   <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH" />
   <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.fusiontables" />
   <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.local" />
@@ -134,29 +135,32 @@ limitations under the License.
     android:icon="@drawable/ic_launcher"
     android:hardwareAccelerated="true"
     android:label="@string/appName"
-    android:name="com.hu.iJogging.IJoggingApplication"
-    android:theme="@style/Theme.EndoActionBarModeList" >
+    android:name="com.hu.iJogging.IJoggingApplication" >
 
     <!-- For data backup -->
     <meta-data
       android:name="com.google.android.backup.api_key"
       android:value="AEdPqrEAAAAIi-_QiwoRSc9_bAC9cmuNXTQyU8ajJmGtKdhskQ" />
     <!-- Activities -->
-    <activity android:name="com.hu.iJogging.IJoggingActivity" >
+    <activity android:name="com.hu.iJogging.IJoggingActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-    <activity android:name="com.hu.iJogging.SplashActivity" >
+    <activity android:name="com.hu.iJogging.SplashActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList">
     </activity>
     
     <activity android:name="com.hu.walkingnotes.NotesActivity" >
 
     </activity>
 
-    <activity android:name="com.hu.iJogging.ViewHistoryActivity" />
-    <activity android:name="com.hu.iJogging.SelectSportsActivity" />
+    <activity android:name="com.hu.iJogging.ViewHistoryActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList"/>
+    <activity android:name="com.hu.iJogging.SelectSportsActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList"/>
     <activity android:name="com.hu.iJogging.HotOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
     <activity android:name="com.hu.iJogging.OfflineSearchResultActivity"/>
@@ -178,6 +182,28 @@ limitations under the License.
         <data android:scheme="file" />
       </intent-filter>
     </activity>
+    
+        <activity
+            android:name="com.hu.walkingnotes.ui.login.DummyActivity"
+            android:theme="@style/AppTheme_Light"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <!-- login activity -->
+        <activity
+            android:name="com.hu.walkingnotes.ui.login.AccountActivity"
+            android:theme="@style/AppTheme_Light"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data android:name="android.support.UI_OPTIONS"  
+                   android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity android:name="com.hu.walkingnotes.ui.login.OAuthActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.login.SSOActivity"
+            android:theme="@style/AppTheme_Light"/>
     
     <!-- Services -->
     <service

@@ -3145,4 +3145,83 @@ Tap to log in, add your friends and follow their sports activities in real-time.
   <string name="actionbarListItemNewNote">New Note</string>
   <string name="actionbarListItemNotes">Notes</string>
   <string name="actionbarListItemMapData">Map Data</string>
+  
+    <string name="unknown_error_error_code">未知错误，错误代码</string>
+    <string name="something_error">发生故障</string>
+    <string name="please_deleted_cache_dir">权限出错，无法读取存储空间，需要用户手动删除SD卡下的 /Android/data/org.qii.weiciyuan 目录</string>
+    <string name="ok">确定</string>
+    <string name="timeout">网络有问题，连不上</string>
+    <string name="unknown_sina_network_error">新浪微博某些网络节点又出故障，换个网络试试</string>
+    <!-- time -->
+    <string name="year">年前</string>
+    <string name="month">月前</string>
+    <string name="day">天前</string>
+    <string name="hour">小时前</string>
+    <string name="min">分钟前</string>
+    <string name="sec">秒前</string>
+    <string name="justnow">刚刚</string>
+    <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
+    <string name="today">今天</string>
+    <string name="date_format">M月d日 HH:mm</string>
+    <string name="year_format">yyyy年 M月d日 HH:mm</string>
+    
+    <!--long click dialog-->
+    <string name="copy">复制</string>
+    <string name="have_copied">已经复制 %s</string>
+    <string name="open">打开</string>
+    
+    <!--accountactivity_layout-->
+    <string name="you_cancel_login">你取消了授权</string>
+    <string name="login_success">授权成功</string>
+    <string name="update_account_success">已有该帐号，授权信息更新成功</string>
+    <string name="account_management">帐号管理</string>
+    <string name="remove_successfully">删除成功</string>
+    <string name="add_account">添加</string>
+    <string name="oauth_login">网页授权</string>
+    <string name="hack_login">黑魔法授权</string>
+    <string name="official_app_login">官方客户端授权</string>
+    <string name="login">登录</string>
+    <string name="logining">登录中</string>
+    <string name="email_cant_be_empty">登录邮箱不能为空</string>
+    <string name="password_cant_be_empty">密码不能为空</string>
+    <string name="login_email">登录邮箱</string>
+    <string name="login_password">密码</string>
+    <string name="app_key">尾巴</string>
+    
+    <!--Account -->
+    <string name="oauthing">授权中</string>
+    <string name="sina_server_error">检测到你跳转到错误页面，这是因为新浪微博第三方认证服务器出错，多次重复操作依然不行的话尝试换网络，四次元无能为力</string>
+    <string name="token_expires_in_time">请注意，根据新浪微博的平台政策，刚添加的帐号会在 %s 天后过期，到时需要重新登录，在授权过期之前重复登陆不会刷新剩余天数</string>
+    <string name="your_token_is_expired">检测到你的授权信息已经过期了，请重新授权一次</string>
+    <string name="logout_to_login_again">返回帐号管理页面，重新授权</string>
+    <string name="dialog_title_error">出错啦</string>
+    <string name="login_again">重新授权</string>
+    <string name="have_account_whose_token_is_expired">有帐号已经过期，无法收取新消息</string>
+    <string name="token_has_expired">已过期</string>
+    <string name="dont_have_other_account">没有多余帐号可供切换</string>
+    
+    <!-- comment -->
+    <string name="and_then">你是要？</string>
+    <string name="reply">回复</string>
+    <string name="delete">删除</string>
+    <string name="reply_to_comment">回复评论</string>
+    <string name="view">查看微博</string>
+    <string name="view_comment">查看评论</string>
+    
+    <!-- timeline -->
+    <string name="refresh">刷新</string>
+    
+    <!--Tip Dialog-->
+    <string name="tip_dialog_title">提示</string>
+    <string name="tip_dialog_content">
+        1. 搜索、私信、个人资料编辑都没接口做\n
+        2. 受新浪微博政策限制，帐号隔3个月就会过期，需要重新登录\n
+        3. 登录是在新浪网站上进行的，登录不了找新浪\n
+        4. Flyme 和 Miui 这2个系统的问题都不解决
+        5. 没适配到平板，不推荐5寸+设备使用这个应用
+        6. 觉得不爽就老老实实用官方客户端\n
+    </string>
+    <string name="title_changelog">更新日志</string>
+    <string name="changelog_close">关闭</string>
 </resources>

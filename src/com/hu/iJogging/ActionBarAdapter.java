@@ -1,6 +1,9 @@
 package com.hu.iJogging;
 
+import com.hu.walkingnotes.ui.login.AccountActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -290,6 +293,8 @@ public class ActionBarAdapter implements SpinnerAdapter {
         ((IJoggingActivity)mContext).switchToTrainingDetailContainerFragment();
         break;
       case 2:
+        Intent intent = new Intent(mContext, AccountActivity.class);
+        mContext.startActivity(intent);
         break;
       case 3:
         ((IJoggingActivity)mContext).switchToTrackListFragment();

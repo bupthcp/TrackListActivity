@@ -4,11 +4,11 @@ import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.RemoveTempFilesService;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.hu.iJogging.common.ConfigFree;
+import com.hu.walkingnotes.support.utils.GlobalContext;
 
-import android.app.Application;
 import android.content.Intent;
 
-public class IJoggingApplication extends Application{
+public class IJoggingApplication extends GlobalContext{
   private TrackDataHub trackDataHub;
   
   public static final String mStrKey = "0Fd301589935a490ad5748edbda82c08";

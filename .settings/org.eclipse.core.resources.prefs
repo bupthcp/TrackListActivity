@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/com/hu/walkingnotes/interfaces/AbstractAppActivity.java=UTF-8
+encoding//src/com/hu/walkingnotes/support/error/ErrorCode.java=UTF-8
+encoding//src/com/hu/walkingnotes/support/error/WeiboException.java=UTF-8
+encoding//src/com/hu/walkingnotes/support/file/FileSize.java=UTF-8
+encoding//src/com/hu/walkingnotes/support/smileypicker/SmileyMap.java=UTF-8
+encoding//src/com/hu/walkingnotes/support/utils/TimeLineUtility.java=UTF-8
+encoding//src/com/hu/walkingnotes/support/utils/Utility.java=UTF-8
+encoding//src/com/hu/walkingnotes/ui/login/AccountActivity.java=UTF-8
+encoding//src/com/hu/walkingnotes/ui/login/DummyActivity.java=UTF-8
