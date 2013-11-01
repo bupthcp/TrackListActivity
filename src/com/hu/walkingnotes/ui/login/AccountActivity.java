@@ -2,13 +2,14 @@ package com.hu.walkingnotes.ui.login;
 
 import com.hu.iJogging.R;
 import com.hu.walkingnotes.bean.AccountBean;
-import com.hu.walkingnotes.interfaces.AbstractAppActivity;
 import com.hu.walkingnotes.support.database.AccountDBTask;
 import com.hu.walkingnotes.support.lib.changelogdialog.ChangeLogDialog;
 import com.hu.walkingnotes.support.settinghelper.SettingUtility;
 import com.hu.walkingnotes.support.utils.GlobalContext;
 import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.blackmagic.BlackMagicActivity;
+import com.hu.walkingnotes.ui.interfaces.AbstractAppActivity;
+import com.hu.walkingnotes.ui.main.MainTimeLineActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -94,10 +95,10 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
                 if (!TextUtils.isEmpty(id)) {
                     AccountBean bean = AccountDBTask.getAccount(id);
                     if (bean != null) {
-//                        Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
-//                        start.putExtra("account", bean);
-//                        startActivity(start);
-//                        finish();
+                        Intent start = new Intent(AccountActivity.this, MainTimeLineActivity.class);
+                        start.putExtra("account", bean);
+                        startActivity(start);
+                        finish();
                     }
                 }
             }
@@ -203,11 +204,11 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-//            Intent intent = new Intent(AccountActivity.this, MainTimeLineActivity.class);
-//            intent.putExtra("account", accountList.get(i));
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
-//            finish();
+            Intent intent = new Intent(AccountActivity.this, MainTimeLineActivity.class);
+            intent.putExtra("account", accountList.get(i));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         }
     }
 

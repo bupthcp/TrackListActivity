@@ -1,4 +1,4 @@
-package com.hu.walkingnotes.interfaces;
+package com.hu.walkingnotes.ui.interfaces;
 
 import com.hu.walkingnotes.support.asyncdrawable.TimeLineBitmapDownloader;
 import com.hu.walkingnotes.support.error.WeiboException;

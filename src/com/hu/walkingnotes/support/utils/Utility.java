@@ -7,6 +7,7 @@ import com.hu.walkingnotes.bean.MessageBean;
 import com.hu.walkingnotes.bean.android.TimeLinePosition;
 import com.hu.walkingnotes.support.file.FileLocationMethod;
 import com.hu.walkingnotes.support.file.FileManager;
+import com.hu.walkingnotes.support.lib.AutoScrollListView;
 import com.hu.walkingnotes.support.lib.MyAsyncTask;
 import com.hu.walkingnotes.support.settinghelper.SettingUtility;
 
@@ -154,12 +155,12 @@ public class Utility {
         return task == null || task.getStatus() == MyAsyncTask.Status.FINISHED;
     }
 
-//    public static void stopListViewScrollingAndScrollToTop(ListView listView) {
-//        if (listView instanceof AutoScrollListView)
-//            ((AutoScrollListView) listView).requestPositionToScreen(0, true);
-//        else
-//            listView.smoothScrollToPosition(0, 0);
-//    }
+    public static void stopListViewScrollingAndScrollToTop(ListView listView) {
+        if (listView instanceof AutoScrollListView)
+            ((AutoScrollListView) listView).requestPositionToScreen(0, true);
+        else
+            listView.smoothScrollToPosition(0, 0);
+    }
 
     public static int dip2px(int dipValue) {
         float reSize = GlobalContext.getInstance().getResources().getDisplayMetrics().density;

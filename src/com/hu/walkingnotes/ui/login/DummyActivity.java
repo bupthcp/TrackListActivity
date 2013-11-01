@@ -1,7 +1,7 @@
 package com.hu.walkingnotes.ui.login;
 
-import com.hu.walkingnotes.interfaces.AbstractAppActivity;
 import com.hu.walkingnotes.support.utils.GlobalContext;
+import com.hu.walkingnotes.ui.interfaces.AbstractAppActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

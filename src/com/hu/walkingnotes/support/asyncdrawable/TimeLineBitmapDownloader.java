@@ -1,6 +1,7 @@
 package com.hu.walkingnotes.support.asyncdrawable;
 
 import com.hu.iJogging.R;
+import com.hu.walkingnotes.bean.MessageBean;
 import com.hu.walkingnotes.bean.UserBean;
 import com.hu.walkingnotes.support.debug.AppLogger;
 import com.hu.walkingnotes.support.file.FileLocationMethod;
@@ -10,6 +11,7 @@ import com.hu.walkingnotes.support.lib.MyAsyncTask;
 import com.hu.walkingnotes.support.settinghelper.SettingUtility;
 import com.hu.walkingnotes.support.utils.GlobalContext;
 import com.hu.walkingnotes.support.utils.ThemeUtility;
+import com.hu.walkingnotes.ui.basefragment.AbstractTimeLineFragment;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -104,10 +106,10 @@ public class TimeLineBitmapDownloader {
     }
 
 
-//    public void downloadAvatar(ImageView view, UserBean user, AbstractTimeLineFragment fragment) {
-//        boolean isFling = fragment.isListViewFling();
-//        downloadAvatar(view, user, isFling);
-//    }
+    public void downloadAvatar(ImageView view, UserBean user, AbstractTimeLineFragment fragment) {
+        boolean isFling = fragment.isListViewFling();
+        downloadAvatar(view, user, isFling);
+    }
 
     public void downloadAvatar(ImageView view, UserBean user, boolean isFling) {
 
@@ -128,30 +130,30 @@ public class TimeLineBitmapDownloader {
         displayImageView(view, url, method, isFling, false);
     }
 
-//    public void downContentPic(ImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
-//        String picUrl;
-//
-//        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-//
-//        if (SettingUtility.getEnableBigPic()) {
-//            picUrl = msg.getOriginal_pic();
-//            displayImageView(view, picUrl, FileLocationMethod.picture_large, isFling, false);
-//
-//        } else {
-//            picUrl = msg.getThumbnail_pic();
-//            displayImageView(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
-//
-//        }
-//    }
+    public void downContentPic(ImageView view, MessageBean msg, AbstractTimeLineFragment fragment) {
+        String picUrl;
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        if (SettingUtility.getEnableBigPic()) {
+            picUrl = msg.getOriginal_pic();
+            displayImageView(view, picUrl, FileLocationMethod.picture_large, isFling, false);
+
+        } else {
+            picUrl = msg.getThumbnail_pic();
+            displayImageView(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
+
+        }
+    }
 
 
-//    public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
-//
-//        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-//
-//        display(view, picUrl, method, isFling, true);
-//
-//    }
+    public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl, FileLocationMethod method, AbstractTimeLineFragment fragment) {
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        display(view, picUrl, method, isFling, true);
+
+    }
 
     public void displayMultiPicture(IWeiciyuanDrawable view, String picUrl, FileLocationMethod method) {
 
@@ -160,21 +162,21 @@ public class TimeLineBitmapDownloader {
     }
 
 
-//    public void downContentPic(IWeiciyuanDrawable view, MessageBean msg, AbstractTimeLineFragment fragment) {
-//        String picUrl;
-//
-//        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
-//
-//        if (SettingUtility.getEnableBigPic()) {
-//            picUrl = msg.getOriginal_pic();
-//            display(view, picUrl, FileLocationMethod.picture_large, isFling, false);
-//
-//        } else {
-//            picUrl = msg.getThumbnail_pic();
-//            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
-//
-//        }
-//    }
+    public void downContentPic(IWeiciyuanDrawable view, MessageBean msg, AbstractTimeLineFragment fragment) {
+        String picUrl;
+
+        boolean isFling = ((AbstractTimeLineFragment) fragment).isListViewFling();
+
+        if (SettingUtility.getEnableBigPic()) {
+            picUrl = msg.getOriginal_pic();
+            display(view, picUrl, FileLocationMethod.picture_large, isFling, false);
+
+        } else {
+            picUrl = msg.getThumbnail_pic();
+            display(view, picUrl, FileLocationMethod.picture_thumbnail, isFling, false);
+
+        }
+    }
 
     /**
      * when user open weibo detail, the activity will setResult to previous Activity,

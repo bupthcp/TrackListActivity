@@ -5,12 +5,12 @@ import com.hu.walkingnotes.bean.AccountBean;
 import com.hu.walkingnotes.bean.UserBean;
 import com.hu.walkingnotes.dao.login.BMOAuthDao;
 import com.hu.walkingnotes.dao.login.OAuthDao;
-import com.hu.walkingnotes.interfaces.AbstractAppActivity;
 import com.hu.walkingnotes.support.database.AccountDBTask;
 import com.hu.walkingnotes.support.debug.AppLogger;
 import com.hu.walkingnotes.support.error.WeiboException;
 import com.hu.walkingnotes.support.lib.MyAsyncTask;
 import com.hu.walkingnotes.support.utils.Utility;
+import com.hu.walkingnotes.ui.interfaces.AbstractAppActivity;
 import com.hu.walkingnotes.ui.login.AccountActivity;
 
 import android.app.ActionBar;
