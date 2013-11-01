@@ -12,15 +12,11 @@ import com.hu.walkingnotes.support.error.WeiboException;
 import com.hu.walkingnotes.support.lib.MyAsyncTask;
 import com.hu.walkingnotes.support.utils.Utility;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
@@ -34,10 +30,15 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Dialog;
+import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.widget.Toast;
 
 /**
  * User: qii
