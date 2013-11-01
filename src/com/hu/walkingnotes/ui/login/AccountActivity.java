@@ -10,7 +10,6 @@ import com.hu.walkingnotes.support.utils.GlobalContext;
 import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.blackmagic.BlackMagicActivity;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,6 +39,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.ListView;
 
 public class AccountActivity extends AbstractAppActivity implements LoaderManager.LoaderCallbacks<List<AccountBean>> {
