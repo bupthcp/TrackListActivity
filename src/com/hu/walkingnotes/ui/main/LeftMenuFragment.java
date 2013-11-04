@@ -36,12 +36,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
+
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.Spinner;
 
 /**
  * User: qii
@@ -228,12 +230,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private void showHomePageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
 
-        ft.hide(rightFragments.get(MENTIONS_INDEX));
-        ft.hide(rightFragments.get(COMMENTS_INDEX));
-        ft.hide(rightFragments.get(SEARCH_INDEX));
-        ft.hide(rightFragments.get(DM_INDEX));
-        ft.hide(rightFragments.get(FAV_INDEX));
-        ft.hide(rightFragments.get(PROFILE_INDEX));
+//        ft.hide(rightFragments.get(MENTIONS_INDEX));
+//        ft.hide(rightFragments.get(COMMENTS_INDEX));
+//        ft.hide(rightFragments.get(SEARCH_INDEX));
+//        ft.hide(rightFragments.get(DM_INDEX));
+//        ft.hide(rightFragments.get(FAV_INDEX));
+//        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
@@ -301,7 +303,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
     private boolean showCommentPage(boolean reset) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+        ((Activity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         if (currentIndex == COMMENTS_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
@@ -358,7 +360,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
     private boolean showSearchPage(boolean reset) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+      ((Activity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         if (currentIndex == SEARCH_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
@@ -417,7 +419,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
     private boolean showDMPage(boolean reset) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+      ((Activity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         if (currentIndex == DM_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
@@ -467,7 +469,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     private boolean showFavPage(boolean reset) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+      ((Activity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         if (currentIndex == FAV_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;
@@ -515,7 +517,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     }
 
     private boolean showProfilePage(boolean reset) {
-        getActivity().getActionBar().setDisplayShowTitleEnabled(true);
+      ((Activity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
         if (currentIndex == PROFILE_INDEX && !reset) {
             ((MainTimeLineActivity) getActivity()).getSlidingMenu().showContent();
             return true;

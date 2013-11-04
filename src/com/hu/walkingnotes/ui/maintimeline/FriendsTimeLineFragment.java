@@ -34,10 +34,10 @@ import com.hu.walkingnotes.ui.main.LeftMenuFragment;
 import com.hu.walkingnotes.ui.main.MainTimeLineActivity;
 import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.holoeverywhere.app.Activity;
 
 /**
  * User: qii
@@ -523,9 +525,9 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
         }
         ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
 
-        getActivity().getActionBar().setDisplayShowTitleEnabled(false);
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(Utility.isDevicePort());
-        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        ((Activity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((Activity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(Utility.isDevicePort());
+        ((Activity)getActivity()).getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         List<GroupBean> list = new ArrayList<GroupBean>();
         if (GlobalContext.getInstance().getGroup() != null) {
             list = GlobalContext.getInstance().getGroup().getLists();
@@ -535,7 +537,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         navAdapter = new FriendsTimeLineListNavAdapter(getActivity(), buildListNavData(list));
         final List<GroupBean> finalList = list;
-        getActivity().getActionBar().setListNavigationCallbacks(navAdapter, new ActionBar.OnNavigationListener() {
+        ((Activity)getActivity()).getSupportActionBar().setListNavigationCallbacks(navAdapter, new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int which, long itemId) {
 
@@ -556,14 +558,14 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
 
         if (Utility.isDevicePort()) {
             ((MainTimeLineActivity) getActivity()).setTitle("");
-            getActivity().getActionBar().setIcon(R.drawable.ic_menu_home);
+            ((Activity)getActivity()).getSupportActionBar().setIcon(R.drawable.ic_menu_home);
         } else {
             ((MainTimeLineActivity) getActivity()).setTitle("");
-            getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+            ((Activity)getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
         }
 
-        if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST && isVisible()) {
-            getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
+        if (((Activity)getActivity()).getSupportActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST && isVisible()) {
+          ((Activity)getActivity()).getSupportActionBar().setSelectedNavigationItem(getRecentNavIndex());
         }
 
     }
@@ -624,8 +626,8 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
             getPullToRefreshListView().setVisibility(View.VISIBLE);
             getAdapter().notifyDataSetChanged();
             setListViewPositionFromPositionsCache();
-            if (getActivity().getActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST)
-                getActivity().getActionBar().setSelectedNavigationItem(getRecentNavIndex());
+            if (((Activity)getActivity()).getSupportActionBar().getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST)
+              ((Activity)getActivity()).getSupportActionBar().setSelectedNavigationItem(getRecentNavIndex());
             refreshLayout(getList());
             /**
              * when this account first open app,if he don't have any data in database,fetch data from server automally

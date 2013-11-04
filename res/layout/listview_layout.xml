@@ -19,7 +19,7 @@
        use overScrollMode to disable blue boundaries at the top and the bottom of listview
        because it is pull to refresh listview-->
 
-    <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
+    <com.hu.walkingnotes.support.lib.pulltorefresh.PullToRefreshListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fastScrollEnabled="false"
@@ -38,7 +38,7 @@
         android:id="@+id/progressbar"
         android:visibility="visible"/>
 
-    <org.qii.weiciyuan.support.lib.TopTipBar
+    <com.hu.walkingnotes.support.lib.TopTipBar
         android:visibility="invisible"
         android:id="@+id/tv_unread_new_message_count_tip_bar"
         android:layout_height="30dp"

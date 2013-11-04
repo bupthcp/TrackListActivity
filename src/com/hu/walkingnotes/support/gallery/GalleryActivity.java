@@ -27,6 +27,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -651,8 +652,13 @@ public class GalleryActivity extends Activity {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                        cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", url));
+                                        if(VERSION.SDK_INT >=11){
+                                          ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                          cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", url));
+                                        }else{
+                                          android.text.ClipboardManager clipboard = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                                          clipboard.setText(url);
+                                        }
                                         Toast.makeText(GalleryActivity.this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                                         break;
                                     case 1:

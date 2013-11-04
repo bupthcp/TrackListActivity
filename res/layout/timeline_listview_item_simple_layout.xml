@@ -7,7 +7,7 @@
                 android:background="@drawable/listview_item_background_selector_light_simple"
                 android:id="@+id/listview_root">
 
-    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
+    <com.hu.walkingnotes.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"
@@ -18,7 +18,7 @@
         android:layout_marginRight="3dp"
         android:clickable="true"/>
 
-    <org.qii.weiciyuan.support.lib.TimeTextView
+    <com.hu.walkingnotes.support.lib.TimeTextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         />
 
 
-    <org.qii.weiciyuan.support.lib.TimeLineImageView
+    <com.hu.walkingnotes.support.lib.TimeLineImageView
         android:id="@+id/content_pic"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -75,7 +75,7 @@
         />
 
 
-    <org.qii.weiciyuan.support.lib.TimeLineImageView
+    <com.hu.walkingnotes.support.lib.TimeLineImageView
         android:id="@+id/repost_content_pic"
         android:layout_width="0dp"
         android:layout_height="0dp"

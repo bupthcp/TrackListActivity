@@ -1,6 +1,6 @@
 package com.slidingmenu.lib.app;
 
-import android.app.ListActivity;
+import org.holoeverywhere.app.ListActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;

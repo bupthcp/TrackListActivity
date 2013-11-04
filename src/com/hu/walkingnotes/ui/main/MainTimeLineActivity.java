@@ -21,7 +21,6 @@ import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 import com.hu.walkingnotes.ui.userinfo.UserInfoActivity;
 import com.slidingmenu.lib.SlidingMenu;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -31,11 +30,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -123,7 +124,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
 
     private void buildInterface(Bundle savedInstanceState) {
-        getActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
+        getSupportActionBar().setTitle(GlobalContext.getInstance().getCurrentAccountName());
         getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.menu_right);
         boolean phone = findViewById(R.id.menu_frame) == null;
@@ -154,11 +155,11 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         Fragment myself = getMyProfileFragment();
 */
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-/*        if (!friend.isAdded()) {
+        if (!friend.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
             fragmentTransaction.hide(friend);
         }
-        if (!mentions.isAdded()) {
+        /*        if (!mentions.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
             fragmentTransaction.hide(mentions);
 
@@ -250,15 +251,15 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
             }
         });
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.RIGHT);
-        getActionBar().setCustomView(title, layoutParams);
-        getActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(title, layoutParams);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
     }
 
     private void buildPhoneInterface(Bundle savedInstanceState) {
         setBehindContentView(R.layout.menu_frame);
         getSlidingMenu().setSlidingEnabled(true);
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSlidingMenu().setMode(SlidingMenu.LEFT);
         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
     }
@@ -353,20 +354,35 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
     private void readClipboard() {
-        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData cmContent = cm.getPrimaryClip();
-        if (cmContent == null)
-            return;
-        ClipData.Item item = cmContent.getItemAt(0);
-        if (item != null) {
-            String url = item.coerceToText(this).toString();
-            boolean a = !TextUtils.isEmpty(url) && !url.equals(SettingUtility.getLastFoundWeiboAccountLink());
-            boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
-            if (a && b) {
-                OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
-                dialog.show(getSupportFragmentManager(), "");
-                SettingUtility.setLastFoundWeiboAccountLink(url);
-            }
+        if(VERSION.SDK_INT >=11){
+          ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+          ClipData cmContent = cm.getPrimaryClip();
+          if (cmContent == null)
+              return;
+          ClipData.Item item = cmContent.getItemAt(0);
+          if (item != null) {
+              String url = item.coerceToText(this).toString();
+              boolean a = !TextUtils.isEmpty(url) && !url.equals(SettingUtility.getLastFoundWeiboAccountLink());
+              boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
+              if (a && b) {
+                  OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
+                  dialog.show(getSupportFragmentManager(), "");
+                  SettingUtility.setLastFoundWeiboAccountLink(url);
+              }
+          }
+        }else{
+          android.text.ClipboardManager clipboard = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+          CharSequence text = clipboard.getText();
+          if(text != null){
+              String url = text.toString();
+              boolean a = !TextUtils.isEmpty(url) && !url.equals(SettingUtility.getLastFoundWeiboAccountLink());
+              boolean b = Utility.isWeiboAccountIdLink(url) || Utility.isWeiboAccountDomainLink(url);
+              if (a && b) {
+                  OpenWeiboAccountLinkDialog dialog = new OpenWeiboAccountLinkDialog(url);
+                  dialog.show(getSupportFragmentManager(), "");
+                  SettingUtility.setLastFoundWeiboAccountLink(url);
+              }
+          }
         }
     }
 
@@ -433,7 +449,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     public void saveNavigationPositionToDB() {
         int navPosition = getMenuFragment().getCurrentIndex() * 10;
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         int second = 0;
         if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_STANDARD) {
             second = actionBar.getSelectedNavigationIndex();

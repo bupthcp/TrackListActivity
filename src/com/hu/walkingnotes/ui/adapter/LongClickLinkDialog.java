@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.widget.Toast;
@@ -82,8 +83,13 @@ public class LongClickLinkDialog extends DialogFragment {
                                 }
                                 break;
                             case 1:
-                                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getStringContent()));
+                                if(VERSION.SDK_INT >=11){
+                                  ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                  cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getStringContent()));
+                                }else{
+                                  android.text.ClipboardManager clipboard = (android.text.ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                  CharSequence text = clipboard.getText();
+                                }
                                 Toast.makeText(GlobalContext.getInstance(), String.format(GlobalContext.getInstance().getString(R.string.have_copied), getStringContent()), Toast.LENGTH_SHORT).show();
                                 break;
                         }

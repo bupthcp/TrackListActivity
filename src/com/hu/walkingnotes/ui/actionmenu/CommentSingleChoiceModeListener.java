@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build.VERSION;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -150,8 +151,13 @@ public class CommentSingleChoiceModeListener implements ActionMode.Callback {
                 });
                 break;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText()));
+                if(VERSION.SDK_INT >=11){
+                  ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                  cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", bean.getText()));
+                }else{
+                  android.text.ClipboardManager clipboard = (android.text.ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                  clipboard.setText(bean.getText());
+                }
                 Toast.makeText(getActivity(), getActivity().getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 listView.clearChoices();
                 mode.finish();

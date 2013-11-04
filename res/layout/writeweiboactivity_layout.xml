@@ -12,7 +12,7 @@
         android:layout_weight="1.0">
 
 
-        <org.qii.weiciyuan.support.lib.KeyboardControlEditText
+        <com.hu.walkingnotes.support.lib.KeyboardControlEditText
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/ll_bottom_menu"
@@ -70,7 +70,7 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <org.qii.weiciyuan.support.lib.SmileyPicker
+    <com.hu.walkingnotes.support.lib.SmileyPicker
         android:id="@+id/smiley_picker"
         android:visibility="gone"
         android:layout_width="fill_parent"

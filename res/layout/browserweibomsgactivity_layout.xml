@@ -7,7 +7,7 @@
               android:layout_height="wrap_content"
               android:padding="@dimen/browser_msg_bg_padding">
 
-    <GridLayout
+    <android.support.v7.widget.GridLayout
         android:id="@+id/first"
         android:background="?android:selectableItemBackground"
         android:padding="5dp"
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:rowOrderPreserved="false">
 
-        <org.qii.weiciyuan.support.lib.ProfileTopAvatarImageView
+        <com.hu.walkingnotes.support.lib.ProfileTopAvatarImageView
             android:layout_rowSpan="2"
             android:layout_width="@dimen/browser_msg_avatar_width"
             android:layout_height="@dimen/browser_msg_avatar_height"
@@ -76,7 +76,7 @@
             android:src="?clickable_flag"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"/>
-    </GridLayout>
+    </android.support.v7.widget.GridLayout>
 
 
     <LinearLayout
@@ -96,7 +96,7 @@
             android:textIsSelectable="true"/>
 
 
-        <org.qii.weiciyuan.support.lib.WeiboDetailImageView
+        <com.hu.walkingnotes.support.lib.WeiboDetailImageView
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:id="@+id/content_pic"
@@ -110,7 +110,7 @@
             android:adjustViewBounds="true"
             />
 
-        <GridLayout
+        <android.support.v7.widget.GridLayout
             android:id="@+id/content_pic_multi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,34 +123,34 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-        </GridLayout>
+        </android.support.v7.widget.GridLayout>
 
 
     </LinearLayout>
@@ -180,7 +180,7 @@
             android:lineSpacingMultiplier="1.2"/>
 
 
-        <org.qii.weiciyuan.support.lib.WeiboDetailImageView
+        <com.hu.walkingnotes.support.lib.WeiboDetailImageView
             android:layout_marginTop="8dp"
             android:padding="3dp"
             android:id="@+id/repost_content_pic"
@@ -195,7 +195,7 @@
             />
 
 
-        <GridLayout
+        <android.support.v7.widget.GridLayout
             android:id="@+id/repost_content_pic_multi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -208,34 +208,34 @@
             android:useDefaultMargins="false"
             android:clickable="false">
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
                 style="@style/listViewMultiImageView"/>
 
-        </GridLayout>
+        </android.support.v7.widget.GridLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

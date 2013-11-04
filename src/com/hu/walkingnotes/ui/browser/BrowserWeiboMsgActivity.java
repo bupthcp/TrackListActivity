@@ -19,6 +19,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.GestureDetector;
@@ -135,8 +136,13 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
                 buildShareActionMenu();
                 return true;
             case R.id.menu_copy:
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getMsg().getText()));
+                if(VERSION.SDK_INT >=11){
+                  ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                  cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", getMsg().getText()));
+                }else{
+                  android.text.ClipboardManager clipboard = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                  CharSequence text = clipboard.getText();
+                }
                 Toast.makeText(this, getString(R.string.copy_successfully), Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_fav:
