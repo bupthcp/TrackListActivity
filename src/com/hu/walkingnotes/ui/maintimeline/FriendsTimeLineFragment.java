@@ -35,6 +35,7 @@ import com.hu.walkingnotes.ui.main.MainTimeLineActivity;
 import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 
 import android.content.Intent;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
@@ -344,7 +345,7 @@ public class FriendsTimeLineFragment extends AbstractMessageTimeLineFragment<Mes
     @Override
     public void onPause() {
         super.onPause();
-        if (!getActivity().isChangingConfigurations()) {
+        if ((VERSION.SDK_INT >= 11)&&(!getActivity().isChangingConfigurations())) {
             savePositionToDB();
             saveGroupIdToDB();
         }

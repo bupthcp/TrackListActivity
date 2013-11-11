@@ -559,7 +559,9 @@ public class GalleryActivity extends Activity {
         large.getSettings().setUseWideViewPort(true);
         large.getSettings().setLoadWithOverviewMode(true);
         large.getSettings().setBuiltInZoomControls(true);
-        large.getSettings().setDisplayZoomControls(false);
+        if(VERSION.SDK_INT >= 11){
+          large.getSettings().setDisplayZoomControls(false);
+        }
 
         large.setVerticalScrollBarEnabled(false);
         large.setHorizontalScrollBarEnabled(false);

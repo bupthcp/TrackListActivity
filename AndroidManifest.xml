@@ -209,6 +209,10 @@ limitations under the License.
             android:name="com.hu.walkingnotes.ui.main.MainTimeLineActivity"
             android:theme="@style/AppTheme_Light"
             android:launchMode="singleTop"/>
+        <activity
+            android:name="com.hu.walkingnotes.support.gallery.GalleryActivity"
+            android:theme="@style/GalleryTheme"
+            android:launchMode="singleTop"/>
     
     <!-- Services -->
     <service

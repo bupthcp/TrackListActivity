@@ -31,6 +31,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -711,16 +712,19 @@ public class Utility {
                     }
                 }
                 iv.setImageBitmap(null);
-                iv.setBackground(null);
+                if(VERSION.SDK_INT >= 16){
+                  iv.setBackground(null);
+                }
                 continue;
             }
 
-
-            child.setBackground(null);
-
+            if(VERSION.SDK_INT >= 16){
+                child.setBackground(null);
+            }
         }
-
-        viewGroup.setBackground(null);
+        if(VERSION.SDK_INT >= 16){
+            viewGroup.setBackground(null);
+        }
     }
 }
 

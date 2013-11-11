@@ -23,13 +23,14 @@ import com.hu.walkingnotes.ui.basefragment.AbstractTimeLineFragment;
 import com.hu.walkingnotes.ui.userinfo.UserInfoActivity;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayout;
 import android.text.Layout;
@@ -535,9 +536,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                         Intent intent = new Intent(getActivity(), GalleryActivity.class);
                         intent.putExtra("msg", msg);
                         intent.putExtra("position", finalI);
-                        Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
+                        Bundle scaleBundle = ActivityOptionsCompat.makeScaleUpAnimation(
                                 v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
-                        getActivity().startActivity(intent, scaleBundle);
+                        ActivityCompat.startActivity(getActivity(),intent, scaleBundle);
                     }
                 });
 
@@ -671,9 +672,9 @@ public abstract class AbstractAppListAdapter<T extends ItemBean> extends BaseAda
                     if (!clipped && bitmap != null)
                         intent.putExtra("rect", rect);
 
-                    Bundle scaleBundle = ActivityOptions.makeScaleUpAnimation(
+                    Bundle scaleBundle = ActivityOptionsCompat.makeScaleUpAnimation(
                             v, 0, 0, v.getWidth(), v.getHeight()).toBundle();
-                    getActivity().startActivity(intent, scaleBundle);
+                    ActivityCompat.startActivity(getActivity(),intent, scaleBundle);
                 }
             });
             buildPic(msg, view);
