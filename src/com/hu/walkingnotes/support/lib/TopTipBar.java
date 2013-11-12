@@ -7,6 +7,7 @@ import com.hu.walkingnotes.bean.ListBean;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -123,29 +124,33 @@ public class TopTipBar extends TextView {
         if (getVisibility() == View.INVISIBLE || getVisibility() == View.GONE) {
             return;
         }
-        if (lastRunnable != null) {
+        if (VERSION.SDK_INT >= 12) {
+          if (lastRunnable != null) {
             getHandler().removeCallbacks(lastRunnable);
-        }
-        lastRunnable = new Runnable() {
+          }
+          lastRunnable = new Runnable() {
             @Override
             public void run() {
-                animate().alpha(0).setDuration(300).setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        setVisibility(View.INVISIBLE);
-                        animate().alpha(1.0f).setListener(null);
-                        if (ids.size() > 0) {
-                            setCount();
-                        }
-                    }
-                });
+              animate().alpha(0).setDuration(300).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                  super.onAnimationEnd(animation);
+                  setVisibility(View.INVISIBLE);
+                  animate().alpha(1.0f).setListener(null);
+                  if (ids.size() > 0) {
+                    setCount();
+                  }
+                }
+              });
             }
+    
+          };
+          Handler handler = getHandler();
+          if (handler != null) handler.postDelayed(lastRunnable, duration);
+        }else{
+          setVisibility(View.INVISIBLE);
+        }
 
-        };
-        Handler handler = getHandler();
-        if (handler != null)
-            handler.postDelayed(lastRunnable, duration);
     }
 
 
@@ -215,7 +220,9 @@ public class TopTipBar extends TextView {
         this.disappear = true;
         this.error = true;
         setVisibility(View.VISIBLE);
-        animate().alpha(1.0f);
+        if(VERSION.SDK_INT>=12){
+          animate().alpha(1.0f);
+        }
         setText(error);
         disappear(3000);
         setBackgroundResource(R.color.top_tip_bar_error);

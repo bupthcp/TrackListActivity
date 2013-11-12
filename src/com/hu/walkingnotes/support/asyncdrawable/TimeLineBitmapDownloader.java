@@ -261,9 +261,12 @@ public class TimeLineBitmapDownloader {
             view.getImageView().setTag(urlKey);
             if (view.getProgressBar() != null)
                 view.getProgressBar().setVisibility(View.INVISIBLE);
-            if (view.getImageView().getAlpha() != 1.0f) {
+            if(VERSION.SDK_INT>=11){
+              if (view.getImageView().getAlpha() != 1.0f) {
                 view.getImageView().setAlpha(1.0f);
+              }
             }
+            
             view.setGifFlag(ImageUtility.isThisPictureGif(urlKey));
             cancelPotentialDownload(urlKey, view.getImageView());
         } else {

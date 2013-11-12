@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/com/hu/walkingnotes/support/asyncdrawable/DownloadWorker.java=UTF-8
 encoding//src/com/hu/walkingnotes/support/error/ErrorCode.java=UTF-8
 encoding//src/com/hu/walkingnotes/support/error/WeiboException.java=UTF-8
 encoding//src/com/hu/walkingnotes/support/file/FileSize.java=UTF-8

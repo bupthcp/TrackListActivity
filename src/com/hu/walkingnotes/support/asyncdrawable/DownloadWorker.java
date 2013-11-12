@@ -6,6 +6,8 @@ import com.hu.walkingnotes.support.file.FileManager;
 import com.hu.walkingnotes.support.imageutility.ImageUtility;
 import com.hu.walkingnotes.support.lib.MyAsyncTask;
 
+import android.os.Build.VERSION;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -57,18 +59,24 @@ public class DownloadWorker extends MyAsyncTask<String, Integer, Boolean> implem
 
         String actualDownloadUrl = url;
 
-        switch (method) {
+        //这里不知道是原作者出于什么考虑，进行了url的替换。经过实验发现，替换后的url所下载
+        //的图片，在4.3的手机上能够显示，但是在2.3的手机上就无法显示了；在windows上无法显示
+        //在windows的浏览器中能够显示。很奇怪的错误
+        if (VERSION.SDK_INT >= 16) {
+          switch (method) {
             case picture_thumbnail:
-                actualDownloadUrl = url.replace("thumbnail", "webp180");
-                break;
+              actualDownloadUrl = url.replace("thumbnail", "webp180");
+              break;
             case picture_bmiddle:
-                actualDownloadUrl = url.replace("bmiddle", "webp720");
-                break;
+              actualDownloadUrl = url.replace("bmiddle", "webp720");
+              break;
             case picture_large:
-                actualDownloadUrl = url.replace("large", "woriginal");
-                break;
-
+              actualDownloadUrl = url.replace("large", "woriginal");
+              break;
+    
+          }
         }
+
 
         boolean result = ImageUtility.getBitmapFromNetWork(actualDownloadUrl, filePath, new FileDownloaderHttpHelper.DownloadListener() {
             @Override
