@@ -9,7 +9,7 @@
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/first"
-        android:background="?android:selectableItemBackground"
+        android:background="?selectableItemBackground"
         android:padding="5dp"
         android:clickable="true"
         android:columnCount="4"
@@ -170,7 +170,7 @@
         android:visibility="visible">
 
         <TextView
-            android:background="?android:selectableItemBackground"
+            android:background="?selectableItemBackground"
             android:id="@+id/repost_content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

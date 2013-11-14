@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build.VERSION;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -170,8 +171,10 @@ public class MsgDetailReadWorker extends MyAsyncTask<Void, Integer, String> {
         view.getImageView().setTag(true);
         view.setVisibility(View.VISIBLE);
         view.setImageBitmap(bitmap);
-        view.setAlpha(0.0f);
-        view.animate().alpha(1.0f).setDuration(200);
+        if(VERSION.SDK_INT >=14){
+          view.setAlpha(0.0f);
+          view.animate().alpha(1.0f).setDuration(200);
+        }    
     }
 
 }

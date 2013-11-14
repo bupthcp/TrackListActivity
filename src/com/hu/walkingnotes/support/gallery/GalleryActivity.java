@@ -152,6 +152,7 @@ public class GalleryActivity extends Activity {
 
 
     private void animateClose(PhotoView imageView) {
+      if(VERSION.SDK_INT>=14){
         animationView.setImageDrawable(imageView.getAttacher().getImageView().getDrawable());
 
         pager.setVisibility(View.INVISIBLE);
@@ -202,6 +203,11 @@ public class GalleryActivity extends Activity {
                         overridePendingTransition(0, 0);
                     }
                 }).start();
+      }else{
+        GalleryActivity.this.finish();
+        overridePendingTransition(0, 0);
+      }
+        
     }
 
 
@@ -299,7 +305,7 @@ public class GalleryActivity extends Activity {
                     }
 
                     animateClose(imageView);
-
+                   
                 }
 
             });
@@ -529,7 +535,9 @@ public class GalleryActivity extends Activity {
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setBuiltInZoomControls(false);
-        webView.getSettings().setDisplayZoomControls(false);
+        if(VERSION.SDK_INT>=11){
+          webView.getSettings().setDisplayZoomControls(false);
+        }
         webView.getSettings().setSupportZoom(false);
 
         webView.setVerticalScrollBarEnabled(false);

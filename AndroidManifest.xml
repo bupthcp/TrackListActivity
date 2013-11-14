@@ -210,6 +210,14 @@ limitations under the License.
             android:theme="@style/AppTheme_Light"
             android:launchMode="singleTop"/>
         <activity
+            android:name="com.hu.walkingnotes.ui.browser.BrowserWeiboMsgActivity"
+            android:theme="@style/AppTheme_Dummy"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:label="@string/detail">
+            <meta-data android:name="android.support.UI_OPTIONS"  
+                   android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
             android:name="com.hu.walkingnotes.support.gallery.GalleryActivity"
             android:theme="@style/GalleryTheme"
             android:launchMode="singleTop"/>

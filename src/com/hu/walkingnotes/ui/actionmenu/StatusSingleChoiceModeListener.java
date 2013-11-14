@@ -19,13 +19,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 /**
@@ -94,7 +95,7 @@ public class StatusSingleChoiceModeListener implements ActionMode.Callback {
 //        }
 
         MenuItem item = menu.findItem(R.id.menu_share);
-        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         if (fragment.getActivity() != null)
             Utility.setShareIntent(fragment.getActivity(), mShareActionProvider, bean);
         mShareActionProvider.setOnShareTargetSelectedListener(new ShareActionProvider.OnShareTargetSelectedListener() {

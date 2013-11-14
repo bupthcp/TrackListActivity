@@ -6,6 +6,7 @@ import com.hu.walkingnotes.support.utils.Utility;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build.VERSION;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -48,7 +49,9 @@ public class SwipeFrameLayout extends FrameLayout {
 
     private void init() {
         scroller = new OverScroller(getContext());
-        setBackground(ThemeUtility.getDrawable(android.R.attr.windowBackground));
+        if(VERSION.SDK_INT>=16){
+          setBackground(ThemeUtility.getDrawable(android.R.attr.windowBackground));
+        }
         this.activity = (Activity) getContext();
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
         this.max_motion_event_down_x_position = Utility.dip2px(25);

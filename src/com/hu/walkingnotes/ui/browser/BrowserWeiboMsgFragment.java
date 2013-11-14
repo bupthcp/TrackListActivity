@@ -57,9 +57,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.holoeverywhere.widget.ListView;
 
 /**
  * User: qii
@@ -80,6 +81,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
     private ListView listView;
     private BrowserWeiboMsgCommentAndRepostAdapter adapter;
+    private View header;
+    private View switchView;
 
     private CommentListBean commentList = new CommentListBean();
     private RepostListBean repostList = new RepostListBean();
@@ -281,10 +284,10 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
         listView = pullToRefreshListView.getRefreshableView();
 
-        View header = inflater.inflate(R.layout.browserweibomsgactivity_layout, listView, false);
+        header = inflater.inflate(R.layout.browserweibomsgactivity_layout, listView, false);
         listView.addHeaderView(header);
 
-        View switchView = inflater.inflate(R.layout.browserweibomsgfragment_switch_list_type_header, listView, false);
+        switchView = inflater.inflate(R.layout.browserweibomsgfragment_switch_list_type_header, listView, false);
         listView.addHeaderView(switchView);
 
         switchView.setOnClickListener(new View.OnClickListener() {
@@ -436,7 +439,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                 }
             }
         });
-        view.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
+        header.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserInfoActivity.class);

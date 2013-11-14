@@ -14,7 +14,6 @@ import com.hu.walkingnotes.ui.send.WriteRepostActivity;
 import com.hu.walkingnotes.ui.task.FavAsyncTask;
 import com.hu.walkingnotes.ui.task.UnFavAsyncTask;
 
-import android.app.ActionBar;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -22,10 +21,12 @@ import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 /**
@@ -80,7 +81,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
         getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getString(R.string.detail));
@@ -102,7 +103,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
         }
 
         MenuItem item = menu.findItem(R.id.menu_share);
-        shareActionProvider = (ShareActionProvider) item.getActionProvider();
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
         return super.onCreateOptionsMenu(menu);
     }
 
