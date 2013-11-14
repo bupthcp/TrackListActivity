@@ -62,6 +62,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
             token = intent.getStringExtra("token");
             msg = intent.getParcelableExtra("msg");
         }
+        setContentView(R.layout.browser_weibo_msg_activity);
         initLayout();
     }
 
@@ -75,7 +76,7 @@ public class BrowserWeiboMsgActivity extends AbstractAppActivity implements Remo
 
         if (getSupportFragmentManager().findFragmentByTag(BrowserWeiboMsgFragment.class.getName()) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new BrowserWeiboMsgFragment(msg), BrowserWeiboMsgFragment.class.getName())
+                    .replace(R.id.body, new BrowserWeiboMsgFragment(msg), BrowserWeiboMsgFragment.class.getName())
                     .commit();
         }
 
