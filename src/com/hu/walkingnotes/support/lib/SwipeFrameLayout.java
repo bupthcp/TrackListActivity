@@ -51,6 +51,8 @@ public class SwipeFrameLayout extends FrameLayout {
         scroller = new OverScroller(getContext());
         if(VERSION.SDK_INT>=16){
           setBackground(ThemeUtility.getDrawable(android.R.attr.windowBackground));
+        }else{
+          setBackgroundDrawable(ThemeUtility.getDrawable(android.R.attr.windowBackground));
         }
         this.activity = (Activity) getContext();
         this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
