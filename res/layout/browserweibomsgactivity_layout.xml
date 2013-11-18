@@ -33,9 +33,9 @@
 
         <TextView
             android:layout_marginLeft="8dp"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="testusernametestusernametestusernametestusernametestusernametestusernametestusernametestusernametestusername"
+            android:text="testusername"
             android:layout_gravity="fill_horizontal"
             android:singleLine="true"
             android:ellipsize="end"
