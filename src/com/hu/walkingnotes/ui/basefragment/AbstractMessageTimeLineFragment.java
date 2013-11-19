@@ -18,6 +18,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import org.holoeverywhere.app.Activity;
+
 /**
  * User: qii
  * Date: 12-7-29
@@ -66,7 +68,7 @@ public abstract class AbstractMessageTimeLineFragment<T extends ListBean<Message
 
                 getListView().setItemChecked(position, true);
                 getAdapter().notifyDataSetChanged();
-                mActionMode = getActivity().startActionMode(choiceModeListener);
+                mActionMode = ((Activity)getActivity()).startSupportActionMode(choiceModeListener);
                 return true;
 
             }

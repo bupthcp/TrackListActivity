@@ -44,10 +44,10 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayout;
 import android.text.Html;
 import android.text.TextUtils;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +60,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.ListView;
 
 /**
@@ -722,7 +723,7 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
 
                 getListView().setItemChecked(position, true);
                 adapter.notifyDataSetChanged();
-                mActionMode = getActivity().startActionMode(choiceModeListener);
+                mActionMode = ((Activity)getActivity()).startSupportActionMode(choiceModeListener);
                 return true;
 
             }
@@ -739,12 +740,12 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
                     mActionMode = null;
                     getListView().setItemChecked(position, true);
                     adapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - listView.getHeaderViewsCount())));
+                    mActionMode = ((Activity)getActivity()).startSupportActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - listView.getHeaderViewsCount())));
                     return true;
                 } else {
                     getListView().setItemChecked(position, true);
                     adapter.notifyDataSetChanged();
-                    mActionMode = getActivity().startActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - listView.getHeaderViewsCount())));
+                    mActionMode = ((Activity)getActivity()).startSupportActionMode(new CommentSingleChoiceModeListener(getListView(), adapter, BrowserWeiboMsgFragment.this, commentList.getItemList().get(position - listView.getHeaderViewsCount())));
                     return true;
                 }
             }
