@@ -277,6 +277,7 @@ public class IJoggingActivity extends TrackActivity implements DeleteOneTrackCal
   public void stopRecording(){
     TrackRecordingServiceConnectionUtils.stopRecording(this, trackRecordingServiceConnection, false);
     recordingTrackId = -1L;
+    PreferencesUtils.setLong(this, R.string.recording_track_id_key,recordingTrackId);
   }
   
 
