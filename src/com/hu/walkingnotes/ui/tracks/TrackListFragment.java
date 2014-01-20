@@ -1,21 +1,21 @@
-package com.hu.iJogging.fragments;
+package com.hu.walkingnotes.ui.tracks;
 
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
-import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.R;
 import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.IconUtils;
 import com.hu.iJogging.content.TracksColumns;
+import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment;
+import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -29,11 +29,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
-public class TrackListFragment extends Fragment{
+import org.holoeverywhere.widget.ListView;
 
-  public static final String TRACK_LIST_FTAGMENT_TAG = "TrackListFragment";
+public class TrackListFragment extends AbstractAppFragment{
+
   public static final String EXTRA_TRACK_ID = "track_id";
   public static final String EXTRA_MARKER_ID = "marker_id";
   
@@ -43,7 +43,8 @@ public class TrackListFragment extends Fragment{
   private ListView listView;
   private View mFragmentView;
   private ResourceCursorAdapter resourceCursorAdapter;
-  private IJoggingActivity mActivity;
+  private Activity mActivity;
+  private long recordingTrackId = -1L;
   
   private boolean recordingTrackPaused = PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT;
   
@@ -64,7 +65,8 @@ public class TrackListFragment extends Fragment{
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
-    mActivity = (IJoggingActivity)activity;
+    mActivity = activity;
+    recordingTrackId = PreferencesUtils.getLong(activity, R.string.recording_track_id_key);
 //    mActivity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
 //    mActivity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
 //    activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
@@ -111,7 +113,7 @@ public class TrackListFragment extends Fragment{
         int iconIndex = cursor.getColumnIndex(TracksColumns.ICON);
         int sharedOwnerIndex = cursor.getColumnIndex(TracksColumns.SHAREDOWNER);
         
-        boolean isRecording = cursor.getLong(idIndex) == (((IJoggingActivity)getActivity()).recordingTrackId);
+        boolean isRecording = cursor.getLong(idIndex) == recordingTrackId;
         String name = cursor.getString(nameIndex);
         int iconId = isRecording ? R.drawable.menu_record_track
             : IconUtils.getInstance(mContext).getIconDrawable(cursor.getString(iconIndex));
@@ -189,11 +191,9 @@ public class TrackListFragment extends Fragment{
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    ViewGroup parentViewGroup = (ViewGroup) mFragmentView.getParent();
-    if (parentViewGroup != null) {
-      parentViewGroup.removeView(mFragmentView);
-    }
+//    ViewGroup parentViewGroup = (ViewGroup) mFragmentView.getParent();
+//    if (parentViewGroup != null) {
+//      parentViewGroup.removeView(mFragmentView);
+//    }
   }
-  
-
 }

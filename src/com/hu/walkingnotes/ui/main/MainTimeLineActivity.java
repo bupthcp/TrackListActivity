@@ -18,6 +18,7 @@ import com.hu.walkingnotes.ui.interfaces.IAccountInfo;
 import com.hu.walkingnotes.ui.interfaces.IUserInfo;
 import com.hu.walkingnotes.ui.maintimeline.FriendsTimeLineFragment;
 import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
+import com.hu.walkingnotes.ui.tracks.TrackListFragment;
 import com.hu.walkingnotes.ui.userinfo.UserInfoActivity;
 import com.slidingmenu.lib.SlidingMenu;
 
@@ -148,6 +149,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
     private void initFragments() {
         Fragment friend = getFriendsTimeLineFragment();
+        Fragment trackList = getTrackListFragment();
 /*        Fragment mentions = getMentionsTimeLineFragment();
         Fragment comments = getCommentsTimeLineFragment();
 
@@ -158,6 +160,10 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (!friend.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
             fragmentTransaction.hide(friend);
+        }
+        if (!trackList.isAdded()) {
+          fragmentTransaction.add(R.id.menu_right_fl, trackList, TrackListFragment.class.getName());
+          fragmentTransaction.hide(trackList);
         }
         /*        if (!mentions.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, mentions, MentionsTimeLine.class.getName());
@@ -479,6 +485,18 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
         return fragment;
     }
+    
+    public TrackListFragment getTrackListFragment() {
+      TrackListFragment fragment = ((TrackListFragment) getSupportFragmentManager().findFragmentByTag(
+          TrackListFragment.class.getName()));
+      if (fragment == null) {
+          fragment = new TrackListFragment();
+          fragment.setArguments(new Bundle());
+      }
+      return fragment;
+  }
+    
+    
 /*
     public MentionsTimeLine getMentionsTimeLineFragment() {
         MentionsTimeLine fragment = ((MentionsTimeLine) getSupportFragmentManager().findFragmentByTag(

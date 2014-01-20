@@ -113,6 +113,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
 
         rightFragments.append(HOME_INDEX, ((MainTimeLineActivity) getActivity()).getFriendsTimeLineFragment());
+        rightFragments.append(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getTrackListFragment());
 /*        rightFragments.append(MENTIONS_INDEX, ((MainTimeLineActivity) getActivity()).getMentionsTimeLineFragment());
         rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
         rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
@@ -230,7 +231,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private void showHomePageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
 
-//        ft.hide(rightFragments.get(MENTIONS_INDEX));
+        ft.hide(rightFragments.get(MENTIONS_INDEX));
 //        ft.hide(rightFragments.get(COMMENTS_INDEX));
 //        ft.hide(rightFragments.get(SEARCH_INDEX));
 //        ft.hide(rightFragments.get(DM_INDEX));
@@ -274,11 +275,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
     private void showMentionPageImp() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(rightFragments.get(HOME_INDEX));
-        ft.hide(rightFragments.get(COMMENTS_INDEX));
-        ft.hide(rightFragments.get(SEARCH_INDEX));
-        ft.hide(rightFragments.get(DM_INDEX));
-        ft.hide(rightFragments.get(FAV_INDEX));
-        ft.hide(rightFragments.get(PROFILE_INDEX));
+//        ft.hide(rightFragments.get(COMMENTS_INDEX));
+//        ft.hide(rightFragments.get(SEARCH_INDEX));
+//        ft.hide(rightFragments.get(DM_INDEX));
+//        ft.hide(rightFragments.get(FAV_INDEX));
+//        ft.hide(rightFragments.get(PROFILE_INDEX));
 
 
         Fragment m = rightFragments.get(MENTIONS_INDEX);
