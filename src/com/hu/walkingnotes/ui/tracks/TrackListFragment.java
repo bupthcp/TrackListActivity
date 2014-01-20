@@ -9,8 +9,12 @@ import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.IconUtils;
 import com.hu.iJogging.content.TracksColumns;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment;
+import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
+import com.hu.walkingnotes.ui.main.LeftMenuFragment;
+import com.hu.walkingnotes.ui.main.MainTimeLineActivity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +36,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import org.holoeverywhere.widget.ListView;
 
-public class TrackListFragment extends AbstractAppFragment{
+public class TrackListFragment extends AbstractAppFragment implements 
+              MainTimeLineActivity.ScrollableListFragment{
 
   public static final String EXTRA_TRACK_ID = "track_id";
   public static final String EXTRA_MARKER_ID = "marker_id";
@@ -60,7 +65,15 @@ public class TrackListFragment extends AbstractAppFragment{
     TracksColumns.ICON,
     TracksColumns.SHAREDOWNER};
   
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+      super.onActivityCreated(savedInstanceState);
 
+      if ((((MainTimeLineActivity) getActivity()).getMenuFragment()).getCurrentIndex()
+              == LeftMenuFragment.MENTIONS_INDEX) {
+          buildActionBar();
+      }
+  }
   
   @Override
   public void onAttach(Activity activity) {
@@ -71,6 +84,14 @@ public class TrackListFragment extends AbstractAppFragment{
 //    mActivity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
 //    activity.findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
 //    activity.findViewById(R.id.training_detail_container).setVisibility(View.GONE);
+  }
+  
+  @Override
+  public void onHiddenChanged(boolean hidden) {
+      super.onHiddenChanged(hidden);
+      if (!hidden) {
+          buildActionBar();
+      }
   }
 
 
@@ -195,5 +216,25 @@ public class TrackListFragment extends AbstractAppFragment{
 //    if (parentViewGroup != null) {
 //      parentViewGroup.removeView(mFragmentView);
 //    }
+  }
+  
+  public void buildActionBar() {
+    ((MainTimeLineActivity) getActivity()).setCurrentFragment(this);
+
+    if (Utility.isDevicePort()) {
+      ((MainTimeLineActivity) getActivity()).setTitle(R.string.actionbar_track_list);
+      getActivity().getActionBar().setIcon(R.drawable.repost_light);
+    } else {
+      ((MainTimeLineActivity) getActivity()).setTitle("");
+      getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+    }
+    ActionBar actionBar = getActivity().getActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+  }
+
+
+  @Override
+  public void scrollToTop() {
   }
 }

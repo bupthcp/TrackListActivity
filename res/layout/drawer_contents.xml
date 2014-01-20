@@ -36,7 +36,7 @@
 
         <Button
             style="@style/drawerMenuButton"
-            android:text="@string/mentions"
+            android:text="@string/actionbar_track_list"
             android:background="@null"
             android:clickable="false"
             android:drawableLeft="@drawable/repost_light"
