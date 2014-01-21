@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright 2010 Google Inc.
+Copyright 2013 Google Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,15 +15,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_height="match_parent"
-  android:layout_width="match_parent"
-  android:orientation="vertical" >
-  <TabHost
-    android:id="@android:id/tabhost"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:layout_width="match_parent" >
-    <include layout="@layout/track_details_tab" />
-  </TabHost>
-  <include layout="@layout/track_controller" />
+  android:id="@+id/stats_small_item_id"
+  style="@style/StatsSmallItemContainer" >
+  <TextView
+    android:id="@+id/stats_label"
+    style="@style/StatsSmallLabel" />
+  <!-- Distance value -->
+  <LinearLayout style="@style/StatsSmallValueContainer" >
+    <TextView
+      android:id="@+id/stats_value"
+      style="@style/StatsSmallValue" />
+    <TextView
+      android:id="@+id/stats_unit"
+      style="@style/StatsUnit" />
+  </LinearLayout>
 </LinearLayout>

@@ -17,6 +17,7 @@
 package com.google.android.apps.mytracks.util;
 
 import com.google.android.apps.mytracks.Constants;
+import com.hu.iJogging.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -95,7 +96,7 @@ public class PreferencesUtils {
 
   public static final String SENSOR_TYPE_DEFAULT = "NONE";
   public static final int SPLIT_FREQUENCY_DEFAULT = 0;
-  public static final boolean STATS_SHOW_COORDINATE_DEFAULT = false;
+
   public static final boolean STATS_SHOW_ELEVATION_DEFAULT = false;
   public static final boolean STATS_SHOW_GRADE_DEFAULT = false;
   public static final boolean STATS_SHOW_MOVING_TIME_DEFAULT = false;
@@ -109,6 +110,16 @@ public class PreferencesUtils {
   public static final int TRACK_WIDGET_ITEM3_DEFAULT = 1; // total time
   public static final int TRACK_WIDGET_ITEM4_DEFAULT = 2; // average speed
   public static final int VOICE_FREQUENCY_DEFAULT = 0;
+  
+  // Stats
+  public static final boolean STATS_SHOW_COORDINATE_DEFAULT = false;
+  public static final boolean STATS_SHOW_GRADE_ELEVATION_DEFAULT = false;
+  public static final String STATS_UNITS_DEFAULT = "METRIC";
+  
+  // Values for recording_gps_accuracy
+  public static final int RECORDING_GPS_ACCURACY_DEFAULT = 50;
+  public static final int RECORDING_GPS_ACCURACY_EXCELLENT = 10;
+  public static final int RECORDING_GPS_ACCURACY_POOR = 2000;
 
   private PreferencesUtils() {}
 
@@ -235,5 +246,15 @@ public class PreferencesUtils {
     Editor editor = sharedPreferences.edit();
     editor.putString(getKey(context, keyId), value);
     ApiAdapterFactory.getApiAdapter().applyPreferenceChanges(editor);
+  }
+  
+  /**
+   * Returns true if metric units.
+   * 
+   * @param context the context
+   */
+  public static boolean isMetricUnits(Context context) {
+    return PreferencesUtils.STATS_UNITS_DEFAULT.equals(
+        getString(context, R.string.stats_units_key, PreferencesUtils.STATS_UNITS_DEFAULT));
   }
 }

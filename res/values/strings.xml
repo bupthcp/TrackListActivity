@@ -3094,6 +3094,27 @@ limitations under the License.
     Welcome to My Tracks
   </string>
   
+  <string name="stats_grade"
+    translation_description="In the 'Stats' page, the grade. Grade is the amount of inclination to
+      the horizontal, also known as slope or incline.">
+    Grade
+  </string>
+  
+  <string name="stats_min"
+    translation_description="In the 'Stats' page, the minimum of a value.">
+    Min
+  </string>
+  
+  <string name="stats_max"
+    translation_description="In the 'Stats' page, the maximum of a value.">
+    Max
+  </string>
+  
+  <string name="stats_gain"
+    translation_description="In the 'Stats' page, the gain of a value. E.g, gain in elevation.">
+    Gain
+  </string>
+  
   <string name="strEmptyString" />
   <string name="strHaveAccount">I have an account</string>
   <string name="strEndomondoSportTracker">Endomondo Sports Tracker</string>

@@ -32,6 +32,8 @@ import java.util.Stack;
  * @author Leif Hendrik Wilden
  */
 public class LocationUtils {
+  
+  private static final long MAX_LOCATION_AGE_MS = 60 * 1000; // 1 minute
 
   private LocationUtils() {}
 
@@ -192,10 +194,10 @@ public class LocationUtils {
   }
   
   /**
-   * Ê¹ÓÃbaiduµØÍ¼Ìá¹©µÄ·½·¨½«Ò»¸öÔ­Ê¼µÄGeoPoint×ª»¯Îª¿ÉÒÔÔÚbaiduµØÍ¼ÉÏÏÔÊ¾µÄGeoPoint
-   * ¼´Ôö¼ÓÁË±ãÒËÁ¿
-   * Õâ¸ö·½·¨ÊÇÖ±½Ó¶ÔÒ»¸ölocationÖÐµÄGeoPoint½øÐÐÉèÖÃ£¬½«Ò»¸ölocation½øÐÐ¸ÄÔì
-   * Õâ¸ö·½·¨Ö»ÄÜÔÚÐèÒªÔÚbaiduµØÍ¼ÉÏ½øÐÐÏÔÊ¾Ö®Ç°µ÷ÓÃ£¬´æÈëÊý¾Ý¿âÖÐµÄ¶¼±ØÐëÊÇÔ­Ê¼µÄµØÀíÐÅÏ¢
+   * ä½¿ç”¨baiduåœ°å›¾æä¾›çš„æ–¹æ³•å°†ä¸€ä¸ªåŽŸå§‹çš„GeoPointè½¬åŒ–ä¸ºå¯ä»¥åœ¨baiduåœ°å›¾ä¸Šæ˜¾ç¤ºçš„GeoPoint
+   * å³å¢žåŠ äº†ä¾¿å®œé‡
+   * è¿™ä¸ªæ–¹æ³•æ˜¯ç›´æŽ¥å¯¹ä¸€ä¸ªlocationä¸­çš„GeoPointè¿›è¡Œè®¾ç½®ï¼Œå°†ä¸€ä¸ªlocationè¿›è¡Œæ”¹é€ 
+   * è¿™ä¸ªæ–¹æ³•åªèƒ½åœ¨éœ€è¦åœ¨baiduåœ°å›¾ä¸Šè¿›è¡Œæ˜¾ç¤ºä¹‹å‰è°ƒç”¨ï¼Œå­˜å…¥æ•°æ®åº“ä¸­çš„éƒ½å¿…é¡»æ˜¯åŽŸå§‹çš„åœ°ç†ä¿¡æ¯
    */
   public static void setGeoInLocation(Location location){
     GeoPoint p1 = new GeoPoint((int) (location.getLatitude() * 1E6),
@@ -207,14 +209,25 @@ public class LocationUtils {
   
   
   /**
-   * Ê¹ÓÃbaiduµØÍ¼Ìá¹©µÄ·½·¨½«Ò»¸öÔ­Ê¼µÄGeoPoint×ª»¯Îª¿ÉÒÔÔÚbaiduµØÍ¼ÉÏÏÔÊ¾µÄGeoPoint
-   * ¼´Ôö¼ÓÁË±ãÒËÁ¿
+   * ä½¿ç”¨baiduåœ°å›¾æä¾›çš„æ–¹æ³•å°†ä¸€ä¸ªåŽŸå§‹çš„GeoPointè½¬åŒ–ä¸ºå¯ä»¥åœ¨baiduåœ°å›¾ä¸Šæ˜¾ç¤ºçš„GeoPoint
+   * å³å¢žåŠ äº†åç§»é‡
    */
   public static GeoPoint convertToBaiduGeopoint(GeoPoint geoPoint){
     GeoPoint p1 = new GeoPoint((int) (geoPoint.getLatitudeE6() ),
                                (int) (geoPoint.getLongitudeE6()) );
     GeoPoint p2 = CoordinateConvert.fromWgs84ToBaidu(p1);
     return p2;
+  }
+  
+
+  /**
+   * Returns true if a location is old.
+   * 
+   * @param location the location
+   */
+  public static boolean isLocationOld(Location location) {
+    return !LocationUtils.isValidLocation(location)
+        || (System.currentTimeMillis() - location.getTime() > MAX_LOCATION_AGE_MS);
   }
 
 }

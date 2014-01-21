@@ -439,4 +439,10 @@ limitations under the License.
     <!--link-->
     <color name="link_pressed_background_color_light">#33B5E5</color>
     <color name="link_pressed_background_color_dark">#ff454545</color>
+    
+    
+    <color name="track_controller_background">#FF0E0E0E</color>
+    <color name="recording_text">#FFBE161B</color>
+    <color name="stats_large_label">#FFFAAD2C</color>
+    <color name="stats_separator">#99999999</color>
 </resources>
