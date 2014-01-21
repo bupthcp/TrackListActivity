@@ -206,10 +206,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapView.onPause();
   }
 
-  //ÔÚÕâÀïÊµÏÖonDestroyViewÊÇÎªÁË±£Ö¤ÔÚfragmentÇĞ»»µÄ
-  //Ê±ºò£¬fragmentµÄcontainerÊÇ¸É¾»µÄ£¬
-  //Èç¹û²»¼ÓÉÏÕâ¸öÇåÀí¹ı³Ì£¬ÓĞ¿ÉÄÜ»á³öÏÖÁ½¸öfragmentÖØµş
-  //ÔÚÒ»ÆğÏÔÊ¾µÄÇé¿ö
+  //åœ¨è¿™é‡Œå®ç°onDestroyViewæ˜¯ä¸ºäº†ä¿è¯åœ¨fragmentåˆ‡æ¢çš„
+  //æ—¶å€™ï¼Œfragmentçš„containeræ˜¯å¹²å‡€çš„ï¼Œ
+  //å¦‚æœä¸åŠ ä¸Šè¿™ä¸ªæ¸…ç†è¿‡ç¨‹ï¼Œæœ‰å¯èƒ½ä¼šå‡ºç°ä¸¤ä¸ªfragmenté‡å 
+  //åœ¨ä¸€èµ·æ˜¾ç¤ºçš„æƒ…å†µ
   @Override
   public void onDestroyView() {
     super.onDestroyView();
@@ -324,7 +324,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 //  public void onProviderStateChange(ProviderState state) {
 //    final int messageId;
 //    final boolean isGpsDisabled;
-//    //Èç¹ûÊÇ²é¿´½çÃæ£¬Ôò²»ĞèÒªÏÔÊ¾gpsµÄ¾¯¸æĞÅÏ¢
+//    //å¦‚æœæ˜¯æŸ¥çœ‹ç•Œé¢ï¼Œåˆ™ä¸éœ€è¦æ˜¾ç¤ºgpsçš„è­¦å‘Šä¿¡æ¯
 //    if(isViewHistory)
 //      return;
 //    switch (state) {
@@ -423,14 +423,14 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void clearTrackPoints() {
-    //clear points²Ù×÷µÄ·¢Æğ¶¼ÊÇÔÚListenerThreadÉÏ½øĞĞµÄ
-    //ÎÒÃÇ¿ÉÒÔ²é¿´loadNewDataForListenerµÄ²Ù×÷Ë³Ğò£¬Èç¹ûÊÇ
-    //reloadAllµÄ»°£¬»áÏÈµ÷ÓÃclearTrackPoints£¬È»ºóÔÙ½øĞĞ
-    //Êı¾İµÄ¼ÓÔØ£¬ÕâÊÇÒ»¸ö´®ĞĞµÄ¹ı³Ì¡£ÎÒÖ®Ç°·¸µÄ´íÎó¾ÍÊÇ½«
-    //clearTrackPointsµÄ¶¯×÷ÓÖ×ª½»¸øÁËUiThreadÈ¥½øĞĞ£¬ËùÒÔ
-    //Ôì³ÉÁËclearTrackPoints²»ÊÇÔÚÊı¾İ¼ÓÔØÖ®Ç°Ö´ĞĞÍê±Ï£¬¶øÊÇ
-    //ÔÚÊı¾İ¼ÓÔØµÄ¹ı³ÌÖĞÖ´ĞĞ£¬ÕâÑùµÄ»°£¬¾Í»áÔì³ÉÒ»²¿·ÖÂ·¾¶²»
-    //²»»áÏÔÊ¾³öÀ´
+    //clear pointsæ“ä½œçš„å‘èµ·éƒ½æ˜¯åœ¨ListenerThreadä¸Šè¿›è¡Œçš„
+    //æˆ‘ä»¬å¯ä»¥æŸ¥çœ‹loadNewDataForListenerçš„æ“ä½œé¡ºåºï¼Œå¦‚æœæ˜¯
+    //reloadAllçš„è¯ï¼Œä¼šå…ˆè°ƒç”¨clearTrackPointsï¼Œç„¶åå†è¿›è¡Œ
+    //æ•°æ®çš„åŠ è½½ï¼Œè¿™æ˜¯ä¸€ä¸ªä¸²è¡Œçš„è¿‡ç¨‹ã€‚æˆ‘ä¹‹å‰çŠ¯çš„é”™è¯¯å°±æ˜¯å°†
+    //clearTrackPointsçš„åŠ¨ä½œåˆè½¬äº¤ç»™äº†UiThreadå»è¿›è¡Œï¼Œæ‰€ä»¥
+    //é€ æˆäº†clearTrackPointsä¸æ˜¯åœ¨æ•°æ®åŠ è½½ä¹‹å‰æ‰§è¡Œå®Œæ¯•ï¼Œè€Œæ˜¯
+    //åœ¨æ•°æ®åŠ è½½çš„è¿‡ç¨‹ä¸­æ‰§è¡Œï¼Œè¿™æ ·çš„è¯ï¼Œå°±ä¼šé€ æˆä¸€éƒ¨åˆ†è·¯å¾„ä¸
+    //ä¸ä¼šæ˜¾ç¤ºå‡ºæ¥
 //    getActivity().runOnUiThread(new Runnable(){
 //      @Override
 //      public void run() {
@@ -536,8 +536,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    */
   private synchronized void resumeTrackDataHub() {
     trackDataHub = ((TrackActivity) getActivity()).getTrackDataHub();
-    //Èç¹ûÊÇ²é¿´½çÃæ£¬²»ĞèÒªÆô¶¯gpsĞÅÏ¢£¬ËùÒÔ¾Í²»ÓÃ×¢²álocationÏà¹ØµÄlistenerÁË£¬
-    //Ò²¾Í²»»á´¥·¢gps
+    //å¦‚æœæ˜¯æŸ¥çœ‹ç•Œé¢ï¼Œä¸éœ€è¦å¯åŠ¨gpsä¿¡æ¯ï¼Œæ‰€ä»¥å°±ä¸ç”¨æ³¨å†Œlocationç›¸å…³çš„listeneräº†ï¼Œ
+    //ä¹Ÿå°±ä¸ä¼šè§¦å‘gps
     if(isViewHistory){
       trackDataHub.registerTrackDataListener(this, EnumSet.of(
           TrackDataType.SELECTED_TRACK,
@@ -658,7 +658,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   /**
    * Shows the track.
-   * ½«Ò»ÌõÂ·ÏßµÄ¿çÔ½µÄ¾­Î³¶È·¶Î§¿ò³öÀ´£¬È»ºó½«Õû¸öÂ·Ïß³ÊÏÖÔÚÕâ¸ö¿òÀï
+   * å°†ä¸€æ¡è·¯çº¿çš„è·¨è¶Šçš„ç»çº¬åº¦èŒƒå›´æ¡†å‡ºæ¥ï¼Œç„¶åå°†æ•´ä¸ªè·¯çº¿å‘ˆç°åœ¨è¿™ä¸ªæ¡†é‡Œ
    * @param track the track
    */
   private void showTrack(Track track) {
@@ -684,8 +684,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   }
   
   /*
-   * ´ÓÏµÍ³È¡µÃÉÏ´Î¼ÇÂ¼µÄ×îºóÎ»ÖÃ£¬³õÊ¼»¯µ±Ç°µÄµØÍ¼ÖĞĞÄ£¬·ñÔòÃ¿´Îbaidu¶¼»á
-   * ½«µØÍ¼ÖĞĞÅÉèÖÃÎª±±¾©
+   * ä»ç³»ç»Ÿå–å¾—ä¸Šæ¬¡è®°å½•çš„æœ€åä½ç½®ï¼Œåˆå§‹åŒ–å½“å‰çš„åœ°å›¾ä¸­å¿ƒï¼Œå¦åˆ™æ¯æ¬¡baiduéƒ½ä¼š
+   * å°†åœ°å›¾ä¸­ä¿¡è®¾ç½®ä¸ºåŒ—äº¬
    */
   private void initMapCenter(){
     if(currentLocation == null){
@@ -694,10 +694,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         return;
       currentLocation = locationTmp;
       LocationUtils.setGeoInLocation(locationTmp);
-      MapController mMapController = mapView.getController();  // µÃµ½mMapViewµÄ¿ØÖÆÈ¨,¿ÉÒÔÓÃËü¿ØÖÆºÍÇı¶¯Æ½ÒÆºÍËõ·Å
+      MapController mMapController = mapView.getController();  // å¾—åˆ°mMapViewçš„æ§åˆ¶æƒ,å¯ä»¥ç”¨å®ƒæ§åˆ¶å’Œé©±åŠ¨å¹³ç§»å’Œç¼©æ”¾
       GeoPoint geoPoint = LocationUtils.getGeoPoint(locationTmp);
-      mMapController.setCenter(geoPoint);  //ÉèÖÃµØÍ¼ÖĞĞÄµã
-      mMapController.setZoom(12);    //ÉèÖÃµØÍ¼zoom¼¶±ğ
+      mMapController.setCenter(geoPoint);  //è®¾ç½®åœ°å›¾ä¸­å¿ƒç‚¹
+      mMapController.setZoom(12);    //è®¾ç½®åœ°å›¾zoomçº§åˆ«
       LocationData locData = new LocationData();
       locData.latitude = locationTmp.getLatitude();
       locData.longitude = locationTmp.getLongitude();
