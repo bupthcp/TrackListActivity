@@ -664,9 +664,9 @@ public class TrackDataHub implements DataSourceListener {
 
       localNumLoadedPoints++;
       localLastSeenLocationId = locationId;
-      //Õâ¶Î±»×¢ÊÍµÄ²âÊÔ´úÂëÊÇÎªÁËÄ£ÄâÔÚÕæÊµµÄgps»·¾³ÏÂ£¬À´Ò»¸ögpsµã£¬¾Í»áµ÷ÓÃÒ»´Î
-      //onNewTrackPointsDoneµÄ³¡¾°¡£µ±È»ÕâÀïÑ¡ÓÃÁËÃ¿Ê®¸öµãµ÷ÓÃÒ»´ÎonNewTrackPointsDone
-      //µÄ·½Ê½
+      //è¿™æ®µè¢«æ³¨é‡Šçš„æµ‹è¯•ä»£ç æ˜¯ä¸ºäº†æ¨¡æ‹Ÿåœ¨çœŸå®çš„gpsç¯å¢ƒä¸‹ï¼Œæ¥ä¸€ä¸ªgpsç‚¹ï¼Œå°±ä¼šè°ƒç”¨ä¸€æ¬¡
+      //onNewTrackPointsDoneçš„åœºæ™¯ã€‚å½“ç„¶è¿™é‡Œé€‰ç”¨äº†æ¯åä¸ªç‚¹è°ƒç”¨ä¸€æ¬¡onNewTrackPointsDone
+      //çš„æ–¹å¼
 //      if(localNumLoadedPoints%10 == 0){
 //        try {
 //          Thread.sleep(100);
