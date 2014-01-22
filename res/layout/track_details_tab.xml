@@ -22,18 +22,31 @@ limitations under the License.
     <TabWidget
       android:id="@android:id/tabs"
       android:layout_height="wrap_content"
-      android:layout_weight="0"
       android:layout_width="match_parent"
       android:orientation="horizontal" />
     <FrameLayout
-      android:id="@android:id/tabcontent"
-      android:layout_height="0dp"
-      android:layout_weight="0"
-      android:layout_width="0dp" />
-    <android.support.v4.view.ViewPager
-      android:id="@+id/pager"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:layout_width="match_parent" />
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <fragment
+                android:id="@+id/map_fragment"
+                android:name="com.hu.walkingnotes.baidumaps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <fragment
+                android:id="@+id/chart_fragment"
+                android:name="com.hu.walkingnotes.ui.tracks.ChartFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <fragment
+                android:id="@+id/stats_fragment"
+                android:name="com.hu.walkingnotes.ui.tracks.StatsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
   </LinearLayout>
 </merge>

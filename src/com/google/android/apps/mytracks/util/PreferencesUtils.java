@@ -77,6 +77,8 @@ public class PreferencesUtils {
   public static final int MIN_RECORDING_INTERVAL_ADAPT_ACCURACY = -1;
   public static final int MIN_RECORDING_INTERVAL_ADAPT_BATTERY_LIFE = -2;
   public static final int MIN_RECORDING_INTERVAL_DEFAULT = 0;
+  
+  public static final int RECORDING_DISTANCE_INTERVAL_DEFAULT = 10;
 
   // Values for min_required_accuracy
   public static final int MIN_REQUIRED_ACCURACY_DEFAULT = 200;

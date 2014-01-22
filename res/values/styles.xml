@@ -511,5 +511,14 @@ limitations under the License.
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_width">match_parent</item>
     </style>
-
+    <!-- scroll view -->
+    <style name="ScrollView">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+    <!-- stats scroll view -->
+    <style name="StatsScrollView" parent="@style/ScrollView">
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
 </resources>

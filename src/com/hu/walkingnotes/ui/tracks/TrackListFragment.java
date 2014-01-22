@@ -5,7 +5,6 @@ import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
 import com.hu.iJogging.R;
-import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.IconUtils;
 import com.hu.iJogging.content.TracksColumns;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment;
@@ -109,7 +108,7 @@ public class TrackListFragment extends AbstractAppFragment implements
     listView.setOnItemClickListener(new OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = IntentUtils.newIntent(mActivity, ViewHistoryActivity.class)
+        Intent intent = IntentUtils.newIntent(mActivity, TrackDetailActivity.class)
             .putExtra(EXTRA_TRACK_ID, id);
         startActivity(intent);
       }

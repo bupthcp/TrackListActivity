@@ -26,14 +26,12 @@ import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
 import com.hu.iJogging.content.WaypointCreationRequest;
-import com.hu.iJogging.fragments.ChartFragment;
-import com.hu.iJogging.fragments.MapFragment;
+import com.hu.walkingnotes.baidumaps.MapFragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -60,8 +58,6 @@ public class TrackDetailActivity extends ActionBarActivity {
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private TrackDataHub trackDataHub;
   private TabHost tabHost;
-  private ViewPager viewPager;
-  private TabsAdapter tabsAdapter;
   private TrackController trackController;
 
   // From intent
@@ -71,6 +67,8 @@ public class TrackDetailActivity extends ActionBarActivity {
   // Preferences
   private long recordingTrackId = PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
   private boolean recordingTrackPaused = PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT;
+  
+  private boolean needLocationListener;
 
 
   private final Runnable bindChangedCallback = new Runnable() {
@@ -160,24 +158,25 @@ public class TrackDetailActivity extends ActionBarActivity {
     tabHost = (TabHost) findViewById(android.R.id.tabhost);
     tabHost.setup();
 
-    viewPager = (ViewPager) findViewById(R.id.pager);
-
-    tabsAdapter = new TabsAdapter(this, tabHost, viewPager);
-
     TabSpec mapTabSpec = tabHost.newTabSpec(MapFragment.MAP_FRAGMENT_TAG).setIndicator(
         getString(R.string.track_detail_map_tab),
-        getResources().getDrawable(R.drawable.ic_tab_map));
-    tabsAdapter.addTab(mapTabSpec, MapFragment.class, null);
+        getResources().getDrawable(R.drawable.ic_tab_map))
+        .setContent(R.id.map_fragment);
+    tabHost.addTab(mapTabSpec);
 
     TabSpec chartTabSpec = tabHost.newTabSpec(ChartFragment.CHART_FRAGMENT_TAG).setIndicator(
         getString(R.string.track_detail_chart_tab),
-        getResources().getDrawable(R.drawable.ic_tab_chart));
-    tabsAdapter.addTab(chartTabSpec, ChartFragment.class, null);
+        getResources().getDrawable(R.drawable.ic_tab_chart))
+        .setContent(R.id.chart_fragment);
+    tabHost.addTab(chartTabSpec);
 
     TabSpec statsTabSpec = tabHost.newTabSpec(StatsFragment.STATS_FRAGMENT_TAG).setIndicator(
         getString(R.string.track_detail_stats_tab),
-        getResources().getDrawable(R.drawable.ic_tab_stats));
-    tabsAdapter.addTab(statsTabSpec, StatsFragment.class, null);
+        getResources().getDrawable(R.drawable.ic_tab_stats))
+        .setContent(R.id.stats_fragment);
+    tabHost.addTab(statsTabSpec);
+    
+    tabHost.setCurrentTab(0);
 
     if (savedInstanceState != null) {
       tabHost.setCurrentTabByTag(savedInstanceState.getString(CURRENT_TAB_TAG_KEY));
@@ -280,6 +279,10 @@ public class TrackDetailActivity extends ActionBarActivity {
    */
   public long getMarkerId() {
     return markerId;
+  }
+  
+  public boolean getNeedLocationListener(){
+    return needLocationListener;
   }
   
   /**

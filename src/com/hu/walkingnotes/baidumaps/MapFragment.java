@@ -14,15 +14,13 @@ import com.google.android.apps.mytracks.stats.TripStatistics;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.GeoRect;
 import com.google.android.apps.mytracks.util.LocationUtils;
-import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.R;
-import com.hu.iJogging.TrackActivity;
-import com.hu.iJogging.ViewHistoryActivity;
 import com.hu.iJogging.common.LocationUtility;
 import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.MyTracksProviderUtils.Factory;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -50,7 +48,7 @@ public class MapFragment extends Fragment
 implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public static final String MAP_FRAGMENT_TAG = "MapFragment";
   Activity mActivity;
-  Boolean isViewHistory = false;
+  Boolean needLocationListener = false;
   
   private Handler mapFragmentHandler= new Handler();
   
@@ -93,11 +91,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
-    if(activity instanceof IJoggingActivity){
-      isViewHistory = false;
-    }else if(activity instanceof ViewHistoryActivity){
-      isViewHistory = true;
-    }
+
+   needLocationListener = ((TrackDetailActivity)activity).getNeedLocationListener();
     mActivity = activity;
   }
 
@@ -353,8 +348,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onLocationChanged(Location location) {
-    currentLocation = location;
-    updateCurrentLocation();
+    if(location != null){
+      currentLocation = location;
+      updateCurrentLocation();
+    }
   }
 
   @Override
@@ -518,10 +515,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * accessed by multiple threads.
    */
   private synchronized void resumeTrackDataHub() {
-    trackDataHub = ((TrackActivity) getActivity()).getTrackDataHub();
+    trackDataHub = ((TrackDetailActivity)getActivity()).getTrackDataHub();
     //如果是查看界面，不需要启动gps信息，所以就不用注册location相关的listener了，
     //也就不会触发gps
-    if(isViewHistory){
+    if(needLocationListener){
       trackDataHub.registerTrackDataListener(this, EnumSet.of(
           TrackDataType.SELECTED_TRACK,
           TrackDataType.WAYPOINTS_TABLE,
