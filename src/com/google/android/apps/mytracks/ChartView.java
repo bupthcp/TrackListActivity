@@ -23,7 +23,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.Waypoint;
 import com.hu.iJogging.content.Waypoint.WaypointType;
-import com.hu.walkingnotes.MapOverlay;
+import com.hu.iJogging.maps.MapOverlay;
 
 import android.content.Context;
 import android.graphics.Canvas;

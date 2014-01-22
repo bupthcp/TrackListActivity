@@ -1,4 +1,4 @@
-package com.hu.walkingnotes;
+package com.hu.iJogging.maps;
 
 import com.baidu.mapapi.map.GraphicsOverlay;
 import com.baidu.mapapi.map.MapView;
@@ -9,9 +9,6 @@ import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.UnitConversions;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.Waypoint;
-import com.hu.iJogging.maps.PolyLine;
-import com.hu.iJogging.maps.TrackPath;
-import com.hu.iJogging.maps.TrackPathFactory;
 
 import android.app.Activity;
 import android.content.Context;

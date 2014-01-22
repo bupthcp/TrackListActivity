@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.hu.iJogging.maps;
+package com.hu.walkingnotes.baidumaps;
 
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.common.annotations.VisibleForTesting;
 import com.hu.iJogging.R;
-import com.hu.iJogging.maps.MapOverlay.CachedLocation;
+import com.hu.walkingnotes.baidumaps.MapOverlay.CachedLocation;
 
 import android.content.Context;
 

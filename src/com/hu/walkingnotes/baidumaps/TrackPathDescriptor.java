@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Google Inc.
+ * Copyright 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,28 +14,27 @@
  * the License.
  */
 
-package com.hu.iJogging.maps;
-
-import com.hu.iJogging.maps.MapOverlay.CachedLocation;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.hu.walkingnotes.baidumaps;
 
 /**
- * A track path.
+ * An interface for classes which describe how to draw a track path.
  * 
- * @author Jimmy Shih
+ * @author Vangelis S.
  */
-public interface TrackPath {
-
-  public boolean updateState();
+public interface TrackPathDescriptor {
 
   /**
-   * Updates the path.
-   * 
-   * @param startIndex the start index
-   * @param points the points
+   * Gets the maximum speed which is considered slow.
    */
-  public void updatePath(MapOverlay mapOverlay, ArrayList<PolyLine> paths, int startIndex,
-      List<CachedLocation> points);
+  public int getSlowSpeed();
+
+  /**
+   * Gets the maximum speed which is considered normal.
+   */
+  public int getNormalSpeed();
+
+  /**
+   * Updates state. Returns true if the state is updated.
+   */
+  public boolean updateState();
 }

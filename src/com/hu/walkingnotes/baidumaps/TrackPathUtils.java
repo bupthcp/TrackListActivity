@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.hu.iJogging.maps;
+package com.hu.walkingnotes.baidumaps;
 
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 

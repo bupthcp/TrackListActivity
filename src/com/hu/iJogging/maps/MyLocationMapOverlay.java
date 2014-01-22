@@ -1,4 +1,4 @@
-package com.hu.walkingnotes;
+package com.hu.iJogging.maps;
 
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;

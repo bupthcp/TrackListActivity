@@ -23,8 +23,8 @@ import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.MyTracksProviderUtils.Factory;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.iJogging.maps.MyLocationMapOverlay;
 import com.hu.iJogging.maps.PolyLine;
-import com.hu.walkingnotes.MyLocationMapOverlay;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -83,7 +83,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   // UI elements
   private View mapViewContainer;
   private MapView mapView;
-  private com.hu.walkingnotes.MapOverlay mapOverlay;
+  private com.hu.iJogging.maps.MapOverlay mapOverlay;
   private MyLocationMapOverlay myLocationOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
@@ -117,7 +117,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
 
     
-    mapOverlay = new com.hu.walkingnotes.MapOverlay(getActivity(),mapView);
+    mapOverlay = new com.hu.iJogging.maps.MapOverlay(getActivity(),mapView);
     myLocationOverlay = new MyLocationMapOverlay(getActivity(),mapView);
     
     List<Overlay> overlays = mapView.getOverlays();
