@@ -148,7 +148,6 @@ limitations under the License.
         android:theme="@style/Theme.EndoActionBarModeList">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
     <activity android:name="com.hu.iJogging.SplashActivity" 
@@ -190,6 +189,7 @@ limitations under the License.
             android:theme="@style/AppTheme_Light"
             android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>

@@ -1,12 +1,16 @@
 package com.hu.walkingnotes.ui.tracks;
 
+import com.google.android.apps.mytracks.io.file.SaveActivity;
+import com.google.android.apps.mytracks.io.file.TrackFileFormat;
 import com.google.android.apps.mytracks.util.IntentUtils;
 import com.google.android.apps.mytracks.util.ListItemUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.StringUtils;
+import com.hu.iJogging.ImportActivity;
 import com.hu.iJogging.R;
 import com.hu.iJogging.common.IconUtils;
 import com.hu.iJogging.content.TracksColumns;
+import com.hu.iJogging.fragments.DeleteAllTrackDialogFragment;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment;
 import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
@@ -19,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -26,6 +31,8 @@ import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +104,7 @@ public class TrackListFragment extends AbstractAppFragment implements
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+    setHasOptionsMenu(true);
   }
   
   
@@ -236,4 +244,48 @@ public class TrackListFragment extends AbstractAppFragment implements
   @Override
   public void scrollToTop() {
   }
+  
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    menu.getItem(0).setVisible(true);
+    menu.getItem(1).setVisible(true);
+    menu.getItem(2).setVisible(true);
+    menu.getItem(3).setVisible(false);
+    super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.ijogging_activity_menu, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    Intent intent;
+    switch(item.getItemId()){
+      case R.id.save_to_sd_action:
+        startSaveActivity(TrackFileFormat.GPX);
+        return true;
+      case R.id.import_from_sd_action:
+        intent = IntentUtils.newIntent(this.getActivity(), ImportActivity.class)
+            .putExtra(ImportActivity.EXTRA_IMPORT_ALL, true);
+        startActivity(intent);
+        return true;
+      case R.id.delete_all_records:
+        new DeleteAllTrackDialogFragment().show(
+            this.getActivity().getSupportFragmentManager(), DeleteAllTrackDialogFragment.DELETE_ALL_TRACK_DIALOG_TAG);
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+  
+  private void startSaveActivity(TrackFileFormat trackFileFormat) {
+    Intent intent = IntentUtils.newIntent(this.getActivity(), SaveActivity.class)
+        .putExtra(SaveActivity.EXTRA_TRACK_FILE_FORMAT, (Parcelable) trackFileFormat);
+    startActivity(intent);
+  }
+  
+  
 }

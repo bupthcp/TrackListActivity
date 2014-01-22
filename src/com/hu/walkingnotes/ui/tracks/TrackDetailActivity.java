@@ -16,11 +16,13 @@
 
 package com.hu.walkingnotes.ui.tracks;
 
+import com.baidu.mapapi.BMapManager;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtils;
+import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.Track;
@@ -50,6 +52,8 @@ public class TrackDetailActivity extends ActionBarActivity {
 
   public static final String EXTRA_TRACK_ID = "track_id";
   public static final String EXTRA_MARKER_ID = "marker_id";
+  
+  public BMapManager mBMapMan = null;
 
   private static final String CURRENT_TAB_TAG_KEY = "current_tab_tag_key";
 
@@ -147,6 +151,8 @@ public class TrackDetailActivity extends ActionBarActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mBMapMan=new BMapManager(getApplication());  
+    mBMapMan.init(IJoggingApplication.mStrKey, null); 
     setContentView(getLayoutResId());
     myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);
     handleIntent(getIntent());

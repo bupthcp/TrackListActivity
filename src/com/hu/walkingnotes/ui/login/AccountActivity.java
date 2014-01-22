@@ -4,7 +4,6 @@ import com.hu.iJogging.R;
 import com.hu.walkingnotes.bean.AccountBean;
 import com.hu.walkingnotes.support.database.AccountDBTask;
 import com.hu.walkingnotes.support.lib.changelogdialog.ChangeLogDialog;
-import com.hu.walkingnotes.support.settinghelper.SettingUtility;
 import com.hu.walkingnotes.support.utils.GlobalContext;
 import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.blackmagic.BlackMagicActivity;
@@ -68,8 +67,8 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
         listView.setMultiChoiceModeListener(new AccountMultiChoiceModeListener());
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
-        if (SettingUtility.firstStart())
-            showChangeLogDialog();
+//        if (SettingUtility.firstStart())
+//            showChangeLogDialog();
     }
 
 
