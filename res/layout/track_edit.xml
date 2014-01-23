@@ -15,19 +15,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_height="fill_parent"
-  android:layout_width="fill_parent"
+  android:layout_height="match_parent"
+  android:layout_width="match_parent"
   android:orientation="vertical" >
   <ScrollView style="@style/ScrollView.WithBottomButtons" >
     <LinearLayout
       android:layout_height="wrap_content"
-      android:layout_width="fill_parent"
+      android:layout_width="match_parent"
       android:orientation="vertical"
       android:padding="8dp" >
       <TextView
         android:text="@string/generic_name"
         style="@style/EditLabel" />
-      <EditText
+      <org.holoeverywhere.widget.EditText
         android:hint="@string/generic_name"
         android:id="@+id/track_edit_name"
         android:imeOptions="actionNext"
@@ -35,22 +35,38 @@ limitations under the License.
       <TextView
         android:id="@+id/track_edit_activity_type_label"
         android:text="@string/track_edit_activity_type"
-        style="@style/EditLabel.WithIcon.WithPaddingTop" />
-      <AutoCompleteTextView
-        android:hint="@string/track_edit_activity_type_hint"
-        android:id="@+id/track_edit_activity_type"
-        android:imeOptions="actionNext"
-        style="@style/EditCategory" />
+        style="@style/EditLabel.WithPaddingTop" />
+      <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
+        <org.holoeverywhere.widget.AutoCompleteTextView
+          android:gravity="bottom"
+          android:hint="@string/track_edit_activity_type_hint"
+          android:id="@+id/track_edit_activity_type"
+          android:imeOptions="actionNext"
+          android:layout_gravity="bottom"
+          android:layout_height="fill_parent"
+          android:layout_weight="1"
+          android:layout_width="0dp"
+          style="@style/EditCategory" />
+        <Spinner
+          android:id="@+id/track_edit_activity_type_icon"
+          android:layout_gravity="bottom"
+          android:layout_height="wrap_content"
+          android:layout_width="wrap_content" />
+      </LinearLayout>
       <TextView
         android:text="@string/generic_description"
         style="@style/EditLabel.WithPaddingTop" />
-      <EditText
+      <org.holoeverywhere.widget.EditText
         android:hint="@string/generic_description"
         android:id="@+id/track_edit_description"
         android:imeOptions="actionDone"
         style="@style/EditDescription" />
     </LinearLayout>
   </ScrollView>
+  <View style="@style/BottomButtonDivider" />
   <LinearLayout style="@style/BottomButtonBar" >
     <include layout="@layout/track_edit_buttons" />
   </LinearLayout>

@@ -1,5 +1,7 @@
 package com.hu.walkingnotes.ui.main;
 
+import com.google.android.apps.mytracks.util.IntentUtils;
+import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.hu.iJogging.R;
 import com.hu.walkingnotes.bean.AccountBean;
 import com.hu.walkingnotes.bean.android.TimeLinePosition;
@@ -17,6 +19,7 @@ import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
 import com.hu.walkingnotes.ui.login.AccountActivity;
 import com.hu.walkingnotes.ui.maintimeline.FriendsTimeLineFragment;
 import com.hu.walkingnotes.ui.preference.SettingActivity;
+import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 import com.slidingmenu.lib.SlidingMenu;
 
 import android.content.BroadcastReceiver;
@@ -300,6 +303,12 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
     public int getCurrentIndex() {
         return currentIndex;
+    }
+    
+    private void showTrackPage(){
+      Intent intent = IntentUtils.newIntent(this.getActivity(), TrackDetailActivity.class)
+          .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, PreferencesUtils.RECORDING_TRACK_ID_DEFAULT);
+      startActivity(intent);
     }
 
 
@@ -631,7 +640,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(MENTIONS_INDEX);
                     break;
                 case R.id.btn_comment:
-                    showCommentPage(false);
+                    showTrackPage();
                     drawButtonsBackground(COMMENTS_INDEX);
                     break;
                 case R.id.btn_search:

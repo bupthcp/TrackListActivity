@@ -91,10 +91,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
-
-   needLocationListener = ((TrackDetailActivity)activity).getNeedLocationListener();
     mActivity = activity;
   }
+  
 
   @Override
   public void onCreate(Bundle bundle) {
@@ -157,6 +156,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         updateCurrentLocation();
       }
     }
+    needLocationListener = ((TrackDetailActivity)mActivity).getNeedLocationListener();
   }
 
   @Override
@@ -520,16 +520,16 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     //也就不会触发gps
     if(needLocationListener){
       trackDataHub.registerTrackDataListener(this, EnumSet.of(
-          TrackDataType.SELECTED_TRACK,
-          TrackDataType.WAYPOINTS_TABLE,
-          TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
-          TrackDataType.HEADING));
+        TrackDataType.SELECTED_TRACK,
+        TrackDataType.WAYPOINTS_TABLE,
+        TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
+        TrackDataType.LOCATION,
+        TrackDataType.HEADING));
     }else{
       trackDataHub.registerTrackDataListener(this, EnumSet.of(
           TrackDataType.SELECTED_TRACK,
           TrackDataType.WAYPOINTS_TABLE,
           TrackDataType.SAMPLED_IN_TRACK_POINTS_TABLE,
-          TrackDataType.LOCATION,
           TrackDataType.HEADING));
     }
   }

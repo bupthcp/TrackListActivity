@@ -19,9 +19,9 @@ package com.google.android.apps.mytracks.util;
 import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
-import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.WaypointCreationRequest;
+import com.hu.walkingnotes.ui.tracks.TrackEditActivity;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -121,9 +121,9 @@ public class TrackRecordingServiceConnectionUtils {
               context, R.string.recording_track_id_key);
           trackRecordingService.endCurrentTrack();
           if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
-            Intent intent = IntentUtils.newIntent(context, IJoggingActivity.class)
-                .putExtra(IJoggingActivity.EXTRA_TRACK_ID, recordingTrackId)
-                .putExtra(IJoggingActivity.EXTRA_NEW_TRACK, true);
+            Intent intent = IntentUtils.newIntent(context, TrackEditActivity.class)
+                .putExtra(TrackEditActivity.EXTRA_TRACK_ID, recordingTrackId)
+                .putExtra(TrackEditActivity.EXTRA_NEW_TRACK, true);
             context.startActivity(intent);
           }
         } else {

@@ -17,7 +17,6 @@ import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
 import com.hu.walkingnotes.ui.main.LeftMenuFragment;
 import com.hu.walkingnotes.ui.main.MainTimeLineActivity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +27,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -230,12 +231,12 @@ public class TrackListFragment extends AbstractAppFragment implements
 
     if (Utility.isDevicePort()) {
       ((MainTimeLineActivity) getActivity()).setTitle(R.string.actionbar_track_list);
-      getActivity().getActionBar().setIcon(R.drawable.repost_light);
+      ((MainTimeLineActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.repost_light);
     } else {
       ((MainTimeLineActivity) getActivity()).setTitle("");
-      getActivity().getActionBar().setIcon(R.drawable.ic_launcher);
+      ((MainTimeLineActivity) getActivity()).getSupportActionBar().setIcon(R.drawable.ic_launcher);
     }
-    ActionBar actionBar = getActivity().getActionBar();
+    ActionBar actionBar = ((ActionBarActivity)this.getActivity()).getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(Utility.isDevicePort());
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
   }

@@ -17,7 +17,9 @@
 package com.hu.walkingnotes.ui.tracks;
 
 import com.baidu.mapapi.BMapManager;
+import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.content.TrackDataHub;
+import com.google.android.apps.mytracks.services.ITrackRecordingService;
 import com.google.android.apps.mytracks.services.TrackRecordingServiceConnection;
 import com.google.android.apps.mytracks.util.ApiAdapterFactory;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
@@ -25,22 +27,27 @@ import com.google.android.apps.mytracks.util.TrackRecordingServiceConnectionUtil
 import com.hu.iJogging.IJoggingApplication;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.MyTracksProviderUtils;
-import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
 import com.hu.iJogging.content.WaypointCreationRequest;
 import com.hu.walkingnotes.baidumaps.MapFragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.Toast;
 
 /**
  * An activity to show the track detail.
@@ -49,6 +56,8 @@ import android.widget.TabHost.TabSpec;
  * @author Rodrigo Damazio
  */
 public class TrackDetailActivity extends ActionBarActivity {
+  
+  private String TAG = TrackDetailActivity.class.getSimpleName();
 
   public static final String EXTRA_TRACK_ID = "track_id";
   public static final String EXTRA_MARKER_ID = "marker_id";
@@ -59,6 +68,7 @@ public class TrackDetailActivity extends ActionBarActivity {
 
   // The following are set in onCreate
   private MyTracksProviderUtils myTracksProviderUtils;
+  private SharedPreferences sharedPreferences;
   private TrackRecordingServiceConnection trackRecordingServiceConnection;
   private TrackDataHub trackDataHub;
   private TabHost tabHost;
@@ -72,18 +82,40 @@ public class TrackDetailActivity extends ActionBarActivity {
   private long recordingTrackId = PreferencesUtils.RECORDING_TRACK_ID_DEFAULT;
   private boolean recordingTrackPaused = PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT;
   
-  private boolean needLocationListener;
+  private boolean needLocationListener = false;
+  
+  private boolean startNewRecording = false; // true to start a new recording
 
 
   private final Runnable bindChangedCallback = new Runnable() {
       @Override
     public void run() {
+      
+      
+      ITrackRecordingService service = trackRecordingServiceConnection.getServiceIfBound();
+      if (service == null) {
+        Log.d(TAG, "service not available to start gps or a new recording");
+        return;
+      }
+      
+      if (startNewRecording) {
+        try {
+          trackId = service.startNewTrack();
+          trackDataHub.loadTrack(trackId);
+          startNewRecording = false;
+        } catch (RemoteException e) {
+          Toast.makeText(
+              TrackDetailActivity.this, R.string.track_list_record_error, Toast.LENGTH_LONG).show();
+          Log.e(TAG, "Unable to start a new recording.", e);
+        }
+      }
+      
       // After binding changes (is available), update the total time in
       // trackController.
       runOnUiThread(new Runnable() {
           @Override
         public void run() {
-          trackController.update(trackId == recordingTrackId, recordingTrackPaused);
+            trackController.update(checkIsRecording(), recordingTrackPaused);
         }
       });
     }
@@ -117,7 +149,7 @@ public class TrackDetailActivity extends ActionBarActivity {
                 @Override
               public void run() {
                 ApiAdapterFactory.getApiAdapter().invalidMenu(TrackDetailActivity.this);
-                boolean isRecording = trackId == recordingTrackId;
+                boolean isRecording = checkIsRecording();
                 trackController.update(isRecording, recordingTrackPaused);
               }
             });
@@ -128,14 +160,18 @@ public class TrackDetailActivity extends ActionBarActivity {
   private final OnClickListener recordListener = new OnClickListener() {
       @Override
     public void onClick(View v) {
-      if (recordingTrackPaused) {
-        // Paused -> Resume
-        TrackRecordingServiceConnectionUtils.resumeTrack(trackRecordingServiceConnection);
-        trackController.update(true, false);
+      if (recordingTrackId == PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
+        startRecording();
       } else {
-        // Recording -> Paused
-        TrackRecordingServiceConnectionUtils.pauseTrack(trackRecordingServiceConnection);
-        trackController.update(true, true);
+        if (recordingTrackPaused) {
+          // Paused -> Resume
+          TrackRecordingServiceConnectionUtils.resumeTrack(trackRecordingServiceConnection);
+          trackController.update(true, false);
+        } else {
+          // Recording -> Paused
+          TrackRecordingServiceConnectionUtils.pauseTrack(trackRecordingServiceConnection);
+          trackController.update(true, true);
+        }
       }
     }
   };
@@ -156,6 +192,8 @@ public class TrackDetailActivity extends ActionBarActivity {
     setContentView(getLayoutResId());
     myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);
     handleIntent(getIntent());
+
+    sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
 
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(
         this, bindChangedCallback);
@@ -190,13 +228,18 @@ public class TrackDetailActivity extends ActionBarActivity {
     
     
     trackController = new TrackController(
-        this, trackRecordingServiceConnection, false, recordListener, stopListener);
+        this, trackRecordingServiceConnection, needLocationListener, recordListener, stopListener);
     
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setIcon(R.color.transparent);
+    getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
   }
 
   @Override
   protected void onStart() {
     super.onStart();
+
+    sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     sharedPreferenceChangeListener.onSharedPreferenceChanged(null, null);
 
     TrackRecordingServiceConnectionUtils.startConnection(this, trackRecordingServiceConnection);
@@ -210,7 +253,7 @@ public class TrackDetailActivity extends ActionBarActivity {
 
     // Update UI
     ApiAdapterFactory.getApiAdapter().invalidMenu(this);
-    boolean isRecording = trackId == recordingTrackId;
+    boolean isRecording = checkIsRecording();
     trackController.onResume(isRecording, recordingTrackPaused);
   }
 
@@ -223,6 +266,7 @@ public class TrackDetailActivity extends ActionBarActivity {
   @Override
   protected void onStop() {
     super.onStop();
+    sharedPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     trackRecordingServiceConnection.unbind();
     trackDataHub.stop();
   }
@@ -250,9 +294,17 @@ public class TrackDetailActivity extends ActionBarActivity {
   }
 
   @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if(item.getItemId() == android.R.id.home){
+      this.finish();
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
   public boolean onTrackballEvent(MotionEvent event) {
     if (event.getAction() == MotionEvent.ACTION_DOWN) {
-      if (trackId == recordingTrackId && !recordingTrackPaused) {
+      if (checkIsRecording() && !recordingTrackPaused) {
         TrackRecordingServiceConnectionUtils.addMarker(
             this, trackRecordingServiceConnection, WaypointCreationRequest.DEFAULT_WAYPOINT);
         return true;
@@ -307,21 +359,51 @@ public class TrackDetailActivity extends ActionBarActivity {
       trackId = waypoint.getTrackId();
     }
     if (trackId == -1L) {
-      finish();
+      needLocationListener = true;
+      trackId = PreferencesUtils.getLong(
+          TrackDetailActivity.this, R.string.recording_track_id_key);
       return;
     }
-    Track track = myTracksProviderUtils.getTrack(trackId);
-    if (track == null) {
-      // Use the last track if markerId is not set
-      if (markerId == -1L) {
-        track = myTracksProviderUtils.getLastTrack();
-        if (track != null) {
-          trackId = track.getId();
-          return;
-        }
+//    Track track = myTracksProviderUtils.getTrack(trackId);
+//    if (track == null) {
+//      // Use the last track if markerId is not set
+//      if (markerId == -1L) {
+//        track = myTracksProviderUtils.getLastTrack();
+//        if (track != null) {
+//          trackId = track.getId();
+//          return;
+//        }
+//      }
+//      finish();
+//      return;
+//    }
+  }
+  
+  /**
+   * Starts a new recording.
+   */
+  private void startRecording() {
+    startNewRecording = true;
+    trackRecordingServiceConnection.startAndBind();
+
+    /*
+     * If the binding has happened, then invoke the callback to start a new
+     * recording. If the binding hasn't happened, then invoking the callback
+     * will have no effect. But when the binding occurs, the callback will get
+     * invoked.
+     */
+    bindChangedCallback.run();
+  }
+  
+  private boolean checkIsRecording(){
+    if(trackId == recordingTrackId){
+      if(recordingTrackId == PreferencesUtils.RECORDING_TRACK_ID_DEFAULT){
+        return false;
+      }else{
+        return true;
       }
-      finish();
-      return;
+    }else{
+      return false;
     }
   }
 
