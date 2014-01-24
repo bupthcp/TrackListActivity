@@ -14,16 +14,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_height="match_parent"
-  android:layout_width="match_parent"
-  android:orientation="vertical" >
+  android:layout_width="match_parent">
   <TabHost
     android:id="@android:id/tabhost"
-    android:layout_height="0dp"
-    android:layout_weight="1"
+    android:layout_height="match_parent"
     android:layout_width="match_parent" >
     <include layout="@layout/track_details_tab" />
   </TabHost>
-  <include layout="@layout/track_controller" />
-</LinearLayout>
+
+  <include
+      layout="@layout/track_controller" />
+
+</RelativeLayout>

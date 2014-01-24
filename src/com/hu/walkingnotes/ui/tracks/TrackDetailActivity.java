@@ -46,6 +46,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.Toast;
 
@@ -226,6 +227,7 @@ public class TrackDetailActivity extends ActionBarActivity {
     tabHost.addTab(statsTabSpec);
     
     tabHost.setCurrentTab(0);
+    
 
     if (savedInstanceState != null) {
       tabHost.setCurrentTabByTag(savedInstanceState.getString(CURRENT_TAB_TAG_KEY));
@@ -234,6 +236,20 @@ public class TrackDetailActivity extends ActionBarActivity {
     
     trackController = new TrackController(
         this, trackRecordingServiceConnection, needLocationListener, recordListener, stopListener);
+    
+    tabHost.setOnTabChangedListener(new OnTabChangeListener(){
+      @Override
+      public void onTabChanged(String tag) {
+        if(needLocationListener){
+          if(!tag.equals(MapFragment.MAP_FRAGMENT_TAG)){
+            trackController.hide();
+          }else{
+            trackController.show();
+          }
+        }
+      }
+      
+    });
     
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setIcon(R.color.transparent);
