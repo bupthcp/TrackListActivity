@@ -514,7 +514,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * Resumes the trackDataHub. Needs to be synchronized because trackDataHub can be
    * accessed by multiple threads.
    */
-  private synchronized void resumeTrackDataHub() {
+  public synchronized void resumeTrackDataHub() {
     trackDataHub = ((TrackDetailActivity)getActivity()).getTrackDataHub();
     //如果是查看界面，不需要启动gps信息，所以就不用注册location相关的listener了，
     //也就不会触发gps
@@ -538,7 +538,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
    * Pauses the trackDataHub. Needs to be synchronized because trackDataHub can be
    * accessed by multiple threads. 
    */
-  private synchronized void pauseTrackDataHub() {
+  public synchronized void pauseTrackDataHub() {
     trackDataHub.unregisterTrackDataListener(this);
     trackDataHub = null;
   }

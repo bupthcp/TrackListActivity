@@ -50,7 +50,7 @@ limitations under the License.
           android:layout_weight="1"
           android:layout_width="0dp"
           style="@style/EditCategory" />
-        <Spinner
+        <org.holoeverywhere.widget.Spinner
           android:id="@+id/track_edit_activity_type_icon"
           android:layout_gravity="bottom"
           android:layout_height="wrap_content"

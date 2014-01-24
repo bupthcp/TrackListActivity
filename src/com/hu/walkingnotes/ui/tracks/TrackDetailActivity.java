@@ -102,6 +102,11 @@ public class TrackDetailActivity extends ActionBarActivity {
         try {
           trackId = service.startNewTrack();
           trackDataHub.loadTrack(trackId);
+          MapFragment fragment = (MapFragment)TrackDetailActivity.this.getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+          if(fragment!=null){
+            fragment.pauseTrackDataHub();
+            fragment.resumeTrackDataHub();
+          }
           startNewRecording = false;
         } catch (RemoteException e) {
           Toast.makeText(
