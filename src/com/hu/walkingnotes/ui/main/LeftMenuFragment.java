@@ -140,19 +140,19 @@ public class LeftMenuFragment extends AbstractAppFragment {
                 showMentionPage(true);
                 break;
             case COMMENTS_INDEX:
-                showCommentPage(true);
+//                showCommentPage(true);
                 break;
             case SEARCH_INDEX:
-                showSearchPage(true);
+//                showSearchPage(true);
                 break;
             case DM_INDEX:
-                showDMPage(true);
+//                showDMPage(true);
                 break;
             case FAV_INDEX:
-                showFavPage(true);
+//                showFavPage(true);
                 break;
             case PROFILE_INDEX:
-                showProfilePage(true);
+//                showProfilePage(true);
                 break;
         }
         drawButtonsBackground(position);
@@ -644,11 +644,11 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(COMMENTS_INDEX);
                     break;
                 case R.id.btn_search:
-                    showSearchPage(false);
+//                    showSearchPage(false);
                     drawButtonsBackground(SEARCH_INDEX);
                     break;
                 case R.id.btn_profile:
-                    showProfilePage(false);
+//                    showProfilePage(false);
                     drawButtonsBackground(PROFILE_INDEX);
                     break;
                 case R.id.btn_location:
@@ -656,18 +656,18 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //                    drawButtonsBackground(5);
                     break;
                 case R.id.btn_favourite:
-                    showFavPage(false);
+//                    showFavPage(false);
                     drawButtonsBackground(FAV_INDEX);
                     break;
                 case R.id.btn_dm:
-                    showDMPage(false);
+//                    showDMPage(false);
                     drawButtonsBackground(DM_INDEX);
                     break;
                 case R.id.btn_setting:
-                    showSettingPage();
+//                    showSettingPage();
                     break;
                 case R.id.btn_logout:
-                    showAccountSwitchPage();
+//                    showAccountSwitchPage();
                     break;
             }
         }
