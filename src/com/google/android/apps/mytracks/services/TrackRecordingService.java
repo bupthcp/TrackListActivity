@@ -32,7 +32,6 @@ import com.google.android.apps.mytracks.util.LocationUtils;
 import com.google.android.apps.mytracks.util.PreferencesUtils;
 import com.google.android.apps.mytracks.util.TrackNameUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.hu.iJogging.IJoggingActivity;
 import com.hu.iJogging.R;
 import com.hu.iJogging.content.MyTracksLocation;
 import com.hu.iJogging.content.MyTracksProviderUtils;
@@ -42,6 +41,7 @@ import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
 import com.hu.iJogging.content.Waypoint.WaypointType;
 import com.hu.iJogging.content.WaypointCreationRequest;
+import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -1036,8 +1036,8 @@ public class TrackRecordingService extends Service {
    */
   private void showNotification() {
     if (isRecording() && !isPaused()) {
-      Intent intent = IntentUtils.newIntent(this, IJoggingActivity.class)
-          .putExtra(IJoggingActivity.EXTRA_TRACK_ID, recordingTrackId);
+      Intent intent = IntentUtils.newIntent(this, TrackDetailActivity.class)
+          .putExtra(TrackDetailActivity.EXTRA_TRACK_ID, recordingTrackId);
       TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
       taskStackBuilder.addNextIntent(intent);
 

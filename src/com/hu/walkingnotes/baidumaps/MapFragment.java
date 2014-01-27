@@ -161,11 +161,11 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onResume() {
-    super.onResume();
     myLocationImageButton.setVisibility(View.VISIBLE);
     mapView.onResume();
     resumeTrackDataHub();
     initMapCenter();
+    super.onResume();
   }
 
   @Override
@@ -179,9 +179,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
 
   @Override
   public void onPause() {
-    super.onPause();
     pauseTrackDataHub();
     mapView.onPause();
+    super.onPause();
   }
 
   //在这里实现onDestroyView是为了保证在fragment切换的
@@ -190,13 +190,13 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   //在一起显示的情况
   @Override
   public void onDestroyView() {
-    super.onDestroyView();
     mOffline.destroy();
     mapView.destroy();
     ViewGroup parentViewGroup = (ViewGroup) mapViewContainer.getParent();
     if (parentViewGroup != null) {
       parentViewGroup.removeView(mapViewContainer);
     }
+    super.onDestroyView();
   }
 
   @Override
@@ -427,7 +427,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       if (LocationUtils.isValidLocation(location)) {
         LocationUtils.setGeoInLocation(location);
         mapOverlay.addLocation(location);
-        Log.d(MAP_FRAGMENT_TAG, "onSampledInTrackPoint");
+        Log.d(MAP_FRAGMENT_TAG, "onSampledInTrackPoint lati:"+location.getLatitude()+" longti:"+location.getLongitude());
       }
     }
   }
@@ -580,24 +580,29 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     if (location == null || mapView == null) {
       return false;
     }
-    GeoPoint mapCenter = mapView.getMapCenter();
-    int latitudeSpan = mapView.getLatitudeSpan();
-    int longitudeSpan = mapView.getLongitudeSpan();
-  
-    /*
-     * The bottom of the mapView is obscured by the zoom controls, subtract its
-     * height from the visible area.
-     */
-    GeoPoint zoomControlBottom = mapView.getProjection().fromPixels(0, mapView.getHeight());
-    GeoPoint zoomControlTop = mapView.getProjection().fromPixels(
-        0, mapView.getHeight() );
-    int zoomControlMargin = Math.abs(zoomControlTop.getLatitudeE6()
-        - zoomControlBottom.getLatitudeE6());
-    GeoRect geoRect = new GeoRect(mapCenter, latitudeSpan, longitudeSpan);
-    geoRect.top += zoomControlMargin;
-  
-    GeoPoint geoPoint = LocationUtils.getGeoPoint(location);
-    return geoRect.contains(geoPoint);
+    try {
+
+      GeoPoint mapCenter = mapView.getMapCenter();
+      int latitudeSpan = mapView.getLatitudeSpan();
+      int longitudeSpan = mapView.getLongitudeSpan();
+
+      /*
+       * The bottom of the mapView is obscured by the zoom controls, subtract
+       * its height from the visible area.
+       */
+      GeoPoint zoomControlBottom = mapView.getProjection().fromPixels(0, mapView.getHeight());
+      GeoPoint zoomControlTop = mapView.getProjection().fromPixels(0, mapView.getHeight());
+      int zoomControlMargin = Math.abs(zoomControlTop.getLatitudeE6()
+          - zoomControlBottom.getLatitudeE6());
+      GeoRect geoRect = new GeoRect(mapCenter, latitudeSpan, longitudeSpan);
+      geoRect.top += zoomControlMargin;
+
+      GeoPoint geoPoint = LocationUtils.getGeoPoint(location);
+      return geoRect.contains(geoPoint);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 
   /**
