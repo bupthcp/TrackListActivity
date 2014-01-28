@@ -229,6 +229,24 @@ limitations under the License.
         
         <activity android:name="com.hu.walkingnotes.ui.tracks.TrackEditActivity"
             android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.SettingActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.AppearanceActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.ReadActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.NotificationActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.DraftActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.ControlActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.PerformanceActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.OtherActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.AboutActivity"
+            android:theme="@style/AppTheme_Light"/>
     
     <!-- Services -->
     <service

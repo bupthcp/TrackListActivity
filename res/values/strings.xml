@@ -3649,7 +3649,7 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="pref_thanks_title">感谢</string>
     <string name="pref_storage_title">存储</string>
     <string name="pref_version_title">@string/title_changelog</string>
-    <string name="pref_official_weibo_title">"@四次元App</string>
+    <string name="pref_official_weibo_title">"@思密达亚克西</string>
     <string name="official_weibo_link">四次元App</string>
     <string name="pref_suggest_title">反馈意见</string>
     <string name="pref_recommend_title">推荐给微博好友</string>
@@ -3661,7 +3661,7 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="pref_play_store_address_summary">打分支持该应用</string>
     <string name="pref_github_title">Github</string>
     <string name="pref_author_title">开发者</string>
-    <string name="pref_author_summary">心之所在</string>
+    <string name="pref_author_summary">思密达亚克西</string>
     <string name="pref_icon_design_title">图标</string>
     <string name="pref_cache_path_title">缓存文件路径</string>
     <string name="pref_saved_pic_path_title">图片保存路径</string>

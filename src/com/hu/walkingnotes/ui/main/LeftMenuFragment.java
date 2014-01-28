@@ -665,7 +665,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(DM_INDEX);
                     break;
                 case R.id.btn_setting:
-//                    showSettingPage();
+                    showSettingPage();
                     break;
                 case R.id.btn_logout:
                     showAccountSwitchPage();
