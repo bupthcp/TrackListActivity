@@ -64,7 +64,7 @@
 
         <Button
             style="@style/drawerMenuButton"
-            android:text="@string/comments"
+            android:text="@string/actionbar_new_track"
             android:background="@null"
             android:clickable="false"
             android:drawableLeft="@drawable/comment_light"

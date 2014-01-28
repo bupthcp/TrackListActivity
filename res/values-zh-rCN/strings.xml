@@ -87,5 +87,6 @@
   <string name="actionbarListItemNotes">笔记记录</string>
   <string name="actionbarListItemMapData">离线地图</string>
   <string name="actionbar_track_list">运动列表</string>
+  <string name="actionbar_new_track">新运动</string>
 </resources>
     

@@ -3692,4 +3692,5 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="first_message">第一条</string>
     
     <string name="actionbar_track_list">运动列表</string>
+    <string name="actionbar_new_track">新运动</string>
 </resources>

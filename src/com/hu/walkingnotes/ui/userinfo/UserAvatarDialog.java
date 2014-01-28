@@ -2,7 +2,6 @@ package com.hu.walkingnotes.ui.userinfo;
 
 import com.hu.iJogging.R;
 
-import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Dialog;
 
 /**
  * User: qii
@@ -43,7 +43,7 @@ public class UserAvatarDialog extends DialogFragment {
         Bitmap bitmap = BitmapFactory.decodeFile(path);
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.UserAvatarDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_HOLO_LIGHT);
         View customView = getActivity().getLayoutInflater().inflate(R.layout.useravatardialog_layout, null);
         ((ImageView) customView.findViewById(R.id.imageview)).setImageBitmap(bitmap);
         builder.setView(customView);
