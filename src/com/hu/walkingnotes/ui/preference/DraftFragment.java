@@ -19,7 +19,7 @@ import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.holoeverywhere.app.ListFragment;
+import org.holoeverywhere.widget.ListView;
 
 /**
  * User: qii
@@ -131,7 +132,7 @@ public class DraftFragment extends ListFragment {
         });
     }
 
-    class DraftMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+    class DraftMultiChoiceModeListener implements ListView.MultiChoiceModeListener {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {

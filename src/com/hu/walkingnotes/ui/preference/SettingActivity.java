@@ -83,6 +83,7 @@ public class SettingActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.pref_simple_layout);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -90,7 +91,7 @@ public class SettingActivity extends AbstractAppActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new SettingsFragment())
+                    .replace(R.id.content, new SettingsFragment())
                     .commit();
         }
 

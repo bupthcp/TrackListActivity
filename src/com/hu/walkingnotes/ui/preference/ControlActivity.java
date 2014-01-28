@@ -16,6 +16,7 @@ public class ControlActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.pref_simple_layout);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -23,7 +24,7 @@ public class ControlActivity extends AbstractAppActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new ControlFragment())
+                    .replace(R.id.content, new ControlFragment())
                     .commit();
         }
     }

@@ -5,8 +5,9 @@ import com.hu.walkingnotes.ui.interfaces.AbstractAppActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.view.MenuItem;
+
+import org.holoeverywhere.preference.PreferenceFragment;
 
 /**
  * User: qii
@@ -17,14 +18,15 @@ public class PerformanceActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle(getString(R.string.pref_performance_title));
+        setContentView(R.layout.pref_simple_layout);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.pref_performance_title));
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new PerformanceFragment())
+          getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content, new PerformanceFragment())
                     .commit();
         }
     }

@@ -20,6 +20,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.pref_simple_layout);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -27,7 +28,7 @@ public class AppearanceActivity extends AbstractAppActivity implements SharedPre
 
         if (savedInstanceState == null) {
           getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new AppearanceFragment())
+                    .replace(R.id.content, new AppearanceFragment())
                     .commit();
         }
 

@@ -119,31 +119,32 @@ public class AccountActivity extends AbstractAppActivity implements LoaderManage
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_add_account:
-                String[] values;
-                if (getResources().getBoolean(R.bool.blackmagic)) {
-                    values = new String[3];
-                    values[0] = getString(R.string.oauth_login);
-                    values[1] = getString(R.string.official_app_login);
-                    values[2] = getString(R.string.hack_login);
-                } else {
-                    values = new String[2];
-                    values[0] = getString(R.string.oauth_login);
-                    values[1] = getString(R.string.official_app_login);
-                }
-                new AlertDialog.Builder(this).setItems(values, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent;
-                        if (which == 0)
-                            intent = new Intent(AccountActivity.this, OAuthActivity.class);
-                        else if (which == 1)
-                            intent = new Intent(AccountActivity.this, SSOActivity.class);
-                        else
-                            intent = new Intent(AccountActivity.this, BlackMagicActivity.class);
-                        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
-                    }
-                }).show();
-
+//                String[] values;
+//                if (getResources().getBoolean(R.bool.blackmagic)) {
+//                    values = new String[3];
+//                    values[0] = getString(R.string.oauth_login);
+//                    values[1] = getString(R.string.official_app_login);
+//                    values[2] = getString(R.string.hack_login);
+//                } else {
+//                    values = new String[2];
+//                    values[0] = getString(R.string.oauth_login);
+//                    values[1] = getString(R.string.official_app_login);
+//                }
+//                new AlertDialog.Builder(this).setItems(values, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent intent;
+//                        if (which == 0)
+//                            intent = new Intent(AccountActivity.this, OAuthActivity.class);
+//                        else if (which == 1)
+//                            intent = new Intent(AccountActivity.this, SSOActivity.class);
+//                        else
+//                            intent = new Intent(AccountActivity.this, BlackMagicActivity.class);
+//                        startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
+//                    }
+//                }).show();
+                intent = new Intent(AccountActivity.this, OAuthActivity.class);
+                startActivityForResult(intent, ADD_ACCOUNT_REQUEST_CODE);
                 break;
             case R.id.menu_hack_login:
                 intent = new Intent(this, BlackMagicActivity.class);
