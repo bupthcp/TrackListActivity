@@ -1,6 +1,7 @@
 package com.hu.walkingnotes.support.utils;
 
 import com.hu.iJogging.BuildConfig;
+import com.hu.iJogging.R;
 import com.hu.walkingnotes.bean.AccountBean;
 import com.hu.walkingnotes.bean.GeoBean;
 import com.hu.walkingnotes.bean.MessageBean;
@@ -57,6 +58,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -562,29 +564,29 @@ public class Utility {
         return days;
     }
 
-//    public static String convertStateNumberToString(Context context, String numberStr) {
-//        int thousandInt = 1000;
-//        int tenThousandInt = thousandInt * 10;
-//        int number = Integer.valueOf(numberStr);
-//        if (number == tenThousandInt) {
-//            return String.valueOf((number / tenThousandInt) + context.getString(R.string.ten_thousand));
-//        }
-//        if (number > tenThousandInt) {
-//            String result = String.valueOf((number / tenThousandInt) + context.getString(R.string.ten_thousand));
-//            if (number > tenThousandInt * 10) {
-//                return result;
-//            }
-//            String thousand = String.valueOf(numberStr.charAt(numberStr.length() - 4));
-//            if (Integer.valueOf(thousand) != 0)
-//                result += thousand;
-//            return result;
-//        }
-//        if (number > thousandInt) {
-//            NumberFormat nf = NumberFormat.getNumberInstance();
-//            return nf.format(Long.valueOf(number));
-//        }
-//        return String.valueOf(number);
-//    }
+    public static String convertStateNumberToString(Context context, String numberStr) {
+        int thousandInt = 1000;
+        int tenThousandInt = thousandInt * 10;
+        int number = Integer.valueOf(numberStr);
+        if (number == tenThousandInt) {
+            return String.valueOf((number / tenThousandInt) + context.getString(R.string.ten_thousand));
+        }
+        if (number > tenThousandInt) {
+            String result = String.valueOf((number / tenThousandInt) + context.getString(R.string.ten_thousand));
+            if (number > tenThousandInt * 10) {
+                return result;
+            }
+            String thousand = String.valueOf(numberStr.charAt(numberStr.length() - 4));
+            if (Integer.valueOf(thousand) != 0)
+                result += thousand;
+            return result;
+        }
+        if (number > thousandInt) {
+            NumberFormat nf = NumberFormat.getNumberInstance();
+            return nf.format(Long.valueOf(number));
+        }
+        return String.valueOf(number);
+    }
 
     public static void showExpiredTokenDialogOrNotification() {
 //        final Activity activity = GlobalContext.getInstance().getCurrentRunningActivity();

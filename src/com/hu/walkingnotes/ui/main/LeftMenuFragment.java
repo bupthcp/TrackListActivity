@@ -121,8 +121,8 @@ public class LeftMenuFragment extends AbstractAppFragment {
         rightFragments.append(COMMENTS_INDEX, ((MainTimeLineActivity) getActivity()).getCommentsTimeLineFragment());
         rightFragments.append(SEARCH_INDEX, ((MainTimeLineActivity) getActivity()).getSearchFragment());
         rightFragments.append(DM_INDEX, ((MainTimeLineActivity) getActivity()).getDMFragment());
-        rightFragments.append(FAV_INDEX, ((MainTimeLineActivity) getActivity()).getFavFragment());
-        rightFragments.append(PROFILE_INDEX, ((MainTimeLineActivity) getActivity()).getMyProfileFragment());*/
+        rightFragments.append(FAV_INDEX, ((MainTimeLineActivity) getActivity()).getFavFragment());*/
+        rightFragments.append(PROFILE_INDEX, ((MainTimeLineActivity) getActivity()).getMyProfileFragment());
 
         switchCategory(currentIndex);
 
@@ -239,7 +239,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //        ft.hide(rightFragments.get(SEARCH_INDEX));
 //        ft.hide(rightFragments.get(DM_INDEX));
 //        ft.hide(rightFragments.get(FAV_INDEX));
-//        ft.hide(rightFragments.get(PROFILE_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
         FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
@@ -282,7 +282,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //        ft.hide(rightFragments.get(SEARCH_INDEX));
 //        ft.hide(rightFragments.get(DM_INDEX));
 //        ft.hide(rightFragments.get(FAV_INDEX));
-//        ft.hide(rightFragments.get(PROFILE_INDEX));
+        ft.hide(rightFragments.get(PROFILE_INDEX));
 
 
         Fragment m = rightFragments.get(MENTIONS_INDEX);
@@ -562,10 +562,10 @@ public class LeftMenuFragment extends AbstractAppFragment {
 
         ft.hide(rightFragments.get(HOME_INDEX));
         ft.hide(rightFragments.get(MENTIONS_INDEX));
-        ft.hide(rightFragments.get(COMMENTS_INDEX));
-        ft.hide(rightFragments.get(SEARCH_INDEX));
-        ft.hide(rightFragments.get(DM_INDEX));
-        ft.hide(rightFragments.get(FAV_INDEX));
+//        ft.hide(rightFragments.get(COMMENTS_INDEX));
+//        ft.hide(rightFragments.get(SEARCH_INDEX));
+//        ft.hide(rightFragments.get(DM_INDEX));
+//        ft.hide(rightFragments.get(FAV_INDEX));
 
         Fragment fragment = rightFragments.get(PROFILE_INDEX);
 
@@ -648,7 +648,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
                     drawButtonsBackground(SEARCH_INDEX);
                     break;
                 case R.id.btn_profile:
-//                    showProfilePage(false);
+                    showProfilePage(false);
                     drawButtonsBackground(PROFILE_INDEX);
                     break;
                 case R.id.btn_location:
@@ -667,7 +667,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //                    showSettingPage();
                     break;
                 case R.id.btn_logout:
-//                    showAccountSwitchPage();
+                    showAccountSwitchPage();
                     break;
             }
         }

@@ -19,6 +19,7 @@ import com.hu.walkingnotes.ui.interfaces.IUserInfo;
 import com.hu.walkingnotes.ui.maintimeline.FriendsTimeLineFragment;
 import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 import com.hu.walkingnotes.ui.tracks.TrackListFragment;
+import com.hu.walkingnotes.ui.userinfo.NewUserInfoFragment;
 import com.hu.walkingnotes.ui.userinfo.UserInfoActivity;
 import com.slidingmenu.lib.SlidingMenu;
 
@@ -153,9 +154,9 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 /*        Fragment mentions = getMentionsTimeLineFragment();
         Fragment comments = getCommentsTimeLineFragment();
 
-        Fragment fav = getFavFragment();
+        Fragment fav = getFavFragment();*/
         Fragment myself = getMyProfileFragment();
-*/
+
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
@@ -179,29 +180,29 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         if (!fav.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, fav, MyFavListFragment.class.getName());
             fragmentTransaction.hide(fav);
-        }
+        }*/
 
         if (!myself.isAdded()) {
             fragmentTransaction.add(R.id.menu_right_fl, myself, NewUserInfoFragment.class.getName());
             fragmentTransaction.hide(myself);
         }
 
-        if (GlobalContext.getInstance().getAccountBean().isBlack_magic()) {
-            Fragment search = getSearchFragment();
-            Fragment dm = getDMFragment();
-
-            if (!search.isAdded()) {
-                fragmentTransaction.add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
-                fragmentTransaction.hide(search);
-
-            }
-
-            if (!dm.isAdded()) {
-                fragmentTransaction.add(R.id.menu_right_fl, dm, DMUserListFragment.class.getName());
-                fragmentTransaction.hide(dm);
-
-            }
-        }*/
+//        if (GlobalContext.getInstance().getAccountBean().isBlack_magic()) {
+//            Fragment search = getSearchFragment();
+//            Fragment dm = getDMFragment();
+//
+//            if (!search.isAdded()) {
+//                fragmentTransaction.add(R.id.menu_right_fl, search, SearchMainParentFragment.class.getName());
+//                fragmentTransaction.hide(search);
+//
+//            }
+//
+//            if (!dm.isAdded()) {
+//                fragmentTransaction.add(R.id.menu_right_fl, dm, DMUserListFragment.class.getName());
+//                fragmentTransaction.hide(dm);
+//
+//            }
+//        }
 
         if (!fragmentTransaction.isEmpty()) {
             fragmentTransaction.commit();
@@ -547,7 +548,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
         return fragment;
     }
-
+*/
     public NewUserInfoFragment getMyProfileFragment() {
         NewUserInfoFragment fragment = ((NewUserInfoFragment) getSupportFragmentManager().findFragmentByTag(
                 NewUserInfoFragment.class.getName()));
@@ -558,7 +559,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
         }
         return fragment;
     }
-*/
+
     //todo
     private class NewMsgInterruptBroadcastReceiver extends BroadcastReceiver {
         @Override

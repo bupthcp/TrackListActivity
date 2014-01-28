@@ -7,7 +7,7 @@
     android:layout_height="@dimen/emotion_bg_size"
     android:minWidth="@dimen/emotion_bg_size"
     android:minHeight="@dimen/emotion_bg_size"
-    android:background="?android:selectableItemBackground"
+    android:background="?selectableItemBackground"
     >
 
     <ImageView
