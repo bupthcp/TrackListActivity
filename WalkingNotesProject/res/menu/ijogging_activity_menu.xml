@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/save_to_sd_action"
+        android:icon="@drawable/menu_save"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/strSaveToSD"/>
+    <item
+        android:id="@+id/import_from_sd_action"
+        android:icon="@drawable/menu_import"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/menu_import"/>
+    <item
+        android:id="@+id/delete_all_records"
+        android:icon="@drawable/menu_delete"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/menu_delete_all"/>
+    <item
+        android:id="@+id/exit_action"
+        android:icon="@drawable/logout_white"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/strExit"/>
+
+</menu>

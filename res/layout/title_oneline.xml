@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.endomondo.android.common.TitleLinearLayout android:orientation="horizontal" android:background="@color/EndoGreen" android:layout_width="fill_parent" android:layout_height="48.0dip" android:weightSum="1.0"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:layout_gravity="center" android:id="@+id/EndoIconContainer" android:background="@drawable/ab_endo__title_selectable_background" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ab_endo__ic_ab_back" />
-    <TextView android:textSize="18.0dip" android:id="@+id/TitleText" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="Title..." android:layout_weight="1.0" style="@style/title_text_style" />
-</com.endomondo.android.common.TitleLinearLayout>

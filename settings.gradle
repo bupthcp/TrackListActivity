@@ -1,0 +1,5 @@
+include ':slidingmenu_lib'
+include ':HoloEverywhere_lib'
+include ':HoloEverywhere_Preference'
+include ':gridlayout'
+include ':WalkingNotesProject'

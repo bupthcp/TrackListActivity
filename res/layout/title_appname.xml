@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.endomondo.android.common.TitleLinearLayout android:orientation="horizontal" android:background="@color/EndoGreen" android:layout_width="fill_parent" android:layout_height="48.0dip" android:weightSum="2.0"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:layout_gravity="center" android:id="@+id/AppNameBanner" android:layout_width="fill_parent" android:layout_height="wrap_content" android:src="@drawable/logo_bar_free" />
-</com.endomondo.android.common.TitleLinearLayout>

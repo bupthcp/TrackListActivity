@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="5.0dip" />
-    <gradient android:startColor="@color/ButtonGreenSelect" android:endColor="@color/ButtonGreenSelect" android:angle="270.0" android:centerColor="@color/EndoGreen" />
-    <stroke android:width="@dimen/stdButtonBorder" android:color="@color/stdButtonBorderColor" />
-</shape>

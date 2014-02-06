@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2010 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  android:installLocation="auto"
+  android:versionCode="47"
+  android:versionName="2.0"
+  package="com.hu.iJogging" >
+
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    </uses-permission>
+    
+  <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+  <uses-permission android:name="android.permission.WIFI_SETTINGS"/>
+  <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    
+  <!-- Permission to initialize services -->
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <!-- Permissions to record locations -->
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <!-- Permissions to access sensors -->
+  <uses-permission android:name="com.dsi.ant.permission.ANT" />
+  <uses-permission android:name="com.dsi.ant.permission.ANT_ADMIN" />
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+  <!-- Permissions to upload tracks -->
+  <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+  <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+  <uses-permission android:name="android.permission.NFC"/>
+  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH" />
+  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.fusiontables" />
+  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.local" />
+  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.wise" />
+  <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.writely" />
+  <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+  <!-- Permission to read phone state so voice announcement will not interrupt ongoing calls -->
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <!-- Permission to write to SD card -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <!-- Permissions to access My Tracks data -->
+  <uses-permission android:name="com.google.android.apps.mytracks.MYTRACKS_NOTIFICATIONS" />
+  <uses-permission android:name="com.google.android.apps.mytracks.READ_TRACK_DATA" />
+  <uses-permission android:name="com.google.android.apps.mytracks.WRITE_TRACK_DATA" />
+  <!-- Permission to receive My Tracks internal broadcasts -->
+  <permission
+    android:description="@string/permission_notification_label"
+    android:label="@string/permission_notification_label"
+    android:name="com.google.android.apps.mytracks.MYTRACKS_NOTIFICATIONS"
+    android:permissionGroup="android.permission-group.LOCATION"
+    android:protectionLevel="signature" />
+  <!-- Permission to read track data -->
+  <permission
+    android:description="@string/permission_read_description"
+    android:label="@string/permission_read_label"
+    android:name="com.google.android.apps.mytracks.READ_TRACK_DATA"
+    android:permissionGroup="android.permission-group.LOCATION"
+    android:protectionLevel="dangerous" />
+  <!-- Permission to receive track start/end broadcasts -->
+  <permission
+    android:description="@string/permission_notification_description"
+    android:label="@string/permission_notification_label"
+    android:name="com.google.android.apps.mytracks.TRACK_NOTIFICATIONS"
+    android:permissionGroup="android.permission-group.LOCATION"
+    android:protectionLevel="dangerous" />
+  <!-- Permission to write track data, either directly or through service calls -->
+  <permission
+    android:description="@string/permission_write_description"
+    android:label="@string/permission_write_label"
+    android:name="com.google.android.apps.mytracks.WRITE_TRACK_DATA"
+    android:permissionGroup="android.permission-group.LOCATION"
+    android:protectionLevel="dangerous" />
+
+  <uses-sdk
+    android:minSdkVersion="9"
+    android:targetSdkVersion="16" />
+  <!-- Required features -->
+  <uses-feature
+    android:name="android.hardware.location"
+    android:required="true" />
+  <uses-feature
+    android:name="android.hardware.location.gps"
+    android:required="true" />
+  <!-- Optional features -->
+  <uses-feature
+    android:name="android.hardware.bluetooth"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.faketouch"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.location.network"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.sensor.compass"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.telephony"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.telephony.gsm"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.touchscreen"
+    android:required="false" />
+  <uses-feature
+    android:name="android.hardware.touchscreen.multitouch"
+    android:required="false" />
+
+  <supports-screens
+    android:anyDensity="true"
+    android:largeScreens="true"
+    android:normalScreens="true"
+    android:smallScreens="true"
+    android:xlargeScreens="true" />
+
+  <application
+    android:icon="@drawable/ic_launcher"
+    android:hardwareAccelerated="true"
+    android:label="@string/appName"
+    android:name="com.hu.iJogging.IJoggingApplication" >
+
+    <!-- For data backup -->
+    <meta-data
+      android:name="com.google.android.backup.api_key"
+      android:value="AEdPqrEAAAAIi-_QiwoRSc9_bAC9cmuNXTQyU8ajJmGtKdhskQ" />
+    <!-- Activities -->
+    <activity android:name="com.hu.iJogging.IJoggingActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+        </intent-filter>
+    </activity>
+    <activity android:name="com.hu.iJogging.SplashActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList">
+    </activity>
+    
+    <activity android:name="com.hu.walkingnotes.NotesActivity" >
+
+    </activity>
+
+    <activity android:name="com.hu.iJogging.ViewHistoryActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList"/>
+    <activity android:name="com.hu.iJogging.SelectSportsActivity" 
+        android:theme="@style/Theme.EndoActionBarModeList"/>
+    <activity android:name="com.hu.iJogging.HotOfflineMapActivity" />
+    <activity android:name="com.hu.iJogging.InstalledOfflineMapActivity" />
+    <activity android:name="com.hu.iJogging.OfflineSearchResultActivity"/>
+    <activity android:name="com.hu.iJogging.AllOfflineMapActivity"/>
+    <activity android:name="com.google.android.apps.mytracks.io.file.SaveActivity" />
+    <activity
+      android:name="com.hu.iJogging.ImportActivity" >
+      <intent-filter>
+        <action android:name="android.intent.action.ATTACH_DATA" />
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.BROWSABLE" />
+        <category android:name="android.intent.category.DEFAULT" />
+
+        <data android:mimeType="application/gpx" />
+        <data android:mimeType="application/gpx+xml" />
+        <data android:mimeType="application/vnd.google-earth.gpx" />
+        <data android:mimeType="application/vnd.google-earth.gpx+xml" />
+        <data android:scheme="file" />
+      </intent-filter>
+    </activity>
+    
+        <activity
+            android:name="com.hu.walkingnotes.ui.login.DummyActivity"
+            android:theme="@style/AppTheme_Light"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <!-- login activity -->
+        <activity
+            android:name="com.hu.walkingnotes.ui.login.AccountActivity"
+            android:theme="@style/AppTheme_Light"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data android:name="android.support.UI_OPTIONS"  
+                   android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity android:name="com.hu.walkingnotes.ui.login.OAuthActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.login.SSOActivity"
+            android:theme="@style/AppTheme_Light"/>
+                <!--main activity -->
+        <activity
+            android:name="com.hu.walkingnotes.ui.main.MainTimeLineActivity"
+            android:theme="@style/AppTheme_Light"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name="com.hu.walkingnotes.ui.browser.BrowserWeiboMsgActivity"
+            android:theme="@style/AppTheme_Dummy"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:label="@string/detail">
+            <meta-data android:name="android.support.UI_OPTIONS"  
+                   android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:name="com.hu.walkingnotes.support.gallery.GalleryActivity"
+            android:theme="@style/GalleryTheme"
+            android:launchMode="singleTop"/>
+        
+        <activity android:name="com.hu.walkingnotes.ui.tracks.TrackDetailActivity"
+            android:theme="@style/AppTheme_Light"/>
+        
+        <activity android:name="com.hu.walkingnotes.ui.tracks.TrackEditActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.SettingActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.AppearanceActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.ReadActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.NotificationActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.DraftActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.ControlActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.PerformanceActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.OtherActivity"
+            android:theme="@style/AppTheme_Light"/>
+        <activity android:name="com.hu.walkingnotes.ui.preference.AboutActivity"
+            android:theme="@style/AppTheme_Light"/>
+    
+    <!-- Services -->
+    <service
+      android:exported="false"
+      android:name="com.google.android.apps.mytracks.services.ControlRecordingService" />
+    <service android:name="com.google.android.apps.mytracks.services.RemoveTempFilesService" />
+    <service android:name="com.hu.iJogging.Services.DownloadOfflineMapService"/>
+    <service
+      android:enabled="true"
+      android:exported="true"
+      android:icon="@drawable/arrow_320"
+      android:label="@string/my_tracks_recording_service"
+      android:name="com.google.android.apps.mytracks.services.TrackRecordingService"
+      android:permission="com.google.android.apps.mytracks.WRITE_TRACK_DATA" />
+    <!-- Receivers -->
+    <receiver android:name="com.google.android.apps.mytracks.BootReceiver" >
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
+    <!-- Providers -->
+    <!-- My Tracks data provider -->
+    <provider
+      android:authorities="com.hu.iJogging"
+      android:exported="false"
+      android:name="com.hu.iJogging.content.IJoggingProvider" />
+    <!-- Search suggestion provider -->
+    <!--provider
+      android:authorities="com.google.android.maps.mytracks.search"
+      android:exported="false"
+      android:name="com.google.android.apps.mytracks.content.SearchEngineProvider" -->
+
+  </application>
+
+</manifest>

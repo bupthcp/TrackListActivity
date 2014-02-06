@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.endomondo.android.common.TitleLinearLayout android:orientation="horizontal" android:background="@color/EndoGreen" android:layout_width="fill_parent" android:layout_height="48.0dip" android:weightSum="1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:layout_gravity="center" android:id="@+id/EndoIconContainer" android:background="@drawable/ab_endo__title_selectable_background" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ab_endo__ic_ab_back" />
+    <TextView android:textSize="18.0dip" android:id="@+id/TitleText" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="Title..." android:layout_weight="1.0" style="@style/title_text_style" />
+    <FrameLayout android:layout_width="48.0dip" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="vertical" android:id="@+id/ButtonContainer" android:background="@drawable/ab_endo__title_selectable_background" android:layout_width="48.0dip" android:layout_height="fill_parent" android:weightSum="2.0" android:layout_weight="0.0">
+            <View android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+            <ImageView android:layout_gravity="center_horizontal" android:id="@+id/ButtonIcon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/htc_header_button_map" />
+            <TextView android:textSize="10.0dip" android:layout_gravity="center_horizontal" android:id="@+id/ButtonText" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bla bla" style="@style/title_text_style" />
+            <View android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+        </LinearLayout>
+        <RelativeLayout android:id="@+id/progressBarRL" android:visibility="gone" android:layout_width="48.0dip" android:layout_height="fill_parent">
+            <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:indeterminate="true" android:layout_centerInParent="true" style="?android:attr/progressBarStyleSmall" />
+        </RelativeLayout>
+    </FrameLayout>
+</com.endomondo.android.common.TitleLinearLayout>
