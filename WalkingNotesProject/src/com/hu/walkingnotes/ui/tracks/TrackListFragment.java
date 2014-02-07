@@ -29,6 +29,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -122,12 +124,14 @@ public class TrackListFragment extends AbstractAppFragment implements
         startActivity(intent);
       }
     });
-    listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener(){
-      @Override
-      public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        mActivity.getMenuInflater().inflate(R.menu.list_fragment_menu, menu);
-      }
-    });
+    listView.setMultiChoiceModeListener(new TrackListMultiChoiceModeListener());
+    listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+//    listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener(){
+//      @Override
+//      public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+//        mActivity.getMenuInflater().inflate(R.menu.list_fragment_menu, menu);
+//      }
+//    });
 //    registerForContextMenu(listView);
     resourceCursorAdapter = new ResourceCursorAdapter(getActivity(), R.layout.list_item, null, 0) {
         @Override
@@ -286,6 +290,44 @@ public class TrackListFragment extends AbstractAppFragment implements
     Intent intent = IntentUtils.newIntent(this.getActivity(), SaveActivity.class)
         .putExtra(SaveActivity.EXTRA_TRACK_FILE_FORMAT, (Parcelable) trackFileFormat);
     startActivity(intent);
+  }
+  
+  private class TrackListMultiChoiceModeListener implements ListView.MultiChoiceModeListener {
+
+      @Override
+      public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+          mode.getMenuInflater().inflate(R.menu.contextual_menu_tracklist, menu);
+          return true;
+      }
+
+      @Override
+      public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+          return false;
+      }
+
+      @Override
+      public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+          switch (item.getItemId()) {
+              case R.id.list_context_menu_delete:
+                  mode.finish();
+                  return true;
+              case R.id.list_context_menu_share:
+                  mode.finish();
+                  return true;
+          }
+          return false;
+      }
+
+
+      @Override
+      public void onDestroyActionMode(ActionMode mode) {
+
+      }
+
+      @Override
+      public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+          resourceCursorAdapter.notifyDataSetChanged();
+      }
   }
   
   

@@ -121,10 +121,10 @@ public class TrackRecordingServiceConnectionUtils {
               context, R.string.recording_track_id_key);
           trackRecordingService.endCurrentTrack();
           if (recordingTrackId != PreferencesUtils.RECORDING_TRACK_ID_DEFAULT) {
-            Intent intent = IntentUtils.newIntent(context, TrackEditActivity.class)
-                .putExtra(TrackEditActivity.EXTRA_TRACK_ID, recordingTrackId)
-                .putExtra(TrackEditActivity.EXTRA_NEW_TRACK, true);
-            context.startActivity(intent);
+//            Intent intent = IntentUtils.newIntent(context, TrackEditActivity.class)
+//                .putExtra(TrackEditActivity.EXTRA_TRACK_ID, recordingTrackId)
+//                .putExtra(TrackEditActivity.EXTRA_NEW_TRACK, true);
+//            context.startActivity(intent);
           }
         } else {
           trackRecordingService.endCurrentTrack();
