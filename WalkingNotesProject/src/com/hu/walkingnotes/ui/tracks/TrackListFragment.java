@@ -59,6 +59,7 @@ public class TrackListFragment extends AbstractAppFragment implements
   private ResourceCursorAdapter resourceCursorAdapter;
   private Activity mActivity;
   private long recordingTrackId = -1L;
+  private boolean mActionModePrepared = false;
   
   private boolean recordingTrackPaused = PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT;
   
@@ -160,7 +161,9 @@ public class TrackListFragment extends AbstractAppFragment implements
         long startTime = cursor.getLong(startTimeIndex);
         String description = cursor.getString(descriptionIndex);
         String sharedOwner = cursor.getString(sharedOwnerIndex);
-        ListItemUtils.setListItem(getActivity(), view, isRecording, recordingTrackPaused,
+        
+        boolean isChecked = listView.isItemChecked(cursor.getPosition());
+        TrackListController.configTracklistItem(getActivity(), view, isRecording, recordingTrackPaused,mActionModePrepared,isChecked,
             iconId, R.string.icon_track, name, category, totalTime, totalDistance, startTime,
             description, sharedOwner);
       }
@@ -302,6 +305,8 @@ public class TrackListFragment extends AbstractAppFragment implements
 
       @Override
       public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+          mActionModePrepared = true;
+          resourceCursorAdapter.notifyDataSetChanged();
           return false;
       }
 
@@ -309,6 +314,7 @@ public class TrackListFragment extends AbstractAppFragment implements
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
           switch (item.getItemId()) {
               case R.id.list_context_menu_delete:
+                  long[] ids = listView.getCheckedItemIds();
                   mode.finish();
                   return true;
               case R.id.list_context_menu_share:
@@ -321,7 +327,8 @@ public class TrackListFragment extends AbstractAppFragment implements
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
-
+          mActionModePrepared = false;
+          resourceCursorAdapter.notifyDataSetChanged();
       }
 
       @Override
