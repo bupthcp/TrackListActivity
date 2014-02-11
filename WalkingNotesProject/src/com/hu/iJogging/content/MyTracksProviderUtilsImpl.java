@@ -191,6 +191,52 @@ public class MyTracksProviderUtilsImpl implements MyTracksProviderUtils {
     contentResolver.delete(TracksColumns.CONTENT_URI, TracksColumns._ID + "=?",
         new String[] { Long.toString(trackId) });
   }
+  
+  @Override
+  public void deleteTracks(ArrayList<Long> trackIds){
+      //这里使用的语法是delete from table where _id in (x,x,x)
+      //使用in关键字可以减少使用and 或者or的频率
+      //需要构建where参数的格式为 _id in (?,?,?)
+      //而selection参数的格式为id数组
+      //删除track包括，trackpoints表中属于被删除的track id的所有points
+      //waypoints表中属于被删除的track id的所有points
+      //删除tracks表中track对应的信息
+      StringBuilder tracksWhereBuilder = new StringBuilder(TracksColumns._ID+" IN (");
+      ArrayList<String> whereSelection = new ArrayList<String>();
+      
+      StringBuilder wayPointsWhereBuilder = new StringBuilder(WaypointsColumns.TRACKID+" IN (");
+      StringBuilder trackPointsWhereBuilder = new StringBuilder(TrackPointsColumns.TRACKID+" IN (");
+      
+      for(Long Id:trackIds){
+          tracksWhereBuilder.append("?,");
+          wayPointsWhereBuilder.append("?,");
+          trackPointsWhereBuilder.append("?,");
+          whereSelection.add(Long.toString(Id));
+      }
+      tracksWhereBuilder.deleteCharAt(tracksWhereBuilder.length()-1);
+      tracksWhereBuilder.append(")");
+      String trackswhereString = tracksWhereBuilder.toString();
+      
+      wayPointsWhereBuilder.deleteCharAt(wayPointsWhereBuilder.length()-1);
+      wayPointsWhereBuilder.append(")");
+      String wayPointsWhereString = wayPointsWhereBuilder.toString();
+      
+      trackPointsWhereBuilder.deleteCharAt(trackPointsWhereBuilder.length()-1);
+      trackPointsWhereBuilder.append(")");
+      String trackPointsWhereString = trackPointsWhereBuilder.toString();
+      
+      String[] selectionArray = new String[whereSelection.size()];
+      selectionArray =  whereSelection.toArray(selectionArray);
+      
+      contentResolver.delete(TrackPointsColumns.CONTENT_URI, trackPointsWhereString, 
+              selectionArray);
+      
+      contentResolver.delete(WaypointsColumns.CONTENT_URI, wayPointsWhereString,
+              selectionArray);
+      
+      contentResolver.delete(TracksColumns.CONTENT_URI, trackswhereString,
+              selectionArray);
+  }
 
   /**
    * Deletes track points and waypoints of a track. Assumes

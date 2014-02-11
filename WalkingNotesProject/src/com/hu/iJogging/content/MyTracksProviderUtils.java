@@ -23,6 +23,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,6 +65,14 @@ public interface MyTracksProviderUtils {
    * @param trackId the track id
    */
   public void deleteTrack(long trackId);
+  
+  
+  /**
+   * Deletes some tracks.
+   * 
+   * @param trackIds array containing the track IDs to be deleted
+   */
+  public void deleteTracks(ArrayList<Long> trackIds);
 
   /**
    * Gets all the tracks. If no track exists, an empty list is returned.

@@ -9,6 +9,7 @@ import com.google.android.apps.mytracks.util.StringUtils;
 import com.hu.iJogging.ImportActivity;
 import com.hu.iJogging.R;
 import com.hu.iJogging.common.IconUtils;
+import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.TracksColumns;
 import com.hu.iJogging.fragments.DeleteAllTrackDialogFragment;
 import com.hu.iJogging.fragments.DeleteOneTrackDialogFragment;
@@ -21,6 +22,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -30,6 +32,7 @@ import android.support.v4.widget.ResourceCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -43,7 +46,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
+import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.ListView;
+
+import java.util.ArrayList;
 
 public class TrackListFragment extends AbstractAppFragment implements 
               MainTimeLineActivity.ScrollableListFragment{
@@ -60,6 +66,7 @@ public class TrackListFragment extends AbstractAppFragment implements
   private Activity mActivity;
   private long recordingTrackId = -1L;
   private boolean mActionModePrepared = false;
+  private ProgressDialog dialog;
   
   private boolean recordingTrackPaused = PreferencesUtils.RECORDING_TRACK_PAUSED_DEFAULT;
   
@@ -295,6 +302,23 @@ public class TrackListFragment extends AbstractAppFragment implements
     startActivity(intent);
   }
   
+  public class DeleteTracksTask extends AsyncTask<ArrayList<Long>, Void, Void>{
+
+    @Override
+    protected Void doInBackground(ArrayList<Long>... trackIDArray) {
+        MyTracksProviderUtils.Factory.get(mActivity).deleteTracks(trackIDArray[0]);
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        if(dialog != null){
+            dialog.dismiss();
+        }
+        super.onPostExecute(result);
+    }
+  }
+  
   private class TrackListMultiChoiceModeListener implements ListView.MultiChoiceModeListener {
 
       @Override
@@ -314,7 +338,22 @@ public class TrackListFragment extends AbstractAppFragment implements
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
           switch (item.getItemId()) {
               case R.id.list_context_menu_delete:
-                  long[] ids = listView.getCheckedItemIds();
+                  SparseBooleanArray positions = listView.getCheckedItemPositions();
+                  ArrayList<Long> trackIDArray = new ArrayList<Long>();
+                  for(int i=0;i<positions.size();i++){
+                      Cursor cursor= (Cursor)listView.getAdapter().getItem((int)positions.keyAt(i));
+                      int idIndex = cursor.getColumnIndex(TracksColumns._ID);
+                      if ((cursor != null )&&(!cursor.isNull(idIndex))) {  
+                          trackIDArray.add(cursor.getLong(idIndex));
+                      }  
+                  }
+                  if(trackIDArray.size()>0){
+                      DeleteTracksTask  deleteTracks = new DeleteTracksTask();
+                      deleteTracks.execute(trackIDArray);
+                      dialog = new ProgressDialog(mActivity);
+                      dialog.show();
+                  }
+                  
                   mode.finish();
                   return true;
               case R.id.list_context_menu_share:
