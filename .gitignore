@@ -1,8 +1,8 @@
 /bin
 /MyTracks.launch
 /gen
-/.gradle
 **/bin
 **/gen
 **/.settings
 /.settings
+/.gradle
