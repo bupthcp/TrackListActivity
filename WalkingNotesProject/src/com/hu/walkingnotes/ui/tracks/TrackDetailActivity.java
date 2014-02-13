@@ -385,6 +385,9 @@ public class TrackDetailActivity extends ActionBarActivity {
       trackId = PreferencesUtils.getLong(
           TrackDetailActivity.this, R.string.recording_track_id_key);
       return;
+    }else if(trackId == PreferencesUtils.getLong(
+            TrackDetailActivity.this, R.string.recording_track_id_key)){
+        needLocationListener = true;
     }
 //    Track track = myTracksProviderUtils.getTrack(trackId);
 //    if (track == null) {
