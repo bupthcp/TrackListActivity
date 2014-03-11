@@ -61,7 +61,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.widget.ListView;
+import android.widget.ListView;
 
 /**
  * User: qii
@@ -284,6 +284,8 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         pullToRefreshListView.setOnScrollListener(listViewOnScrollListener);
 
         listView = pullToRefreshListView.getRefreshableView();
+        listView.setHeaderDividersEnabled(false);
+//        listView.setDivider(null);
 
         header = inflater.inflate(R.layout.browserweibomsgactivity_layout, listView, false);
         listView.addHeaderView(header);
@@ -376,12 +378,13 @@ public class BrowserWeiboMsgFragment extends AbstractAppFragment implements IRem
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         listView.setOnItemClickListener(commentOnItemClickListener);
         listView.setOnItemLongClickListener(commentOnItemLongClickListener);
+        listView.setHeaderDividersEnabled(false);
 
         initView(header, savedInstanceState);
         adapter = new BrowserWeiboMsgCommentAndRepostAdapter(this, listView, commentList.getItemList(), repostList.getItemList());
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        listView.setHeaderDividersEnabled(false);
+        
 
         swipeFrameLayout.addView(pullToRefreshListView,
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

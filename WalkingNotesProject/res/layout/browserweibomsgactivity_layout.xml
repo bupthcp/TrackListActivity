@@ -2,6 +2,7 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:grid="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
@@ -28,6 +29,8 @@
             android:layout_marginLeft="-5dp"
             android:layout_marginTop="-5dp"
             android:layout_marginBottom="0dp"
+            grid:layout_row="0"
+            grid:layout_column="0"
             android:layout_marginRight="0dp"/>
 
 
@@ -39,6 +42,8 @@
             android:layout_gravity="fill_horizontal"
             android:singleLine="true"
             android:ellipsize="end"
+            grid:layout_row="0"
+            grid:layout_column="1"
             android:layout_columnSpan="2"
             android:id="@+id/username"/>
 
@@ -50,6 +55,8 @@
             android:layout_height="wrap_content"
             android:hint="w"
             android:gravity="left"
+            grid:layout_row="1"
+            grid:layout_column="1"
             android:textColor="?android:textColorTertiary"
             android:textIsSelectable="false"
             android:textSize="12sp"
@@ -62,6 +69,8 @@
             android:gravity="left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            grid:layout_row="1"
+            grid:layout_column="2"
             android:hint="sina"
             android:text="testsourcetestsourcetestsourcetestsource"
             android:textColor="?android:textColorTertiary"
@@ -73,6 +82,8 @@
         <ImageView
             android:layout_rowSpan="2"
             android:layout_gravity="center_vertical"
+            grid:layout_row="0"
+            grid:layout_column="2"
             android:src="?clickable_flag"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"/>
@@ -124,30 +135,48 @@
             android:clickable="false">
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="0"
+                grid:layout_column="0"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="0"
+                grid:layout_column="1"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="0"
+                grid:layout_column="2"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="1"
+                grid:layout_column="0"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="1"
+                grid:layout_column="1"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="1"
+                grid:layout_column="2"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="2"
+                grid:layout_column="0"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="2"
+                grid:layout_column="1"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="2"
+                grid:layout_column="2"
                 style="@style/listViewMultiImageView"/>
 
         </android.support.v7.widget.GridLayout>
@@ -209,30 +238,48 @@
             android:clickable="false">
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="0"
+                grid:layout_column="0"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="0"
+                grid:layout_column="1"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="0"
+                grid:layout_column="2"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="1"
+                grid:layout_column="0"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="1"
+                grid:layout_column="1"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="1"
+                grid:layout_column="2"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="2"
+                grid:layout_column="0"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="2"
+                grid:layout_column="1"
                 style="@style/listViewMultiImageView"/>
 
             <com.hu.walkingnotes.support.asyncdrawable.MultiPicturesChildImageView
+                grid:layout_row="2"
+                grid:layout_column="2"
                 style="@style/listViewMultiImageView"/>
 
         </android.support.v7.widget.GridLayout>

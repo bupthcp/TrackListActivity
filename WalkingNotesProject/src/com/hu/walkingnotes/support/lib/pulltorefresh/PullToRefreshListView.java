@@ -33,7 +33,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 
-import org.holoeverywhere.widget.ListView;
+import android.widget.ListView;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 

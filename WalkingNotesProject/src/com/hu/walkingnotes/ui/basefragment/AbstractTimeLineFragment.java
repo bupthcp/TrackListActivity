@@ -35,7 +35,7 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.holoeverywhere.widget.ListView;
+import android.widget.ListView;
 
 /**
  * User: qii
@@ -387,7 +387,7 @@ public abstract class AbstractTimeLineFragment<T extends ListBean> extends Abstr
             mActionMode.finish();
             mActionMode = null;
         }
-        if (pullToRefreshListView != null && getListView().getCheckedItemCount() > 0) {
+        if (pullToRefreshListView != null) {
             getListView().clearChoices();
             if (getAdapter() != null) getAdapter().notifyDataSetChanged();
         }

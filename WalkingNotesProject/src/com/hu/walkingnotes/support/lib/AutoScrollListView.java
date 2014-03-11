@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Build.VERSION;
 import android.util.AttributeSet;
 
-import org.holoeverywhere.widget.ListView;
+import android.widget.ListView;
 
 /**
  * User: qii
