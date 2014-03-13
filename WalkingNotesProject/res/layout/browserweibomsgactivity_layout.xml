@@ -13,38 +13,34 @@
         android:background="?selectableItemBackground"
         android:padding="5dp"
         android:clickable="true"
-        android:columnCount="4"
-        android:rowCount="2"
-        android:orientation="vertical"
+        grid:columnCount="4"
+        grid:rowCount="2"
+        grid:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:rowOrderPreserved="false">
+        grid:rowOrderPreserved="false">
 
         <com.hu.walkingnotes.support.lib.ProfileTopAvatarImageView
-            android:layout_rowSpan="2"
+            grid:layout_rowSpan="2"
             android:layout_width="@dimen/browser_msg_avatar_width"
             android:layout_height="@dimen/browser_msg_avatar_height"
             android:id="@+id/avatar"
-            android:layout_gravity="center_vertical"
+            grid:layout_gravity="center_vertical"
             android:layout_marginLeft="-5dp"
             android:layout_marginTop="-5dp"
             android:layout_marginBottom="0dp"
-            grid:layout_row="0"
-            grid:layout_column="0"
             android:layout_marginRight="0dp"/>
 
 
         <TextView
             android:layout_marginLeft="8dp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="testusername"
-            android:layout_gravity="fill_horizontal"
+            grid:layout_gravity="fill_horizontal"
             android:singleLine="true"
             android:ellipsize="end"
-            grid:layout_row="0"
-            grid:layout_column="1"
-            android:layout_columnSpan="2"
+            grid:layout_columnSpan="2"
             android:id="@+id/username"/>
 
 
@@ -55,8 +51,6 @@
             android:layout_height="wrap_content"
             android:hint="w"
             android:gravity="left"
-            grid:layout_row="1"
-            grid:layout_column="1"
             android:textColor="?android:textColorTertiary"
             android:textIsSelectable="false"
             android:textSize="12sp"
@@ -69,21 +63,17 @@
             android:gravity="left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            grid:layout_row="1"
-            grid:layout_column="2"
             android:hint="sina"
             android:text="testsourcetestsourcetestsourcetestsource"
             android:textColor="?android:textColorTertiary"
             android:textIsSelectable="false"
             android:textSize="12sp"
             android:id="@+id/source"
-            android:layout_gravity="fill_horizontal|right"/>
+            grid:layout_gravity="fill_horizontal|right"/>
 
         <ImageView
-            android:layout_rowSpan="2"
-            android:layout_gravity="center_vertical"
-            grid:layout_row="0"
-            grid:layout_column="2"
+            grid:layout_rowSpan="2"
+            grid:layout_gravity="center_vertical"
             android:src="?clickable_flag"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"/>
