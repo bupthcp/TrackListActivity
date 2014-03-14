@@ -8,6 +8,8 @@ import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,11 +36,14 @@ public class SmileyPicker extends LinearLayout {
     private LayoutInflater mInflater;
     private List<String> keys;
     private Activity activity;
-    private final LayoutTransition transitioner = new LayoutTransition();
+    private Object transitioner = null;
 
 
     public SmileyPicker(Context paramContext) {
         super(paramContext);
+        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+            transitioner = new LayoutTransition();
+        }
     }
 
     public SmileyPicker(Context paramContext, AttributeSet paramAttributeSet) {
@@ -47,22 +52,32 @@ public class SmileyPicker extends LinearLayout {
         GridView gridView = (GridView) this.mInflater.inflate(R.layout.writeweiboactivity_smileypicker, null);
         addView(gridView);
         gridView.setAdapter(new SmileyAdapter(paramContext));
+        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+            transitioner = new LayoutTransition();
+        }
     }
 
     public void setEditText(Activity activity, ViewGroup rootLayout, EditText paramEditText) {
         this.mEditText = paramEditText;
         this.activity = activity;
-        rootLayout.setLayoutTransition(transitioner);
-        setupAnimations(transitioner);
+        if(transitioner != null){
+            rootLayout.setLayoutTransition((LayoutTransition)transitioner);
+            setupAnimations((LayoutTransition)transitioner);
+        }
 
     }
 
 
     public void show(Activity paramActivity, boolean showAnimation) {
         if (showAnimation) {
-            transitioner.setDuration(200);
+            if(transitioner != null){
+                ((LayoutTransition)transitioner).setDuration(200);
+            }
+            
         } else {
-            transitioner.setDuration(0);
+            if(transitioner != null){
+                ((LayoutTransition)transitioner).setDuration(0);
+            }
         }
         this.mPickerHeight = SmileyPickerUtility.getKeyboardHeight(paramActivity);
         SmileyPickerUtility.hideSoftInput(this.mEditText);
@@ -130,17 +145,17 @@ public class SmileyPicker extends LinearLayout {
     }
 
     private void setupAnimations(LayoutTransition transition) {
+        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH) {
+            ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "translationY",
+                    SmileyPickerUtility.getScreenHeight(this.activity), mPickerHeight).
+                    setDuration(transition.getDuration(LayoutTransition.APPEARING));
+            transition.setAnimator(LayoutTransition.APPEARING, animIn);
 
-        ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "translationY",
-                SmileyPickerUtility.getScreenHeight(this.activity), mPickerHeight).
-                setDuration(transition.getDuration(LayoutTransition.APPEARING));
-        transition.setAnimator(LayoutTransition.APPEARING, animIn);
-
-        ObjectAnimator animOut = ObjectAnimator.ofFloat(null, "translationY", mPickerHeight,
-                SmileyPickerUtility.getScreenHeight(this.activity)).
-                setDuration(transition.getDuration(LayoutTransition.DISAPPEARING));
-        transition.setAnimator(LayoutTransition.DISAPPEARING, animOut);
-
+            ObjectAnimator animOut = ObjectAnimator.ofFloat(null, "translationY", mPickerHeight,
+                    SmileyPickerUtility.getScreenHeight(this.activity)).
+                    setDuration(transition.getDuration(LayoutTransition.DISAPPEARING));
+            transition.setAnimator(LayoutTransition.DISAPPEARING, animOut);
+        }
 
     }
 }

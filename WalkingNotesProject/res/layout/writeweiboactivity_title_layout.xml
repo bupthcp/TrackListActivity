@@ -39,7 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="140"
-        android:textColor="?android:actionMenuTextColor"
+        android:textColor="?actionMenuTextColor"
         android:textSize="21sp"
         android:layout_marginRight="8dp"
         android:id="@+id/content_number"

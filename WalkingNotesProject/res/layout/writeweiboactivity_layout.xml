@@ -30,43 +30,44 @@
             android:background="?attr/split_line_between_content_and_bottom_button_panel"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="?android:actionBarSize">
+            android:layout_height="?actionBarSize">
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:src="?statusnewactivity_camera"
                 android:id="@+id/menu_add_pic"
                 android:layout_height="match_parent"/>
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:src="?at"
                 android:id="@+id/menu_at"
                 android:layout_height="match_parent"/>
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:src="?emoticon"
                 android:id="@+id/menu_emoticon"
                 android:layout_height="match_parent"/>
 
-            <Space
+            <android.support.v7.widget.Space
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight="1"/>
 
             <Button
-                style="?android:actionButtonStyle"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:drawableRight="?statusnewactivity_send"
                 android:text="@string/send"
                 android:id="@+id/menu_send"
-                android:textColor="?android:actionMenuTextColor"
-                android:textAppearance="?android:attr/actionMenuTextAppearance"
+                android:textColor="?actionMenuTextColor"
+                android:textAppearance="?actionMenuTextAppearance"
                 android:layout_height="match_parent"/>
+                
         </LinearLayout>
     </RelativeLayout>
 

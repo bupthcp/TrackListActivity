@@ -23,7 +23,6 @@ import com.hu.walkingnotes.ui.main.MainTimeLineActivity;
 import com.hu.walkingnotes.ui.maintimeline.SaveDraftDialog;
 import com.hu.walkingnotes.ui.search.AtUserActivity;
 
-import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,6 +38,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -48,7 +49,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -112,7 +112,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private void handleFailedOperation(Intent intent) {
         accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
-        getActionBar().setSubtitle(accountBean.getUsernick());
+        getSupportActionBar().setSubtitle(accountBean.getUsernick());
         String stringExtra = intent.getStringExtra("content");
         content.setText(stringExtra);
         String failedReason = intent.getStringExtra("failedReason");
@@ -305,7 +305,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
             accountBean = (AccountBean) savedInstanceState.getParcelable("accountBean");
             token = accountBean.getAccess_token();
 
-            getActionBar().setSubtitle(getAccount().getUsernick());
+            getSupportActionBar().setSubtitle(getAccount().getUsernick());
 
         }
     }
@@ -341,7 +341,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private void handleDraftOperation(Intent intent) {
         accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
-        getActionBar().setSubtitle(accountBean.getUsernick());
+        getSupportActionBar().setSubtitle(accountBean.getUsernick());
 
         statusDraftBean = (StatusDraftBean) intent.getParcelableExtra("draft");
         if (statusDraftBean != null) {
@@ -364,7 +364,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private void handleNormalOperation(Intent intent) {
         accountBean = (AccountBean) intent.getParcelableExtra("account");
         token = accountBean.getAccess_token();
-        getActionBar().setSubtitle(accountBean.getUsernick());
+        getSupportActionBar().setSubtitle(accountBean.getUsernick());
         String contentStr = intent.getStringExtra("content");
         if (!TextUtils.isEmpty(contentStr)) {
             content.setText(contentStr + " ");
@@ -381,7 +381,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     private void buildInterface() {
         setContentView(R.layout.writeweiboactivity_layout);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(R.string.write_weibo);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -486,7 +486,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         if (account != null) {
             accountBean = account;
             token = account.getAccess_token();
-            getActionBar().setSubtitle(account.getUsernick());
+            getSupportActionBar().setSubtitle(account.getUsernick());
         }
     }
 
@@ -673,7 +673,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
     }
 
     private void addPic() {
-        new SelectPictureDialog().show(getFragmentManager(), "");
+        new SelectPictureDialog().show(getSupportFragmentManager(), "");
     }
 
     private void showPic() {

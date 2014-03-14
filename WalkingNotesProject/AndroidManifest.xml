@@ -249,7 +249,8 @@ limitations under the License.
             android:theme="@style/AppTheme_Light"/>
         <activity android:name="com.hu.walkingnotes.ui.send.WriteWeiboActivity"
             android:theme="@style/AppTheme_Light"/>
-    
+        <activity android:name="com.hu.walkingnotes.ui.search.AtUserActivity"
+            android:theme="@style/AppTheme_Light"/>
     <!-- Services -->
     <service
       android:exported="false"

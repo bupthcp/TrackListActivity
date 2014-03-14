@@ -3,8 +3,8 @@ package com.hu.walkingnotes.ui.search;
 import com.hu.iJogging.R;
 import com.hu.walkingnotes.ui.interfaces.AbstractAppActivity;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 /**
@@ -17,13 +17,13 @@ public class AtUserActivity extends AbstractAppActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.at_other);
 
         String token = getIntent().getStringExtra("token");
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new AtUserFragment(token))
                     .commit();
         }

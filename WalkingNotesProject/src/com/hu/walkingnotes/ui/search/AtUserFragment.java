@@ -8,19 +8,21 @@ import com.hu.walkingnotes.support.error.WeiboException;
 import com.hu.walkingnotes.support.lib.MyAsyncTask;
 import com.hu.walkingnotes.support.utils.GlobalContext;
 
+import org.holoeverywhere.app.ListFragment;
+
 import android.app.Activity;
-import android.app.ListFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +104,7 @@ public class AtUserFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.actionbar_menu_atuserfragment, menu);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint(getString(R.string.at_other));
