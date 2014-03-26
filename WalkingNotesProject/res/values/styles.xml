@@ -20,13 +20,13 @@ limitations under the License.
     <item name="android:paddingLeft">48dp</item>
   </style>
   <!-- The style for the bottom button -->
-  <style name="BottomButton" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
+  <style name="BottomButton">
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_weight">1</item>
     <item name="android:layout_width">0dp</item>
   </style>
   <!-- The style for the bottom button bar -->
-  <style name="BottomButtonBar" parent="@android:style/DeviceDefault.ButtonBar">
+  <style name="BottomButtonBar">
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_width">fill_parent</item>
     <item name="android:orientation">horizontal</item>
@@ -239,17 +239,11 @@ limitations under the License.
         <item name="android:textColor">@color/black</item>
     </style>
     <style name="Theme.EndoActionBarModeList" parent="@style/Theme.EndoActionBarCommon">
-        <item name="android:actionDropDownStyle">@style/Endo.DropDownNav</item>
         <item name="actionDropDownStyle">@style/Endo.DropDownNav</item>
     </style>
     <style name="Theme.EndoActionBarCommon" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowBackground">@color/white</item>
         <item name="android:dropDownListViewStyle">@style/Endo.DropDownListView</item>
-        <item name="android:actionBarStyle">@style/Endo.ActionBarStyle</item>
-        <item name="android:actionOverflowButtonStyle">@style/Endo.OverflowButton</item>
-        <item name="android:popupMenuStyle">@style/Endo.PopupMenu</item>
-        <item name="android:homeAsUpIndicator">@drawable/ab_endo__ic_ab_back</item>
-        <item name="android:actionBarItemBackground">@drawable/ab_endo__title_selectable_background</item>
         <item name="actionOverflowButtonStyle">@style/Endo.OverflowButton</item>
         <item name="actionBarStyle">@style/Endo.ActionBarStyle</item>
         <item name="actionBarItemBackground">@drawable/ab_endo__title_selectable_background</item>
@@ -266,9 +260,6 @@ limitations under the License.
     </style>
     <style name="Endo.ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="android:background">@color/EndoGreen</item>
-        <item name="android:logo">@drawable/ab_endo__empty_logo</item>
-        <item name="android:titleTextStyle">@style/Endo.ActionBar.TitleTextStyle</item>
-        <item name="android:subtitleTextStyle">@style/Endo.ActionBar.SubtitleTextStyle</item>
         <item name="titleTextStyle">@style/Endo.ActionBar.TitleTextStyle</item>
         <item name="subtitleTextStyle">@style/Endo.ActionBar.SubtitleTextStyle</item>
         <item name="background">@color/EndoGreen</item>
@@ -316,14 +307,13 @@ limitations under the License.
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:padding">0dp</item>
         <item name="android:background">@color/transparent</item>
     </style>
 
-    <style name="progressBarStyleHorizontal" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+    <style name="progressBarStyleHorizontal" parent="Widget.AppCompat.Base.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal</item>
         <item name="android:minHeight">16dip</item>
         <item name="android:maxHeight">16dip</item>
