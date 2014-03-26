@@ -67,7 +67,7 @@ public class FriendsTimeLineListNavAdapter extends BaseAdapter {
 
         if (convertView == null || convertView.getTag() == null) {
             LayoutInflater inflater = activity.getLayoutInflater();
-            convertView = inflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+            convertView = inflater.inflate(R.layout.support_simple_spinner_dropdown_item, parent, false);
             holder = new ViewHolder();
             holder.textView = (TextView) convertView;
         } else {
