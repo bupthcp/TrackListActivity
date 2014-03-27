@@ -17,6 +17,7 @@ limitations under the License.
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
   <item
     android:icon="@drawable/menu_satellite_mode"
-    android:id="@+id/map_satellite_mode"
-    android:orderInCategory="6"/>
+    android:id="@+id/map_satellite_mode"/>
+  <item android:id="@+id/menu_share_weibo"
+      android:title="@string/menu_share_weibo"/>
 </menu>

@@ -353,7 +353,7 @@ public class TrackDetailActivity extends ActionBarActivity {
     int itemId = item.getItemId();
     if(itemId == android.R.id.home){
       this.finish();
-    }else if(itemId == R.id.map_satellite_mode){
+    }else if((itemId == R.id.map_satellite_mode)||(itemId == R.id.menu_share_weibo)){
         String currentTag = tabHost.getCurrentTabTag();
         if(currentTag.equals(MapFragment.MAP_FRAGMENT_TAG)){
             MapFragment fragment = (MapFragment)TrackDetailActivity.this.getSupportFragmentManager().findFragmentById(R.id.map_fragment);

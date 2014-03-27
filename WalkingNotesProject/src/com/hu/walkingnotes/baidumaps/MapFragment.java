@@ -1,9 +1,11 @@
 package com.hu.walkingnotes.baidumaps;
 
 import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MKOfflineMap;
 import com.baidu.mapapi.map.MKOfflineMapListener;
 import com.baidu.mapapi.map.MapController;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
@@ -20,10 +22,12 @@ import com.hu.iJogging.content.MyTracksProviderUtils;
 import com.hu.iJogging.content.MyTracksProviderUtils.Factory;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
+import com.hu.walkingnotes.support.file.FileManager;
 import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +44,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -83,6 +89,47 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
   private MKOfflineMap mOffline = null;
+  private MKMapViewListener mapViewListener = new MKMapViewListener(){
+
+      @Override
+      public void onClickMapPoi(MapPoi mapPoi) {
+
+      }
+
+      @Override
+      public void onGetCurrentMap(Bitmap bitMap) {
+          FileOutputStream out = null;
+          String filename = FileManager.getSdCardPath() + File.separator + "map.jpg";
+          try {
+                 out = new FileOutputStream(filename);
+                 bitMap.compress(Bitmap.CompressFormat.PNG, 90, out);
+          } catch (Exception e) {
+              e.printStackTrace();
+          } 
+          try{
+              if(out != null){
+                  out.close();
+              }
+          }catch(Exception e){
+              e.printStackTrace(); 
+          }
+      }
+
+      @Override
+      public void onMapAnimationFinish() {
+ 
+      }
+
+      @Override
+      public void onMapLoadFinish() {
+
+      }
+
+      @Override
+      public void onMapMoveFinish() {
+
+      }
+  };
   
   //Current paths
    private ArrayList<PolyLine> paths = new ArrayList<PolyLine>();
@@ -120,6 +167,8 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapView.requestFocus();
     mapView.setOnTouchListener(this);
     mapView.setBuiltInZoomControls(false);
+    
+    mapView.regMapViewListener(((TrackDetailActivity)getActivity()).mBMapMan, mapViewListener);
     
     mOffline = new MKOfflineMap();    
     mOffline.init(mapView.getController(), new MKOfflineMapListener(){
@@ -216,7 +265,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
         if (mapView != null && menuItem.getItemId() == R.id.map_satellite_mode) {
             mapView.setSatellite(!mapView.isSatellite());
             return true;
-        } else {
+        } else if(mapView != null && menuItem.getItemId() == R.id.menu_share_weibo){
+            mapView.getCurrentMap();
+            return true;
+        }else {
             return false;
         }
     }

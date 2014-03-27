@@ -3691,4 +3691,6 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     
     <string name="actionbar_track_list">运动列表</string>
     <string name="actionbar_new_track">新运动</string>
+    
+    <string name="menu_share_weibo">分享到微博</string>
 </resources>

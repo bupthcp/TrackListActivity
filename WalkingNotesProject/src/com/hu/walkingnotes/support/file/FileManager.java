@@ -44,7 +44,7 @@ public class FileManager {
      */
     private static volatile boolean cantReadBecauseOfAndroidBugPermissionProblem = false;
 
-    private static String getSdCardPath() {
+    public static String getSdCardPath() {
         if (isExternalStorageMounted()) {
             File path = GlobalContext.getInstance().getExternalCacheDir();
             if (path != null)
