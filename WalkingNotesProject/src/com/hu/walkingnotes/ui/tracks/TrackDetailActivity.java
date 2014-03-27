@@ -41,6 +41,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -199,7 +200,6 @@ public class TrackDetailActivity extends ActionBarActivity {
     setContentView(getLayoutResId());
     myTracksProviderUtils = MyTracksProviderUtils.Factory.get(this);
     handleIntent(getIntent());
-
     sharedPreferences = getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE);
 
     trackRecordingServiceConnection = new TrackRecordingServiceConnection(
@@ -241,6 +241,7 @@ public class TrackDetailActivity extends ActionBarActivity {
     tabHost.setOnTabChangedListener(new OnTabChangeListener(){
       @Override
       public void onTabChanged(String tag) {
+        supportInvalidateOptionsMenu();
         if(needLocationListener){
           if(!tag.equals(MapFragment.MAP_FRAGMENT_TAG)){
             trackController.hide();
@@ -310,15 +311,56 @@ public class TrackDetailActivity extends ActionBarActivity {
   }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater menuInflator = getMenuInflater();
+        String currentTag = null;
+        if (tabHost == null) {
+            currentTag = MapFragment.MAP_FRAGMENT_TAG;
+        } else {
+            currentTag = tabHost.getCurrentTabTag();
+        }
+        if (currentTag.equals(MapFragment.MAP_FRAGMENT_TAG)) {
+            menuInflator.inflate(R.menu.map, menu);
+            return true;
+        }
+        return false;
+    }
+
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    return super.onPrepareOptionsMenu(menu);
+    super.onPrepareOptionsMenu(menu);
+    String currentTag = null;
+    if(tabHost == null){
+        currentTag = MapFragment.MAP_FRAGMENT_TAG;
+    }else{
+        currentTag = tabHost.getCurrentTabTag();
+    }
+    if(currentTag.equals(MapFragment.MAP_FRAGMENT_TAG)){
+        MapFragment fragment = (MapFragment)TrackDetailActivity.this.getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+      if(fragment!=null){
+          fragment.setOptionsMenu(menu);
+          return true;
+      }
+    }
+    return false;
   }
+
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if(item.getItemId() == android.R.id.home){
+    int itemId = item.getItemId();
+    if(itemId == android.R.id.home){
       this.finish();
+    }else if(itemId == R.id.map_satellite_mode){
+        String currentTag = tabHost.getCurrentTabTag();
+        if(currentTag.equals(MapFragment.MAP_FRAGMENT_TAG)){
+            MapFragment fragment = (MapFragment)TrackDetailActivity.this.getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+          if(fragment!=null){
+              fragment.handleOptionsMenuSelected(item);
+          }
+        }
     }
     return super.onOptionsItemSelected(item);
   }

@@ -98,7 +98,6 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   @Override
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
-    setHasOptionsMenu(true);
   }
 
   @Override
@@ -199,29 +198,28 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     super.onDestroyView();
   }
 
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflator) {
-    menuInflator.inflate(R.menu.map, menu);
+  
+  public void createOptionsMenu(Menu menu){
+      MenuInflater menuInflator = getActivity().getMenuInflater();
+      menuInflator.inflate(R.menu.map, menu);
   }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    int titleId = R.string.menu_satellite_mode;
-    if (mapView != null) {
-      titleId = mapView.isSatellite() ? R.string.menu_map_mode : R.string.menu_satellite_mode;
+  
+    public void setOptionsMenu(Menu menu) {
+        int titleId = R.string.menu_satellite_mode;
+        if (mapView != null) {
+            titleId = mapView.isSatellite() ? R.string.menu_map_mode : R.string.menu_satellite_mode;
+        }
+        menu.findItem(R.id.map_satellite_mode).setTitle(titleId);
     }
-    menu.findItem(R.id.map_satellite_mode).setTitle(titleId);
-    super.onPrepareOptionsMenu(menu);
-  }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem menuItem) {
-    if (mapView != null && menuItem.getItemId() == R.id.map_satellite_mode) {
-      mapView.setSatellite(!mapView.isSatellite());
-      return true;
+    public boolean handleOptionsMenuSelected(MenuItem menuItem) {
+        if (mapView != null && menuItem.getItemId() == R.id.map_satellite_mode) {
+            mapView.setSatellite(!mapView.isSatellite());
+            return true;
+        } else {
+            return false;
+        }
     }
-    return super.onOptionsItemSelected(menuItem);
-  }
 
   /**
    * Shows my location.

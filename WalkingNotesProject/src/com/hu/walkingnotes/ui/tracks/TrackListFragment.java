@@ -324,6 +324,9 @@ public class TrackListFragment extends AbstractAppFragment implements
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
           mode.getMenuInflater().inflate(R.menu.contextual_menu_tracklist, menu);
+          //这里的menu有两个菜单，一个是删除，一个是分享。但是分享菜单式不适合于做批量操作的
+          //而且，分享的时候需要带上当前的mapview的截图，所以将分享菜单放到mapFragment里面是比较合适的
+          menu.getItem(1).setVisible(false);
           return true;
       }
 
@@ -356,6 +359,9 @@ public class TrackListFragment extends AbstractAppFragment implements
                   
                   mode.finish();
                   return true;
+              //这里的menu有两个菜单，一个是删除，一个是分享。但是分享菜单式不适合于做批量操作的
+              //而且，分享的时候需要带上当前的mapview的截图，所以将分享菜单放到mapFragment里面是比较合适的
+              //这个case相当于是不会跑到了
               case R.id.list_context_menu_share:
                   mode.finish();
                   return true;
