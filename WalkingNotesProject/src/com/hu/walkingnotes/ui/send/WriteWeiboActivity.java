@@ -73,6 +73,7 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
 
     public static final String ACTION_DRAFT = "org.qii.weiciyuan.DRAFT";
     public static final String ACTION_SEND_FAILED = "org.qii.weiciyuan.SEND_FAILED";
+    public static final String ACTION_SHARE_MAP = "com.hu.iJogging.SHARE_MAP";
 
     private AccountBean accountBean;
     protected String token = "";
@@ -330,6 +331,8 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
                     handleDraftOperation(intent);
                 } else if (action.equals(WriteWeiboActivity.ACTION_SEND_FAILED)) {
                     handleFailedOperation(intent);
+                } else if (action.equals(WriteWeiboActivity.ACTION_SHARE_MAP)){
+                    handleShareMapOperation(intent);
                 }
             } else {
                 handleNormalOperation(intent);
@@ -369,6 +372,21 @@ public class WriteWeiboActivity extends AbstractAppActivity implements DialogInt
         if (!TextUtils.isEmpty(contentStr)) {
             content.setText(contentStr + " ");
             content.setSelection(content.getText().toString().length());
+        }
+    }
+    
+    private void handleShareMapOperation(Intent intent){
+
+        getAccountInfo();
+
+        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            picPath = Utility.getPicPathFromUri(imageUri, this);
+            if (TextUtils.isEmpty(content.getText().toString())) {
+                content.setText(getString(R.string.topic_ijogging));
+                content.setSelection(content.getText().toString().length());
+            }
+            enablePicture();
         }
     }
 

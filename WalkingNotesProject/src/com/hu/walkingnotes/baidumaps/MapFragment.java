@@ -23,16 +23,21 @@ import com.hu.iJogging.content.MyTracksProviderUtils.Factory;
 import com.hu.iJogging.content.Track;
 import com.hu.iJogging.content.Waypoint;
 import com.hu.walkingnotes.support.file.FileManager;
+import com.hu.walkingnotes.support.gallery.GalleryActivity;
+import com.hu.walkingnotes.support.utils.Utility;
+import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -102,7 +107,15 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
           String filename = FileManager.getSdCardPath() + File.separator + "map.jpg";
           try {
                  out = new FileOutputStream(filename);
-                 bitMap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                 bitMap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                 Intent intent = new Intent(WriteWeiboActivity.ACTION_SHARE_MAP);
+                 intent.setType("image/jpeg");
+                 if (!TextUtils.isEmpty(filename)) {
+                     Uri uri = Uri.fromFile(new File(filename));
+                     intent.putExtra(Intent.EXTRA_STREAM, uri);
+                     intent.setClass(mActivity, WriteWeiboActivity.class);
+                     startActivity(intent);
+                 }
           } catch (Exception e) {
               e.printStackTrace();
           } 
