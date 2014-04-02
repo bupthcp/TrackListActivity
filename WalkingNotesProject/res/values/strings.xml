@@ -3351,7 +3351,7 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="convert_successfully">转换成功，你可以精简文字了</string>
     <string name="convert_failed">转换失败</string>
     <string name="failed_reason">发送失败：%s</string>
-    <string name="topic_ijogging">#微运动#</string>
+    <string name="topic_ijogging">#微运动APP#</string>
 
 
     <!--accountactivity_layout-->
