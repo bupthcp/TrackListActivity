@@ -18,6 +18,7 @@ import com.hu.walkingnotes.ui.interfaces.IAccountInfo;
 import com.hu.walkingnotes.ui.interfaces.IUserInfo;
 import com.hu.walkingnotes.ui.maintimeline.FriendsTimeLineFragment;
 import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
+import com.hu.walkingnotes.ui.topic.SearchTopicByNameFragment;
 import com.hu.walkingnotes.ui.tracks.TrackListFragment;
 import com.hu.walkingnotes.ui.userinfo.NewUserInfoFragment;
 import com.hu.walkingnotes.ui.userinfo.UserInfoActivity;
@@ -159,7 +160,7 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (!friend.isAdded()) {
-            fragmentTransaction.add(R.id.menu_right_fl, friend, FriendsTimeLineFragment.class.getName());
+            fragmentTransaction.add(R.id.menu_right_fl, friend, SearchTopicByNameFragment.class.getName());
             fragmentTransaction.hide(friend);
         }
         if (!trackList.isAdded()) {
@@ -477,11 +478,21 @@ public class MainTimeLineActivity extends MainTimeLineParentActivity implements 
     }
 
 
-    public FriendsTimeLineFragment getFriendsTimeLineFragment() {
-        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
-                FriendsTimeLineFragment.class.getName()));
+//    public FriendsTimeLineFragment getFriendsTimeLineFragment() {
+//        FriendsTimeLineFragment fragment = ((FriendsTimeLineFragment) getSupportFragmentManager().findFragmentByTag(
+//                FriendsTimeLineFragment.class.getName()));
+//        if (fragment == null) {
+//            fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
+//            fragment.setArguments(new Bundle());
+//        }
+//        return fragment;
+//    }
+    
+    public SearchTopicByNameFragment getFriendsTimeLineFragment() {
+        SearchTopicByNameFragment fragment = ((SearchTopicByNameFragment) getSupportFragmentManager().findFragmentByTag(
+                SearchTopicByNameFragment.class.getName()));
         if (fragment == null) {
-            fragment = new FriendsTimeLineFragment(getAccount(), getUser(), getToken());
+            fragment = new SearchTopicByNameFragment(getString(R.string.topic_ijogging));
             fragment.setArguments(new Bundle());
         }
         return fragment;

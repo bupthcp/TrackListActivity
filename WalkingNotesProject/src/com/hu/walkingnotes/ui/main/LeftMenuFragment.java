@@ -19,6 +19,7 @@ import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
 import com.hu.walkingnotes.ui.login.AccountActivity;
 import com.hu.walkingnotes.ui.maintimeline.FriendsTimeLineFragment;
 import com.hu.walkingnotes.ui.preference.SettingActivity;
+import com.hu.walkingnotes.ui.topic.SearchTopicByNameFragment;
 import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 import com.hu.walkingnotes.ui.userinfo.NewUserInfoFragment;
 import com.slidingmenu.lib.SlidingMenu;
@@ -242,7 +243,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //        ft.hide(rightFragments.get(FAV_INDEX));
         ft.hide(rightFragments.get(PROFILE_INDEX));
 
-        FriendsTimeLineFragment fragment = (FriendsTimeLineFragment) rightFragments.get(HOME_INDEX);
+        SearchTopicByNameFragment fragment = (SearchTopicByNameFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
         ft.commit();
         setTitle("");
