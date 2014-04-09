@@ -3351,7 +3351,7 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="convert_successfully">转换成功，你可以精简文字了</string>
     <string name="convert_failed">转换失败</string>
     <string name="failed_reason">发送失败：%s</string>
-    <string name="topic_ijogging">#行走日记APP#</string>
+    <string name="topic_ijogging">"@思密达亚克西"</string>
 
 
     <!--accountactivity_layout-->
@@ -3694,4 +3694,5 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     <string name="actionbar_new_track">新运动</string>
     
     <string name="menu_share_weibo">分享到微博</string>
+    <string name="official_account_screen_name">思密达亚克西</string>
 </resources>

@@ -16,6 +16,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<MessageListBean> {
 
+    public static int FEATRUE_ORIGINAL = 1;
+    
     private static Lock lock = new ReentrantLock();
 
 
@@ -25,6 +27,8 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
     private String screenName;
     private String uid;
     private String count;
+    
+    private int feature;
 
     public StatusesByIdLoader(Context context, String uid, String screenName, String token, String sinceId, String maxId) {
         super(context);
@@ -41,10 +45,17 @@ public class StatusesByIdLoader extends AbstractAsyncNetRequestTaskLoader<Messag
         this.count = count;
 
     }
+    
+    public void setFeature(int featureParam){
+        feature = featureParam;
+    }
 
 
     public MessageListBean loadData() throws WeiboException {
         StatusesTimeLineDao dao = new StatusesTimeLineDao(token, uid);
+        if(feature != 0){
+            dao.setFeature(Integer.toString(feature));
+        }
 
         if (TextUtils.isEmpty(uid)) {
             dao.setScreen_name(screenName);

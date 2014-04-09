@@ -18,10 +18,12 @@ import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.interfaces.AbstractAppFragment;
 import com.hu.walkingnotes.ui.login.AccountActivity;
 import com.hu.walkingnotes.ui.maintimeline.FriendsTimeLineFragment;
+import com.hu.walkingnotes.ui.maintimeline.MentionsWeiboTimeLineFragment;
 import com.hu.walkingnotes.ui.preference.SettingActivity;
 import com.hu.walkingnotes.ui.topic.SearchTopicByNameFragment;
 import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 import com.hu.walkingnotes.ui.userinfo.NewUserInfoFragment;
+import com.hu.walkingnotes.ui.userinfo.UserOriginalTimelineFragment;
 import com.slidingmenu.lib.SlidingMenu;
 
 import android.content.BroadcastReceiver;
@@ -243,7 +245,7 @@ public class LeftMenuFragment extends AbstractAppFragment {
 //        ft.hide(rightFragments.get(FAV_INDEX));
         ft.hide(rightFragments.get(PROFILE_INDEX));
 
-        SearchTopicByNameFragment fragment = (SearchTopicByNameFragment) rightFragments.get(HOME_INDEX);
+        UserOriginalTimelineFragment fragment = (UserOriginalTimelineFragment) rightFragments.get(HOME_INDEX);
         ft.show(fragment);
         ft.commit();
         setTitle("");
