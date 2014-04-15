@@ -30,6 +30,7 @@ public class UserOriginalTimelineFragment extends AbstractMessageTimeLineFragmen
     protected String token;
     private MessageListBean bean = new MessageListBean();
     private TimeLinePosition timeLinePosition;
+    //账户昵称,目前使用UserOriginalTimelineFragment来呈现"思密达亚克西"的原创官方内容
     private String screenName;
     private static final String LIMITED_READ_MESSAGE_COUNT = "10";
     
