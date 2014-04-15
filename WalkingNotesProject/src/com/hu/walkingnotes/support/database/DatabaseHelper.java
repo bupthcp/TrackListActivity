@@ -16,6 +16,7 @@ import com.hu.walkingnotes.support.database.table.MentionCommentsTable;
 import com.hu.walkingnotes.support.database.table.MyStatusTable;
 import com.hu.walkingnotes.support.database.table.RepostsTable;
 import com.hu.walkingnotes.support.database.table.TopicTable;
+import com.hu.walkingnotes.support.database.table.UserOriginalTable;
 import com.hu.walkingnotes.support.utils.GlobalContext;
 
 import android.content.Context;
@@ -113,6 +114,20 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + RepostsTable.RepostDataTable.ACCOUNTID + " text,"
             + RepostsTable.RepostDataTable.MBLOGID + " text,"
             + RepostsTable.RepostDataTable.JSONDATA + " text"
+            + ");";
+    static final String CREATE_USERORIGINAL_TABLE_SQL = "create table " + UserOriginalTable.TABLE_NAME
+            + "("
+            + UserOriginalTable.ID + " integer primary key autoincrement,"
+            + UserOriginalTable.ACCOUNTID + " text,"
+            + UserOriginalTable.TIMELINEDATA + " text"
+            + ");";
+
+    static final String CREATE_USERORIGINAL_DATA_TABLE_SQL = "create table " + UserOriginalTable.UserOriginalDataTable.TABLE_NAME
+            + "("
+            + UserOriginalTable.UserOriginalDataTable.ID + " integer primary key autoincrement,"
+            + UserOriginalTable.UserOriginalDataTable.ACCOUNTID + " text,"
+            + UserOriginalTable.UserOriginalDataTable.MBLOGID + " text,"
+            + UserOriginalTable.UserOriginalDataTable.JSONDATA + " text"
             + ");";
 
     static final String CREATE_COMMENT_BY_ME_TABLE_SQL = "create table " + CommentByMeTable.TABLE_NAME
@@ -246,6 +261,13 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "("
             + RepostsTable.RepostDataTable.ACCOUNTID
             + ")";
+    private static final String CREATE_USERORIGINAL_INDEX_SQL = "CREATE INDEX idx_"
+            + UserOriginalTable.UserOriginalDataTable.TABLE_NAME
+            + " ON "
+            + UserOriginalTable.UserOriginalDataTable.TABLE_NAME
+            + "("
+            + UserOriginalTable.UserOriginalDataTable.ACCOUNTID
+            + ")";
 
     private static final String CREATE_COMMENT_INDEX_SQL = "CREATE INDEX idx_"
             + CommentsTable.CommentsDataTable.TABLE_NAME
@@ -334,6 +356,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_REPOSTS_TABLE_SQL);
         db.execSQL(CREATE_REPOSTS_DATA_TABLE_SQL);
+        
+        db.execSQL(CREATE_USERORIGINAL_TABLE_SQL);
+        db.execSQL(CREATE_USERORIGINAL_DATA_TABLE_SQL);
 
         db.execSQL(CREATE_MENTION_COMMENTS_TABLE_SQL);
         db.execSQL(CREATE_MENTION_COMMENTS_DATA_TABLE_SQL);
@@ -358,6 +383,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_HOME_INDEX_SQL);
         db.execSQL(CREATE_HOME_OTHER_GROUP_INDEX_SQL);
         db.execSQL(CREATE_REPOST_INDEX_SQL);
+        db.execSQL(CREATE_USERORIGINAL_INDEX_SQL);
         db.execSQL(CREATE_COMMENT_INDEX_SQL);
         db.execSQL(CREATE_MENTION_COMMENTS_INDEX_SQL);
         db.execSQL(CREATE_COMMENT_BY_ME_INDEX_SQL);
@@ -380,6 +406,9 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + RepostsTable.RepostDataTable.TABLE_NAME);
+        
+        db.execSQL("DROP TABLE IF EXISTS " + UserOriginalTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UserOriginalTable.UserOriginalDataTable.TABLE_NAME);
 
         db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MentionCommentsTable.MentionCommentsDataTable.TABLE_NAME);
