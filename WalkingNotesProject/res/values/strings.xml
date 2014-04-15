@@ -3695,4 +3695,5 @@ Tap to log in, add your friends and follow their sports activities in real-time.
     
     <string name="menu_share_weibo">分享到微博</string>
     <string name="official_account_screen_name">思密达亚克西</string>
+    <string name="map_fragment_save_map">正在保存截图</string>
 </resources>

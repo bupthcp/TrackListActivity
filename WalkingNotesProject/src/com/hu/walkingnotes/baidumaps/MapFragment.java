@@ -28,6 +28,8 @@ import com.hu.walkingnotes.support.utils.Utility;
 import com.hu.walkingnotes.ui.send.WriteWeiboActivity;
 import com.hu.walkingnotes.ui.tracks.TrackDetailActivity;
 
+import org.holoeverywhere.app.ProgressDialog;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -62,6 +64,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   Boolean needLocationListener = false;
   
   private Handler mapFragmentHandler= new Handler();
+  private ProgressDialog mProgressDialog;
   
   private static final String KEY_CURRENT_LOCATION = "currentLocation";
   private static final String KEY_KEEP_MY_LOCATION_VISIBLE = "keepMyLocationVisible";
@@ -105,6 +108,10 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       public void onGetCurrentMap(Bitmap bitMap) {
           FileOutputStream out = null;
           String filename = FileManager.getSdCardPath() + File.separator + "map.jpg";
+          if(mProgressDialog != null){
+              mProgressDialog.dismiss();
+              mProgressDialog = null;
+          }
           try {
                  out = new FileOutputStream(filename);
                  bitMap.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -165,7 +172,6 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment_baidu, container,false);
     mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
-
     
     mapOverlay = new MapOverlay(getActivity(),mapView);
     myLocationOverlay = new MyLocationMapOverlay(getActivity(),mapView);
@@ -280,6 +286,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
             return true;
         } else if(mapView != null && menuItem.getItemId() == R.id.menu_share_weibo){
             mapView.getCurrentMap();
+            mProgressDialog = ProgressDialog.show(getActivity(),null,getString(R.string.map_fragment_save_map));
             return true;
         }else {
             return false;
