@@ -1,5 +1,6 @@
 package com.hu.walkingnotes.baidumaps;
 
+import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MKOfflineMap;
@@ -8,6 +9,7 @@ import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Overlay;
+import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.content.TrackDataHub;
 import com.google.android.apps.mytracks.content.TrackDataListener;
@@ -33,6 +35,7 @@ import org.holoeverywhere.app.ProgressDialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,6 +64,7 @@ public class MapFragment extends Fragment
 implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   public static final String MAP_FRAGMENT_TAG = "MapFragment";
   Activity mActivity;
+  //在记录新运动的时候，是需要Location listener的，在查看已有运动记录的时候，是不需要Location listener的
   Boolean needLocationListener = false;
   
   private Handler mapFragmentHandler= new Handler();
@@ -94,6 +98,7 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
   private MapView mapView;
   private MapOverlay mapOverlay;
   private MyLocationMapOverlay myLocationOverlay;
+  private ItemizedOverlay<OverlayItem> markersOverlay;
   private ImageButton myLocationImageButton;
   private TextView messageTextView;
   private MKOfflineMap mOffline = null;
@@ -173,13 +178,17 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
     mapViewContainer = getActivity().getLayoutInflater().inflate(R.layout.map_fragment_baidu, container,false);
     mapView = (MapView) mapViewContainer.findViewById(R.id.map_view);
     
-    mapOverlay = new MapOverlay(getActivity(),mapView);
+    Drawable mark = getResources().getDrawable(R.drawable.red_dot);
+    markersOverlay = new ItemizedOverlay<OverlayItem>(mark,mapView);
+    
+    mapOverlay = new MapOverlay(getActivity(),mapView,markersOverlay);
     myLocationOverlay = new MyLocationMapOverlay(getActivity(),mapView);
     
     List<Overlay> overlays = mapView.getOverlays();
     overlays.clear();
     overlays.add(mapOverlay);
     overlays.add(myLocationOverlay);
+    overlays.add(markersOverlay);
     myLocationOverlay.enableCompass();
     myLocationOverlay.setMarker(null);
     
@@ -224,6 +233,9 @@ implements View.OnTouchListener, View.OnClickListener, TrackDataListener{
       }
     }
     needLocationListener = ((TrackDetailActivity)mActivity).getNeedLocationListener();
+    //needLocationListener为true时，说明正在记录一条新纪录，此时不需要绘制结束标记，轨迹的末端是mylocationOverlay
+    //needLocationListener为false时，说明是正在查看一条历史记录，此时需要绘制结束标记
+    mapOverlay.setShowEndMarker(!needLocationListener);
   }
 
   @Override

@@ -1,7 +1,9 @@
 package com.hu.walkingnotes.baidumaps;
 
 import com.baidu.mapapi.map.GraphicsOverlay;
+import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.OverlayItem;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.google.android.apps.mytracks.Constants;
 import com.google.android.apps.mytracks.util.LocationUtils;
@@ -25,6 +27,7 @@ import java.util.concurrent.BlockingQueue;
 public class MapOverlay extends GraphicsOverlay{
   
   private final static String TAG = MapOverlay.class.getSimpleName();
+  private ItemizedOverlay<OverlayItem> mMarkOverlay;
   
   public static final float WAYPOINT_X_ANCHOR = 13f / 48f;
 
@@ -108,7 +111,7 @@ public class MapOverlay extends GraphicsOverlay{
     }
   };
   
-  public MapOverlay(Activity activity, MapView mapView) {
+  public MapOverlay(Activity activity, MapView mapView,ItemizedOverlay<OverlayItem> markOverlay) {
     super(mapView);
     
     this.context = activity;
@@ -116,6 +119,7 @@ public class MapOverlay extends GraphicsOverlay{
     this.locations = new ArrayList<CachedLocation>(INITIAL_LOCATIONS_SIZE);
     this.pendingLocations = new ArrayBlockingQueue<CachedLocation>(
         Constants.MAX_DISPLAYED_TRACK_POINTS, true);
+    this.mMarkOverlay = markOverlay;
 
     context.getSharedPreferences(Constants.SETTINGS_NAME, Context.MODE_PRIVATE)
         .registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
@@ -202,7 +206,7 @@ public class MapOverlay extends GraphicsOverlay{
         this.removeAll();
         paths.clear();
         trackPath.updatePath(this, paths, 0, locations);
-//        updateStartAndEndMarkers(googleMap);
+        updateStartAndEndMarkers();
 //        updateWaypoints(googleMap);
       } else {
         if (newLocations != 0) {
@@ -215,38 +219,38 @@ public class MapOverlay extends GraphicsOverlay{
     }
   }
 
-//  /**
-//   * Updates the start and end markers.
-//   * 
-//   * @param googleMap the google map
-//   */
-//  private void updateStartAndEndMarkers(GoogleMap googleMap) {
-//    // Add the end marker
-//    if (showEndMarker) {
-//      for (int i = locations.size() - 1; i >= 0; i--) {
-//        CachedLocation cachedLocation = locations.get(i);
-//        if (cachedLocation.valid) {
-//          MarkerOptions markerOptions = new MarkerOptions().position(cachedLocation.getLatLng())
-//              .anchor(MARKER_X_ANCHOR, MARKER_Y_ANCHOR).draggable(false).visible(true)
-//              .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_dot));
-//          googleMap.addMarker(markerOptions);
-//          break;
-//        }
-//      }
-//    }
-//
-//    // Add the start marker
-//    for (int i = 0; i < locations.size(); i++) {
-//      CachedLocation cachedLocation = locations.get(i);
-//      if (cachedLocation.valid) {
-//        MarkerOptions markerOptions = new MarkerOptions().position(cachedLocation.getLatLng())
-//            .anchor(MARKER_X_ANCHOR, MARKER_Y_ANCHOR).draggable(false).visible(true)
-//            .icon(BitmapDescriptorFactory.fromResource(R.drawable.green_dot));
-//        googleMap.addMarker(markerOptions);
-//        break;
-//      }
-//    }
-//  }
+  /**
+   * Updates the start and end markers.
+   * 
+   */
+  private void updateStartAndEndMarkers() {
+    mMarkOverlay.removeAll();
+    // Add the end marker
+    if (showEndMarker) {
+      for (int i = locations.size() - 1; i >= 0; i--) {
+        CachedLocation cachedLocation = locations.get(i);
+        if (cachedLocation.valid) {
+            OverlayItem endItem = new OverlayItem(cachedLocation.getGeoPoint(),null,null);
+            endItem.setAnchor(MARKER_X_ANCHOR, MARKER_Y_ANCHOR);
+            endItem.setMarker(context.getResources().getDrawable(R.drawable.red_dot));
+            mMarkOverlay.addItem(endItem);
+            break;
+        }
+      }
+    }
+
+    // Add the start marker
+    for (int i = 0; i < locations.size(); i++) {
+      CachedLocation cachedLocation = locations.get(i);
+      if (cachedLocation.valid) {
+          OverlayItem startItem = new OverlayItem(cachedLocation.getGeoPoint(),null,null);
+          startItem.setAnchor(MARKER_X_ANCHOR, MARKER_Y_ANCHOR);
+          startItem.setMarker(context.getResources().getDrawable(R.drawable.green_dot));
+          mMarkOverlay.addItem(startItem);
+          break;
+      }
+    }
+  }
 //
 //  /**
 //   * Updates the waypoints.
